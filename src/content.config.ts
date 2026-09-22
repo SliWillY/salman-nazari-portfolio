@@ -6,7 +6,7 @@ const media = z.object({
   title: z.string().optional(),
   alt: z.string().optional(),
   publicId: z.string().optional(),
-  provider: z.enum(['youtube', 'vimeo']).optional(),
+  provider: z.enum(['youtube', 'vimeo', 'cloudinary']).optional(),
   id: z.string().optional(),
   url: z.string().url().optional(),
   aspect: z.string().optional(),
