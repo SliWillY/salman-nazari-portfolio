@@ -1,0 +1,6 @@
+---
+import { labels, path, type Lang } from '../lib/site';
+const { lang } = Astro.props as { lang: Lang };
+---
+<footer class="site-footer"><span>© {new Date().getFullYear()} Salman Nazari</span><a href={path(`/${lang}/about-me/`)}>{labels[lang].contact}</a><a href={path("sitemap-index.xml")}>Sitemap</a></footer>
+

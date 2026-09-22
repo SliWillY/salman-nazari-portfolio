@@ -1,0 +1,15 @@
+---
+import { nav, labels, path, type Lang } from '../lib/site';
+const { lang, currentSlug } = Astro.props as { lang: Lang; currentSlug: string };
+const other = lang === 'en' ? 'ar' : 'en';
+const languageHref = currentSlug === 'home' ? `/${other}/` : `/${other}/${currentSlug}/`;
+---
+<header class="site-header">
+  <a class="brand" href={path(`/${lang}/`)}>Salman Nazari<span aria-hidden="true">.</span></a>
+  <nav aria-label="Primary navigation">
+    <a href={path(`/${lang}/`)}>{labels[lang].home}</a>
+    {nav.map((item) => <a class:list={{ active: currentSlug === item.slug }} href={path(`/${lang}/${item.slug}/`)}>{item[lang]}</a>)}
+  </nav>
+  <a class="language-toggle" href={path(languageHref)} lang={other}>{labels[lang].language}</a>
+</header>
+
