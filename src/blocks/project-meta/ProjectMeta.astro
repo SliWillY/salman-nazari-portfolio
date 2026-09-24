@@ -1,0 +1,15 @@
+---
+import { t } from '../../lib/i18n';
+const { lang, ctx } = Astro.props;
+// The block catalog has no project, so it previews sample values.
+const project = ctx.project ?? (ctx.catalog ? { year: 2025, role: 'Level design', tools: ['Unreal Engine', 'Blender'] } : {});
+const labels = lang === 'ar' ? { year: 'السنة', role: 'الدور', tools: 'الأدوات' } : { year: 'Year', role: 'Role', tools: 'Tools' };
+const tools = (project.tools ?? []).map((tool: unknown) => t(tool, lang));
+---
+{(project.year || project.role || tools.length > 0) && (
+  <dl class="b-project-meta">
+    {project.year && <div><dt>{labels.year}</dt><dd>{project.year}</dd></div>}
+    {project.role && <div><dt>{labels.role}</dt><dd>{t(project.role, lang)}</dd></div>}
+    {tools.length > 0 && <div><dt>{labels.tools}</dt><dd>{tools.join(' · ')}</dd></div>}
+  </dl>
+)}

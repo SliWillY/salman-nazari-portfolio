@@ -1,0 +1,50 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Section from '../../../blocks/Section.astro';
+import type { BlockContext } from '../../../blocks/types';
+import { section as sectionSchema } from '../../../lib/content-schemas';
+import { langs, t, type Lang } from '../../../lib/i18n';
+import { resolveSections } from '../../../lib/prefabs';
+import { getProjects } from '../../../lib/projects';
+import { nav, path } from '../../../lib/site';
+
+export async function getStaticPaths() {
+  const projects = await getProjects();
+  return projects.flatMap((project) => {
+    const siblings = projects.filter((p) => p.category === project.category);
+    const i = siblings.indexOf(project);
+    return langs.map((lang) => ({
+      params: { lang, category: project.category, project: project.route },
+      props: { project, prev: siblings[i - 1], next: siblings[i + 1] }
+    }));
+  });
+}
+
+const { project, prev, next } = Astro.props;
+const lang = Astro.params.lang as Lang;
+const { data, category, route } = project;
+const categoryItem = nav.find((item) => item.slug === category);
+const categoryHref = path(`/${lang}/${category}/`);
+const ctx: BlockContext = {
+  lang, route, category,
+  title: data.title,
+  description: data.summary,
+  eyebrow: categoryItem ? { en: categoryItem.en, ar: categoryItem.ar } : category,
+  eyebrowHref: categoryHref,
+  project: { year: data.year, role: data.role, tools: data.tools }
+};
+const sections = await resolveSections(data, `src/content/projects/${project.id}.yaml`);
+if (data.header === 'auto') {
+  sections.unshift({ ...sectionSchema.parse({ spacing: 's' }), blocks: [{ type: 'hero', size: 'page' }, { type: 'project-meta' }] });
+}
+const label = categoryItem?.[lang] ?? category;
+const arrows = lang === 'ar' ? { prev: '→', next: '←', back: `العودة إلى ${label}` } : { prev: '←', next: '→', back: `Back to ${label}` };
+---
+<BaseLayout lang={lang} title={t(data.title, lang)} description={t(data.summary, lang)} currentSlug={`${category}/${route}`}>
+  {sections.map((section) => <Section section={section} lang={lang} ctx={ctx} />)}
+  <nav class="project-nav" aria-label={arrows.back}>
+    {prev ? <a href={path(`/${lang}/${category}/${prev.route}/`)}>{arrows.prev} {t(prev.data.title, lang)}</a> : <span />}
+    <a href={categoryHref}>{arrows.back}</a>
+    {next ? <a href={path(`/${lang}/${category}/${next.route}/`)}>{t(next.data.title, lang)} {arrows.next}</a> : <span />}
+  </nav>
+</BaseLayout>

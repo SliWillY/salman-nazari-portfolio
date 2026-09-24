@@ -1,0 +1,13 @@
+---
+import { registry } from './registry';
+const { block, lang, ctx } = Astro.props;
+const entry = registry[block.type];
+const Component = entry?.component;
+---
+{block.type === '__error' ? (
+  <div class="block-error" role="alert"><strong>Content error</strong><pre>{block.message}</pre></div>
+) : Component ? (
+  <div class:list={['block', `block-${block.type}`]}><Component block={block} lang={lang} ctx={ctx} /></div>
+) : (
+  <div class="block-error" role="alert"><strong>Unknown block “{block.type}”</strong></div>
+)}

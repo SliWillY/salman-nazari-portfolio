@@ -1,0 +1,1488 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "title": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "en": {
+              "type": "string"
+            },
+            "ar": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "en"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "description": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "en": {
+              "type": "string"
+            },
+            "ar": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "en"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "eyebrow": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "en": {
+              "type": "string"
+            },
+            "ar": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "en"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "header": {
+      "enum": [
+        "auto",
+        "none"
+      ],
+      "default": "auto"
+    },
+    "sections": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/sectionEntry"
+      },
+      "default": []
+    },
+    "blocks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/blockEntry"
+      }
+    },
+    "summary": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "en": {
+              "type": "string"
+            },
+            "ar": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "en"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "cover": {
+      "type": "string"
+    },
+    "year": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "role": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "en": {
+              "type": "string"
+            },
+            "ar": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "en"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "tools": {
+      "type": "array",
+      "items": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "en": {
+                "type": "string"
+              },
+              "ar": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "en"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      },
+      "default": []
+    },
+    "order": {
+      "type": "number",
+      "default": 0
+    },
+    "draft": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "title",
+    "summary"
+  ],
+  "additionalProperties": false,
+  "definitions": {
+    "localized": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "en": {
+              "type": "string"
+            },
+            "ar": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "en"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "prefabInstance": {
+      "type": "object",
+      "title": "Prefab instance",
+      "required": [
+        "prefab"
+      ],
+      "properties": {
+        "prefab": {
+          "enum": [
+            "contact-cta",
+            "document-feature",
+            "project-header",
+            "section-title",
+            "showcase-grid",
+            "showcase-slider",
+            "video-showcase"
+          ],
+          "description": "A prefab from src/content/prefabs/"
+        },
+        "props": {
+          "type": "object",
+          "description": "Values for the prefab’s exposed props"
+        },
+        "overrides": {
+          "type": "object",
+          "description": "Unity-style overrides, e.g. \"blocks.1.layout\": slider"
+        }
+      },
+      "additionalProperties": false
+    },
+    "block": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "button"
+            },
+            "label": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "en": {
+                      "type": "string"
+                    },
+                    "ar": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "en"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            },
+            "href": {
+              "type": "string"
+            },
+            "style": {
+              "enum": [
+                "primary",
+                "outline"
+              ],
+              "default": "primary"
+            },
+            "align": {
+              "enum": [
+                "start",
+                "center"
+              ]
+            }
+          },
+          "required": [
+            "type",
+            "label",
+            "href"
+          ],
+          "additionalProperties": false,
+          "title": "Button",
+          "description": "A call-to-action link. `href` can be a full URL, `mailto:`, or a site page like `games-dev`."
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "cards"
+            },
+            "columns": {
+              "type": "number",
+              "default": 3
+            },
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "en": {
+                            "type": "string"
+                          },
+                          "ar": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "en"
+                        ],
+                        "additionalProperties": false
+                      }
+                    ]
+                  },
+                  "text": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "en": {
+                            "type": "string"
+                          },
+                          "ar": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "en"
+                        ],
+                        "additionalProperties": false
+                      }
+                    ]
+                  },
+                  "href": {
+                    "type": "string"
+                  },
+                  "image": {
+                    "type": "string"
+                  },
+                  "cta": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "en": {
+                            "type": "string"
+                          },
+                          "ar": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "en"
+                        ],
+                        "additionalProperties": false
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "title",
+                  "href"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "type",
+            "items"
+          ],
+          "additionalProperties": false,
+          "title": "Cards",
+          "description": "Link cards with optional image, e.g. the home page sections. `href` can be a site page (`games-dev`) or a full URL."
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "columns"
+            },
+            "widths": {
+              "type": "string"
+            },
+            "gap": {
+              "enum": [
+                "s",
+                "m",
+                "l"
+              ],
+              "default": "m"
+            },
+            "valign": {
+              "enum": [
+                "start",
+                "center",
+                "end"
+              ],
+              "default": "start"
+            },
+            "columns": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "blocks": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/definitions/blockEntry"
+                    },
+                    "default": []
+                  }
+                },
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "type",
+            "columns"
+          ],
+          "additionalProperties": false,
+          "title": "Columns",
+          "description": "Side-by-side columns, each with its own blocks (any block, even prefabs). `widths` like \"2fr 1fr\" sets proportions. Stacks on phones."
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "divider"
+            },
+            "style": {
+              "enum": [
+                "line",
+                "short"
+              ],
+              "default": "line"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "additionalProperties": false,
+          "title": "Divider",
+          "description": "A horizontal line: full width or a short accent mark."
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "embed"
+            },
+            "url": {
+              "type": "string"
+            },
+            "title": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "en": {
+                      "type": "string"
+                    },
+                    "ar": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "en"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            },
+            "caption": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "en": {
+                      "type": "string"
+                    },
+                    "ar": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "en"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            },
+            "aspect": {
+              "type": "string",
+              "default": "16 / 9"
+            },
+            "height": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "type",
+            "url"
+          ],
+          "additionalProperties": false,
+          "title": "Embed",
+          "description": "An interactive embed: Sketchfab 3D model, itch.io game, Figma prototype, YouTube playlist, ArtStation… Paste the embed URL."
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "gallery"
+            },
+            "title": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "en": {
+                      "type": "string"
+                    },
+                    "ar": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "en"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            },
+            "layout": {
+              "enum": [
+                "grid",
+                "masonry",
+                "slider"
+              ],
+              "default": "grid"
+            },
+            "columns": {
+              "type": "number",
+              "default": 3
+            },
+            "aspect": {
+              "type": "string"
+            },
+            "gap": {
+              "enum": [
+                "none",
+                "s",
+                "m"
+              ],
+              "default": "s"
+            },
+            "lightbox": {
+              "type": "boolean",
+              "default": true
+            },
+            "items": {
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "publicId": {
+                        "type": "string"
+                      },
+                      "alt": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "en": {
+                                "type": "string"
+                              },
+                              "ar": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "en"
+                            ],
+                            "additionalProperties": false
+                          }
+                        ]
+                      },
+                      "caption": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "en": {
+                                "type": "string"
+                              },
+                              "ar": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "en"
+                            ],
+                            "additionalProperties": false
+                          }
+                        ]
+                      }
+                    },
+                    "required": [
+                      "publicId"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              }
+            }
+          },
+          "required": [
+            "type",
+            "items"
+          ],
+          "additionalProperties": false,
+          "title": "Gallery",
+          "description": "Several images as a `grid`, `masonry` (natural heights) or `slider`. Items are public IDs, or objects with alt/caption."
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "heading"
+            },
+            "text": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "en": {
+                      "type": "string"
+                    },
+                    "ar": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "en"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            },
+            "eyebrow": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "en": {
+                      "type": "string"
+                    },
+                    "ar": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "en"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            },
+            "level": {
+              "type": "number",
+              "default": 2
+            },
+            "size": {
+              "enum": [
+                "s",
+                "m",
+                "l",
+                "xl"
+              ]
+            },
+            "align": {
+              "enum": [
+                "start",
+                "center"
+              ]
+            }
+          },
+          "required": [
+            "type",
+            "text"
+          ],
+          "additionalProperties": false,
+          "title": "Heading",
+          "description": "A title with optional small eyebrow text above it."
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "hero"
+            },
+            "eyebrow": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "en": {
+                      "type": "string"
+                    },
+                    "ar": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "en"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            },
+            "title": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "en": {
+                      "type": "string"
+                    },
+                    "ar": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "en"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            },
+            "intro": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "en": {
+                      "type": "string"
+                    },
+                    "ar": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "en"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            },
+            "size": {
+              "enum": [
+                "page",
+                "home"
+              ],
+              "default": "page"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "additionalProperties": false,
+          "title": "Hero",
+          "description": "Big page title. Empty fields fall back to the page/project title, description and eyebrow. `size: home` is the full-screen home intro."
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "image"
+            },
+            "publicId": {
+              "type": "string",
+              "default": ""
+            },
+            "alt": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "en": {
+                      "type": "string"
+                    },
+                    "ar": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "en"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            },
+            "caption": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "en": {
+                      "type": "string"
+                    },
+                    "ar": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "en"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            },
+            "aspect": {
+              "type": "string"
+            },
+            "fit": {
+              "enum": [
+                "cover",
+                "contain"
+              ],
+              "default": "cover"
+            },
+            "size": {
+              "enum": [
+                "s",
+                "m",
+                "l",
+                "full"
+              ],
+              "default": "full"
+            },
+            "href": {
+              "type": "string"
+            },
+            "lightbox": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "additionalProperties": false,
+          "title": "Image",
+          "description": "One Cloudinary image. Omit `aspect` to keep its natural shape; `lightbox` opens it full screen on click."
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "image-text"
+            },
+            "image": {
+              "type": "string",
+              "default": ""
+            },
+            "alt": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "en": {
+                      "type": "string"
+                    },
+                    "ar": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "en"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            },
+            "heading": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "en": {
+                      "type": "string"
+                    },
+                    "ar": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "en"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            },
+            "text": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "en": {
+                      "type": "string"
+                    },
+                    "ar": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "en"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            },
+            "side": {
+              "enum": [
+                "start",
+                "end"
+              ],
+              "default": "start"
+            },
+            "aspect": {
+              "type": "string",
+              "default": "4 / 3"
+            },
+            "button": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "en": {
+                          "type": "string"
+                        },
+                        "ar": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "en"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
+                },
+                "href": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "label",
+                "href"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "type",
+            "text"
+          ],
+          "additionalProperties": false,
+          "title": "Image + Text",
+          "description": "An image beside a heading, Markdown text and an optional button. `side: end` puts the image on the other side."
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "pdf"
+            },
+            "publicId": {
+              "type": "string"
+            },
+            "url": {
+              "type": "string"
+            },
+            "title": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "en": {
+                      "type": "string"
+                    },
+                    "ar": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "en"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            },
+            "text": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "en": {
+                      "type": "string"
+                    },
+                    "ar": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "en"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            },
+            "embed": {
+              "type": "boolean",
+              "default": false
+            },
+            "caption": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "en": {
+                      "type": "string"
+                    },
+                    "ar": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "en"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            }
+          },
+          "required": [
+            "type",
+            "title"
+          ],
+          "additionalProperties": false,
+          "title": "PDF",
+          "description": "A PDF from Cloudinary (`publicId`) or any `url`. Shows a card with a page-1 thumbnail, or the full PDF with `embed: true`."
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "project-meta"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "additionalProperties": false,
+          "title": "Project info",
+          "description": "Year, role and tools from the project file. Added automatically under the project title; place it yourself when using `header: none`."
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "projects"
+            },
+            "category": {
+              "enum": [
+                "3d-renders",
+                "games-dev",
+                "ux-and-gamification",
+                "animations"
+              ]
+            },
+            "columns": {
+              "type": "number",
+              "default": 2
+            },
+            "limit": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "additionalProperties": false,
+          "title": "Projects",
+          "description": "Automatic grid of project cards from src/content/projects/<category>/. Defaults to the current page’s category."
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "quote"
+            },
+            "text": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "en": {
+                      "type": "string"
+                    },
+                    "ar": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "en"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            },
+            "cite": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "en": {
+                      "type": "string"
+                    },
+                    "ar": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "en"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            }
+          },
+          "required": [
+            "type",
+            "text"
+          ],
+          "additionalProperties": false,
+          "title": "Quote",
+          "description": "A large pull quote or testimonial with an optional source."
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "spacer"
+            },
+            "size": {
+              "enum": [
+                "s",
+                "m",
+                "l",
+                "xl"
+              ],
+              "default": "m"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "additionalProperties": false,
+          "title": "Spacer",
+          "description": "Empty vertical space between blocks."
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "text"
+            },
+            "text": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "en": {
+                      "type": "string"
+                    },
+                    "ar": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "en"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            },
+            "size": {
+              "enum": [
+                "normal",
+                "large"
+              ],
+              "default": "normal"
+            },
+            "align": {
+              "enum": [
+                "start",
+                "center"
+              ]
+            }
+          },
+          "required": [
+            "type",
+            "text"
+          ],
+          "additionalProperties": false,
+          "title": "Text",
+          "description": "Paragraphs written in Markdown: **bold**, *italic*, [links](https://…), lists, ### subheadings."
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "video"
+            },
+            "provider": {
+              "enum": [
+                "youtube",
+                "vimeo",
+                "cloudinary"
+              ]
+            },
+            "id": {
+              "type": "string"
+            },
+            "title": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "en": {
+                      "type": "string"
+                    },
+                    "ar": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "en"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            },
+            "caption": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "en": {
+                      "type": "string"
+                    },
+                    "ar": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "en"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            },
+            "aspect": {
+              "type": "string",
+              "default": "16 / 9"
+            },
+            "autoplay": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          "required": [
+            "type",
+            "provider",
+            "id"
+          ],
+          "additionalProperties": false,
+          "title": "Video",
+          "description": "YouTube / Vimeo (use the video ID from the URL) or a Cloudinary video (use its public ID)."
+        }
+      ]
+    },
+    "blockEntry": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/prefabInstance"
+        },
+        {
+          "$ref": "#/definitions/block"
+        }
+      ]
+    },
+    "section": {
+      "type": "object",
+      "properties": {
+        "theme": {
+          "enum": [
+            "paper",
+            "light",
+            "dark",
+            "accent"
+          ],
+          "default": "paper"
+        },
+        "width": {
+          "enum": [
+            "narrow",
+            "contained",
+            "wide",
+            "full"
+          ],
+          "default": "contained"
+        },
+        "spacing": {
+          "enum": [
+            "none",
+            "s",
+            "m",
+            "l"
+          ],
+          "default": "m"
+        },
+        "align": {
+          "enum": [
+            "start",
+            "center"
+          ],
+          "default": "start"
+        },
+        "background": {
+          "type": "object",
+          "properties": {
+            "image": {
+              "type": "string"
+            },
+            "overlay": {
+              "type": "number",
+              "default": 0.5
+            }
+          },
+          "required": [
+            "image"
+          ],
+          "additionalProperties": true
+        },
+        "id": {
+          "type": "string"
+        },
+        "blocks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/blockEntry"
+          },
+          "default": []
+        }
+      },
+      "additionalProperties": false,
+      "title": "Section"
+    },
+    "sectionEntry": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/prefabInstance"
+        },
+        {
+          "$ref": "#/definitions/section"
+        }
+      ]
+    }
+  }
+}

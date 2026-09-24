@@ -1,0 +1,15 @@
+---
+import CloudinaryImage from '../../components/CloudinaryImage.astro';
+import { t } from '../../lib/i18n';
+import { markdown } from '../../lib/markdown';
+import { href } from '../../lib/site';
+const { block, lang } = Astro.props;
+---
+<div class:list={['b-image-text', `side-${block.side}`]} style={`--media-aspect: ${block.aspect}`}>
+  <div class="b-image-text-media"><CloudinaryImage publicId={block.image} alt={t(block.alt, lang)} sizes="(max-width: 800px) 100vw, 560px" /></div>
+  <div class="b-image-text-body">
+    {block.heading && <h3>{t(block.heading, lang)}</h3>}
+    <div class="prose" set:html={markdown(t(block.text, lang))} />
+    {block.button && <a class="button button-outline" href={href(block.button.href, lang)}>{t(block.button.label, lang)}</a>}
+  </div>
+</div>

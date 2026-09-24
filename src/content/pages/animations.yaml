@@ -1,0 +1,14 @@
+title: { en: Animations, ar: الرسوم المتحركة }
+description:
+  en: Motion studies and short pieces that make ideas easier to feel.
+  ar: دراسات حركة وأعمال قصيرة تجعل الأفكار أسهل في الإحساس.
+eyebrow: { en: Motion, ar: الحركة }
+
+sections:
+  - blocks:
+      - type: text
+        size: large
+        text:
+          en: Short animation work, visual experiments, and motion tests live here as a growing collection.
+          ar: مجموعة من أعمال الحركة والتجارب البصرية واختبارات الرسوم المتحركة.
+      - type: projects

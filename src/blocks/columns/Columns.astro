@@ -1,0 +1,10 @@
+---
+import BlockRenderer from '../BlockRenderer.astro';
+const { block, lang, ctx } = Astro.props;
+const widths = block.widths ?? `repeat(${block.columns.length}, minmax(0, 1fr))`;
+---
+<div class:list={['b-columns', `gap-${block.gap}`, `valign-${block.valign}`]} style={`--column-widths: ${widths}`}>
+  {block.columns.map((column: { blocks: unknown[] }) => (
+    <div class="b-column">{column.blocks.map((child) => <BlockRenderer block={child} lang={lang} ctx={ctx} />)}</div>
+  ))}
+</div>

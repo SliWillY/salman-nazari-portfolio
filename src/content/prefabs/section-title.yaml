@@ -1,0 +1,15 @@
+name: Section title
+description: "A bold centered title band that introduces a group of work (like “Game Art” or “Pixel Art” on the original site)."
+props:
+  title: { en: Section title, ar: عنوان القسم }
+  eyebrow: ""
+  theme: accent
+section:
+  theme: "{{theme}}"
+  align: center
+  spacing: l
+  blocks:
+    - type: heading
+      eyebrow: "{{eyebrow}}"
+      text: "{{title}}"
+      size: xl

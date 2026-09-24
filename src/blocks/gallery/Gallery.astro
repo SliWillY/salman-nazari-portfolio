@@ -1,0 +1,61 @@
+---
+import CloudinaryImage from '../../components/CloudinaryImage.astro';
+import Lightbox from '../../components/Lightbox.astro';
+import { cloudinaryUrl } from '../../lib/cloudinary';
+import { t } from '../../lib/i18n';
+const { block, lang } = Astro.props;
+type Item = string | { publicId: string; alt?: unknown; caption?: unknown };
+const items = (block.items as Item[]).map((item) => (typeof item === 'string' ? { publicId: item } : item));
+const title = t(block.title, lang);
+const slider = block.layout === 'slider';
+const aspect = block.aspect ?? (slider ? '16 / 9' : '4 / 3');
+const group = `gallery-${Math.random().toString(36).slice(2, 8)}`;
+const sizes = slider ? '(max-width: 1100px) 100vw, 1120px' : `(max-width: 800px) 100vw, ${Math.round(100 / block.columns)}vw`;
+const labels = lang === 'ar' ? { prev: 'السابق', next: 'التالي', of: 'من' } : { prev: 'Previous', next: 'Next', of: 'of' };
+---
+<div class:list={['b-gallery', `layout-${block.layout}`, `gap-${block.gap}`]} style={`--media-aspect: ${aspect}; --columns: ${block.columns}`} data-gallery={slider ? '' : undefined}>
+  {title && <h3 class="b-gallery-title">{title}</h3>}
+  <div class="gallery-track" tabindex={slider ? 0 : undefined} role={slider ? 'region' : undefined} aria-roledescription={slider ? 'carousel' : undefined} aria-label={title || undefined}>
+    {items.map((item, i) => {
+      const alt = t(item.alt ?? item.caption ?? block.title, lang);
+      const caption = t(item.caption, lang);
+      const image = <CloudinaryImage publicId={item.publicId} alt={alt} eager={slider && i === 0} sizes={sizes} />;
+      return (
+        <figure class="gallery-slide" aria-roledescription={slider ? 'slide' : undefined} aria-label={slider ? `${i + 1} ${labels.of} ${items.length}` : undefined}>
+          {block.lightbox && item.publicId ? <a href={cloudinaryUrl(item.publicId, 2400)} data-lightbox={group} data-caption={caption}>{image}</a> : image}
+          {caption && <figcaption>{caption}</figcaption>}
+        </figure>
+      );
+    })}
+  </div>
+  {slider && items.length > 1 && (
+    <div class="gallery-controls">
+      <button type="button" class="gallery-btn" data-dir="-1" aria-label={labels.prev}>←</button>
+      <span class="gallery-count" aria-live="polite"><span data-current>1</span> / {items.length}</span>
+      <button type="button" class="gallery-btn" data-dir="1" aria-label={labels.next}>→</button>
+    </div>
+  )}
+</div>
+{block.lightbox && <Lightbox />}
+
+<script>
+  for (const gallery of document.querySelectorAll<HTMLElement>('[data-gallery]')) {
+    const track = gallery.querySelector<HTMLElement>('.gallery-track')!;
+    const current = gallery.querySelector<HTMLElement>('[data-current]');
+    const count = track.children.length;
+    // In RTL layouts scrollLeft runs negative, so "next" moves left.
+    const sign = () => (getComputedStyle(track).direction === 'rtl' ? -1 : 1);
+    const index = () => Math.round(Math.abs(track.scrollLeft) / track.clientWidth);
+    const go = (step: number) => {
+      const target = (index() + step + count) % count;
+      track.scrollTo({ left: sign() * target * track.clientWidth, behavior: 'smooth' });
+    };
+    gallery.querySelectorAll<HTMLButtonElement>('.gallery-btn').forEach((btn) => btn.addEventListener('click', () => go(Number(btn.dataset.dir))));
+    track.addEventListener('keydown', (event) => {
+      if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+      event.preventDefault();
+      go((event.key === 'ArrowRight' ? 1 : -1) * sign());
+    });
+    track.addEventListener('scroll', () => { if (current) current.textContent = String(index() + 1); }, { passive: true });
+  }
+</script>

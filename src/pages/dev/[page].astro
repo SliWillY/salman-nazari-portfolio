@@ -1,0 +1,65 @@
+---
+// Block & prefab catalog — only exists in `pnpm dev`, never in the built site.
+// /dev/blocks/ (English) and /dev/blocks-ar/ (Arabic).
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Section from '../../blocks/Section.astro';
+import { blockSchemas, blockTypes } from '../../blocks/schemas';
+import type { BlockContext } from '../../blocks/types';
+import { loadPrefabs, resolveSections } from '../../lib/prefabs';
+import { yamlSnippet } from '../../lib/yaml';
+
+export function getStaticPaths() {
+  return import.meta.env.DEV ? [{ params: { page: 'blocks' } }, { params: { page: 'blocks-ar' } }] : [];
+}
+
+const lang = Astro.params.page === 'blocks-ar' ? 'ar' : 'en';
+const ctx: BlockContext = {
+  lang, route: '3d-renders', catalog: true,
+  title: { en: 'Page title', ar: 'عنوان الصفحة' },
+  description: { en: 'Page description from the YAML file.', ar: 'وصف الصفحة من ملف YAML.' },
+  eyebrow: { en: 'Eyebrow', ar: 'عنوان صغير' }
+};
+const groups = ['Text', 'Media', 'Layout', 'Site'];
+const blocks = await Promise.all(blockTypes.map(async (type) => ({
+  type,
+  ...blockSchemas[type],
+  sections: await resolveSections({ blocks: [blockSchemas[type].example] }, `block "${type}" example`)
+})));
+const prefabs = await Promise.all([...(await loadPrefabs())].map(async ([id, prefab]) => {
+  const instance = { prefab: id, props: prefab.example ?? {} };
+  return { id, prefab, instance, sections: await resolveSections({ sections: [instance] }, `prefab "${id}" preview`) };
+}));
+---
+<BaseLayout lang={lang} title="Block catalog" description="Every block and prefab" currentSlug="dev">
+  <section class="section spacing-m">
+    <div class="section-inner">
+      <span class="eyebrow">Dev only</span>
+      <h1 style="font-size: clamp(2.2rem, 6vw, 4rem); letter-spacing: -.06em; margin: .3rem 0 1rem">Blocks &amp; Prefabs</h1>
+      <p style="max-width: 680px; color: var(--muted)">Copy a snippet into a page (<code>src/content/pages/*.yaml</code>) or project (<code>src/content/projects/&lt;category&gt;/*.yaml</code>). Blocks go inside a section’s <code>blocks:</code>; prefabs go straight into <code>sections:</code>. <a href={lang === 'ar' ? '/dev/blocks/' : '/dev/blocks-ar/'} style="color: var(--accent)">{lang === 'ar' ? 'English preview' : 'Arabic preview'} ↗</a></p>
+      <nav class="catalog-nav" aria-label="Catalog">
+        {groups.map((group) => blocks.filter((b) => b.meta.group === group).map((b) => <a href={`#block-${b.type}`}>{b.meta.label}</a>))}
+        {prefabs.map((p) => <a href={`#prefab-${p.id}`}>◆ {p.prefab.name}</a>)}
+      </nav>
+    </div>
+  </section>
+
+  {groups.map((group) => blocks.filter((b) => b.meta.group === group).map((b) => (
+    <article class="catalog-item" id={`block-${b.type}`}>
+      <div class="catalog-head">
+        <div><span class="eyebrow">{group} block</span><h2>{b.meta.label}<code>type: {b.type}</code></h2><p>{b.meta.description}</p><p><code>src/blocks/{b.type}/</code></p></div>
+        <pre>{`- ${yamlSnippet(b.example).replace(/\n/g, '\n  ')}`}</pre>
+      </div>
+      {b.sections.map((section) => <Section section={section} lang={lang} ctx={ctx} />)}
+    </article>
+  )))}
+
+  {prefabs.map((p) => (
+    <article class="catalog-item" id={`prefab-${p.id}`}>
+      <div class="catalog-head">
+        <div><span class="eyebrow">Prefab{p.prefab.extends ? ` · variant of ${p.prefab.extends}` : ''}</span><h2>{p.prefab.name}<code>prefab: {p.id}</code></h2><p>{p.prefab.description}</p><p><code>src/content/prefabs/{p.id}.yaml</code> · props: {Object.keys(p.prefab.props).join(', ') || 'none'}</p></div>
+        <pre>{`- ${yamlSnippet(p.instance).replace(/\n/g, '\n  ')}`}</pre>
+      </div>
+      {p.sections.map((section) => <Section section={section} lang={lang} ctx={ctx} />)}
+    </article>
+  ))}
+</BaseLayout>

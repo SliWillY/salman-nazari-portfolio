@@ -1,0 +1,15 @@
+---
+import ProjectCard from '../../components/ProjectCard.astro';
+import { getProjects } from '../../lib/projects';
+const { block, lang, ctx } = Astro.props;
+const category = block.category ?? ctx.category ?? ctx.route;
+const projects = (await getProjects({ category })).slice(0, block.limit);
+const empty = lang === 'ar' ? 'المشاريع قادمة قريباً.' : 'Projects coming soon.';
+---
+{projects.length > 0 ? (
+  <div class="b-projects" style={`--columns: ${block.columns}`}>
+    {projects.map((project) => <ProjectCard project={project} lang={lang} />)}
+  </div>
+) : (
+  <p class="b-projects-empty">{empty}</p>
+)}

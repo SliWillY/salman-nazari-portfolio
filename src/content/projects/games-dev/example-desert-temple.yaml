@@ -1,0 +1,46 @@
+# Example with a custom header: `header: none` + the project-header prefab (cover image behind the title).
+
+title: { en: Desert Temple (example), ar: المعبد الصحراوي (مثال) }
+summary:
+  en: An Unreal Engine level built around light shafts guiding the player.
+  ar: مرحلة في Unreal Engine مبنية حول أشعة الضوء التي ترشد اللاعب.
+cover: portfolio/games/desert-temple/cover
+year: 2024
+role: { en: Level design, ar: تصميم المراحل }
+tools: [Unreal Engine, Blender]
+draft: true
+header: none
+
+sections:
+  - prefab: project-header
+    props:
+      cover: portfolio/games/desert-temple/cover
+
+  - blocks:
+      - type: image-text
+        image: portfolio/games/desert-temple/top-down
+        heading: { en: Guiding with light, ar: الإرشاد بالضوء }
+        text:
+          en: Every critical path is lit by a **shaft of sunlight**, so players navigate without UI markers.
+          ar: كل مسار أساسي تضيئه **أشعة الشمس**، فيتنقل اللاعب دون علامات في الواجهة.
+      - type: embed
+        url: https://sketchfab.com/models/442c548d94744641ba279ae94b5f45ec/embed
+        title: { en: Temple model, ar: نموذج المعبد }
+
+  - prefab: section-title
+    props:
+      title: { en: Playable build, ar: نسخة قابلة للعب }
+
+  - blocks:
+      - type: columns
+        columns:
+          - blocks:
+              - type: video
+                provider: youtube
+                id: aqz-KE-bpKQ
+          - blocks:
+              - type: text
+                text: { en: Try the prototype in your browser., ar: جرّب النموذج في متصفحك. }
+              - type: button
+                label: { en: Play on itch.io, ar: العب على itch.io }
+                href: https://itch.io

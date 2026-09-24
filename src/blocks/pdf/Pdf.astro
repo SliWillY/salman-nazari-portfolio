@@ -1,0 +1,22 @@
+---
+import { cloudinaryPdfPreview, cloudinaryPdfUrl } from '../../lib/cloudinary';
+import { t } from '../../lib/i18n';
+const { block, lang } = Astro.props;
+const url = block.url || cloudinaryPdfUrl(block.publicId);
+const preview = block.publicId ? cloudinaryPdfPreview(block.publicId) : undefined;
+const title = t(block.title, lang);
+const open = lang === 'ar' ? 'فتح المستند' : 'Open document';
+---
+<figure class="b-pdf">
+  {block.embed && <iframe class="pdf-embed" src={url} title={title} loading="lazy" />}
+  <a class="document-card" href={url} target="_blank" rel="noreferrer">
+    {preview && !block.embed && <img class="document-preview" src={preview} alt="" loading="lazy" onerror="this.remove()" />}
+    <span class="document-icon" aria-hidden="true">PDF</span>
+    <span>
+      <strong>{title}</strong>
+      {block.text && <span class="document-text">{t(block.text, lang)}</span>}
+      <span class="document-link">{open} ↗</span>
+    </span>
+  </a>
+  {block.caption && <figcaption>{t(block.caption, lang)}</figcaption>}
+</figure>

@@ -1,0 +1,22 @@
+name: Video showcase
+description: "Heading and a large video (YouTube, Vimeo or Cloudinary) with an optional caption."
+props:
+  title: { en: Trailer, ar: العرض الدعائي }
+  provider: youtube
+  id: ""
+  caption: ""
+  theme: dark
+section:
+  theme: "{{theme}}"
+  width: wide
+  blocks:
+    - type: heading
+      text: "{{title}}"
+    - type: video
+      provider: "{{provider}}"
+      id: "{{id}}"
+      title: "{{title}}"
+      caption: "{{caption}}"
+example:
+  title: { en: Gameplay trailer, ar: عرض اللعب }
+  id: aqz-KE-bpKQ

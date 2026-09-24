@@ -1,3 +1,6 @@
+export type { Lang } from './i18n';
+import type { Lang } from './i18n';
+
 export const nav = [
   { slug: 'about-me', en: 'About', ar: 'نبذة' },
   { slug: '3d-renders', en: '3D Renders', ar: 'تصاميم ثلاثية الأبعاد' },
@@ -12,5 +15,12 @@ export const labels = {
   ar: { menu: 'القائمة', home: 'الرئيسية', explore: 'استكشف', contact: 'تواصل', language: 'English', back: 'العودة للرئيسية' }
 } as const;
 
-export type Lang = 'en' | 'ar';
 export const path = (value: string) => `${import.meta.env.BASE_URL.replace(/\/$/, '')}/${value.replace(/^\//, '')}`;
+
+// Link targets in content: full URLs pass through; "games-dev" or "games-dev/my-game" become /<lang>/games-dev/…/
+export function href(value: string, lang: Lang) {
+  if (/^([a-z]+:|#)/i.test(value)) return value;
+  if (value.startsWith('/')) return path(value);
+  const clean = value.replace(/^\/+|\/+$/g, '');
+  return path(clean === '' || clean === 'home' ? `/${lang}/` : `/${lang}/${clean}/`);
+}

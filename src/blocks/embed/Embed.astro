@@ -1,0 +1,8 @@
+---
+import { t } from '../../lib/i18n';
+const { block, lang } = Astro.props;
+---
+<figure class:list={['b-embed', { 'fixed-height': block.height }]} style={`--media-aspect: ${block.aspect}`}>
+  <iframe src={block.url} title={t(block.title, lang) || 'Embedded content'} style={block.height ? `height: ${block.height}px` : undefined} loading="lazy" allow="autoplay; fullscreen; xr-spatial-tracking; clipboard-write" allowfullscreen />
+  {block.caption && <figcaption>{t(block.caption, lang)}</figcaption>}
+</figure>

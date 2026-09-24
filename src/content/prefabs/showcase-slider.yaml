@@ -1,0 +1,7 @@
+name: Showcase slider
+description: "Variant of Showcase grid — same structure, but a full-width slider on a light band."
+extends: showcase-grid
+props:
+  theme: light
+  layout: slider
+  aspect: "16 / 9"

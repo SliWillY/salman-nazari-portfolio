@@ -1,0 +1,7 @@
+---
+import { t } from '../../lib/i18n';
+import { markdown } from '../../lib/markdown';
+const { block, lang } = Astro.props;
+const text = t(block.text, lang).trim();
+---
+{text && <div class:list={['b-text', 'prose', `size-${block.size}`, block.align && `align-${block.align}`]} set:html={markdown(text)} />}

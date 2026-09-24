@@ -1,0 +1,44 @@
+title: { en: Certificates, ar: الشهادات }
+description:
+  en: Selected courses, continuing education, and volunteer work.
+  ar: دورات مختارة وتعليم مستمر وأعمال تطوعية.
+eyebrow: { en: Learning, ar: التعلم }
+
+sections:
+  - blocks:
+      - type: columns
+        columns:
+          - blocks:
+              - type: heading
+                level: 3
+                text: { en: Courses, ar: الدورات }
+              - type: text
+                text:
+                  en: |
+                    - Harvard CS50x: Introduction to Computer Science
+                    - Google: Foundations of Digital Marketing and E-commerce
+                    - Google: Attract and Engage Customers with Digital Marketing
+                  ar: |
+                    - Harvard CS50x: مقدمة في علوم الحاسب
+                    - Google: أساسيات التسويق الرقمي والتجارة الإلكترونية
+                    - Google: جذب العملاء والتفاعل معهم عبر التسويق الرقمي
+          - blocks:
+              - type: heading
+                level: 3
+                text: { en: Volunteer work, ar: العمل التطوعي }
+              - type: text
+                text:
+                  en: |
+                    - حلقات teacher — 120 hours
+                    - Educational supervisor — 150 hours
+                    - Educational supervisor — 81 hours
+                  ar: |
+                    - معلم حلقات — 120 ساعة
+                    - مشرف تعليمي — 150 ساعة
+                    - مشرف تعليمي — 81 ساعة
+
+  # Add certificate scans here once uploaded, e.g.:
+  # - blocks:
+  #     - type: pdf
+  #       publicId: portfolio/certificates/cs50x
+  #       title: { en: Harvard CS50x certificate, ar: شهادة Harvard CS50x }

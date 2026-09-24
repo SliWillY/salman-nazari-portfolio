@@ -1,0 +1,22 @@
+---
+import CloudinaryImage from '../../components/CloudinaryImage.astro';
+import { t } from '../../lib/i18n';
+import { href } from '../../lib/site';
+const { block, lang } = Astro.props;
+const explore = lang === 'ar' ? 'استكشف' : 'Explore';
+---
+<div class="b-cards" style={`--columns: ${block.columns}`}>
+  {block.items.map((item: any) => {
+    const external = /^https?:/.test(item.href);
+    return (
+      <a class="feature-card" href={href(item.href, lang)} target={external ? '_blank' : undefined} rel={external ? 'noreferrer' : undefined}>
+        <div>
+          {item.image && <div class="feature-card-media"><CloudinaryImage publicId={item.image} alt="" width={720} sizes="(max-width: 800px) 100vw, 400px" /></div>}
+          <h2>{t(item.title, lang)}</h2>
+          {item.text && <p>{t(item.text, lang)}</p>}
+        </div>
+        <span class="feature-link">{t(item.cta, lang) || explore} ↗</span>
+      </a>
+    );
+  })}
+</div>

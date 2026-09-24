@@ -1,0 +1,27 @@
+title: { en: Designing experiences that stay with people, ar: أصمم تجارب تبقى في الذاكرة }
+description:
+  en: Salman Nazari is a multidisciplinary designer working across interactive systems, game worlds, 3D art, UX, and behavioral design.
+  ar: سلمان ناظري مصمم متعدد التخصصات يعمل على الأنظمة التفاعلية وعوالم الألعاب والتصميم ثلاثي الأبعاد وتجربة المستخدم.
+eyebrow: { en: Portfolio · Riyadh, ar: ملف أعمال · الرياض }
+header: none
+
+sections:
+  - width: full
+    spacing: none
+    blocks:
+      - type: hero
+        size: home
+
+  - blocks:
+      - type: cards
+        columns: 3
+        items:
+          - title: { en: 3D Renders, ar: تصاميم ثلاثية الأبعاد }
+            text: { en: "Visual worlds built through composition, light, and detail.", ar: "عوالم بصرية مبنية على التكوين والضوء والتفاصيل." }
+            href: 3d-renders
+          - title: { en: Games Dev, ar: تطوير الألعاب }
+            text: { en: "Game art, level design, and interactive systems in one place.", ar: "فن الألعاب وتصميم المراحل والأنظمة التفاعلية." }
+            href: games-dev
+          - title: { en: UX & Gamification, ar: تجربة المستخدم والتلعيب }
+            text: { en: "Human-centered journeys, prototypes, and behavioral experiments.", ar: "رحلات وتجارب ونماذج أولية تتمحور حول الإنسان." }
+            href: ux-and-gamification

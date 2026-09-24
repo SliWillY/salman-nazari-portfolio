@@ -1,0 +1,55 @@
+---
+// Full-screen image viewer for links marked data-lightbox="<group>".
+// Included by image/gallery blocks; Astro bundles the script once per page.
+---
+<script>
+  let dialog: HTMLDialogElement | undefined;
+  let group: HTMLAnchorElement[] = [];
+  let index = 0;
+
+  function show() {
+    const link = group[index];
+    const img = dialog!.querySelector('img')!;
+    img.src = link.href;
+    img.alt = link.querySelector('img')?.alt ?? '';
+    dialog!.querySelector('figcaption')!.textContent = link.dataset.caption ?? '';
+    dialog!.querySelectorAll<HTMLElement>('[data-step]').forEach((b) => (b.hidden = group.length < 2));
+  }
+
+  function open(link: HTMLAnchorElement) {
+    if (!dialog) {
+      dialog = document.createElement('dialog');
+      dialog.className = 'lightbox';
+      dialog.innerHTML = '<figure><img alt=""><figcaption></figcaption></figure><button class="lightbox-close" aria-label="Close">×</button><button class="lightbox-step" data-step="-1" aria-label="Previous">←</button><button class="lightbox-step" data-step="1" aria-label="Next">→</button>';
+      dialog.addEventListener('click', (event) => {
+        const target = event.target as HTMLElement;
+        const step = target.closest<HTMLElement>('[data-step]')?.dataset.step;
+        if (step) { go(Number(step)); return; }
+        if (target === dialog || target.closest('.lightbox-close')) dialog!.close();
+      });
+      dialog.addEventListener('keydown', (event) => {
+        const rtl = document.dir === 'rtl' ? -1 : 1;
+        if (event.key === 'ArrowRight') go(rtl);
+        if (event.key === 'ArrowLeft') go(-rtl);
+      });
+      document.body.append(dialog);
+    }
+    const name = link.dataset.lightbox;
+    group = name ? [...document.querySelectorAll<HTMLAnchorElement>(`a[data-lightbox="${name}"]`)] : [link];
+    index = Math.max(0, group.indexOf(link));
+    show();
+    dialog.showModal();
+  }
+
+  function go(step: number) {
+    index = (index + step + group.length) % group.length;
+    show();
+  }
+
+  document.addEventListener('click', (event) => {
+    const link = (event.target as HTMLElement).closest<HTMLAnchorElement>('a[data-lightbox]');
+    if (!link || event.metaKey || event.ctrlKey) return;
+    event.preventDefault();
+    open(link);
+  });
+</script>

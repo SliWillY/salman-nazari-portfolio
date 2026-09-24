@@ -1,0 +1,17 @@
+---
+import { cloudinaryVideoUrl } from '../../lib/cloudinary';
+import { t } from '../../lib/i18n';
+const { block, lang } = Astro.props;
+const title = t(block.title, lang) || 'Video';
+const embed = block.provider === 'vimeo'
+  ? `https://player.vimeo.com/video/${block.id}${block.autoplay ? '?autoplay=1&muted=1&loop=1' : ''}`
+  : `https://www.youtube-nocookie.com/embed/${block.id}${block.autoplay ? `?autoplay=1&mute=1&loop=1&playlist=${block.id}` : ''}`;
+---
+<figure class="b-video" style={`--media-aspect: ${block.aspect}`}>
+  {block.provider === 'cloudinary' ? (
+    <video controls={!block.autoplay} autoplay={block.autoplay} muted={block.autoplay} loop={block.autoplay} preload="metadata" playsinline title={title} src={cloudinaryVideoUrl(block.id)} />
+  ) : (
+    <iframe src={embed} title={title} loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen />
+  )}
+  {block.caption && <figcaption>{t(block.caption, lang)}</figcaption>}
+</figure>

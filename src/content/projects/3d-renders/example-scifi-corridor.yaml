@@ -1,0 +1,59 @@
+# Example project — copy this file to start a new one.
+# URL: /en/3d-renders/example-scifi-corridor/  (folder = category, file name = URL)
+# Browse every block and prefab at http://localhost:4321/dev/blocks/ while `pnpm dev` runs.
+
+title: { en: Sci-Fi Corridor (example), ar: ممر خيال علمي (مثال) }
+summary:
+  en: A modular interior study exploring volumetric light and hard-surface detail.
+  ar: دراسة لمساحة داخلية معيارية تستكشف الإضاءة الحجمية وتفاصيل الأسطح الصلبة.
+cover: portfolio/3d/scifi-corridor/cover   # card image; falls back to the first image below
+year: 2025
+role: { en: "Modeling, lighting, rendering", ar: "النمذجة والإضاءة والإخراج" }
+tools: [Blender, Substance Painter]
+order: 1        # lower numbers appear first
+draft: true     # visible in `pnpm dev` only; delete this line to publish
+
+sections:
+  # Plain blocks, placed by hand
+  - blocks:
+      - type: text
+        size: large
+        text:
+          en: This is where the project story goes. Describe the brief, your **process**, and what you learned.
+          ar: "هنا تُكتب قصة المشروع: الفكرة، و**مراحل العمل**، وما تعلمته."
+
+  # Prefab instance: only the props change, the layout comes from src/content/prefabs/showcase-grid.yaml
+  - prefab: showcase-grid
+    props:
+      title: { en: Final renders, ar: اللقطات النهائية }
+      images:
+        - portfolio/3d/scifi-corridor/render-01
+        - { publicId: portfolio/3d/scifi-corridor/render-02, caption: { en: Volumetric fog pass, ar: طبقة الضباب الحجمي } }
+        - portfolio/3d/scifi-corridor/render-03
+
+  # Prefab variant: showcase-slider extends showcase-grid
+  - prefab: showcase-slider
+    props:
+      title: { en: Lighting passes, ar: مراحل الإضاءة }
+      images: [portfolio/3d/scifi-corridor/light-01, portfolio/3d/scifi-corridor/light-02]
+
+  # Same prefab again, with a Unity-style override on this instance only
+  - prefab: showcase-grid
+    props:
+      title: { en: Wireframes, ar: الإطارات السلكية }
+      columns: 2
+      images: [portfolio/3d/scifi-corridor/wire-01, portfolio/3d/scifi-corridor/wire-02]
+    overrides:
+      theme: paper
+      blocks.2.layout: masonry
+
+  - prefab: video-showcase
+    props:
+      title: { en: Turntable, ar: عرض دوراني }
+      id: aqz-KE-bpKQ
+
+  - prefab: document-feature
+    props:
+      title: { en: Process breakdown, ar: شرح مراحل العمل }
+      text: { en: "Blockout, modular kit, and lighting passes in Cycles.", ar: "التخطيط الأولي، ثم القطع المعيارية، ثم مراحل الإضاءة في Cycles." }
+      pdf: portfolio/3d/scifi-corridor/breakdown

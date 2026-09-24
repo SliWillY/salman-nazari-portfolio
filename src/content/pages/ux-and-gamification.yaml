@@ -1,0 +1,31 @@
+title: { en: UX & Gamification, ar: تجربة المستخدم والتلعيب }
+description:
+  en: Human-centered journeys, working prototypes, and experiments designed around motivation.
+  ar: رحلات تتمحور حول الإنسان ونماذج أولية وتجارب مصممة حول الدافع.
+eyebrow: { en: Systems and behavior, ar: الأنظمة والسلوك }
+
+sections:
+  - blocks:
+      - type: columns
+        columns:
+          - blocks:
+              - type: heading
+                level: 3
+                text: { en: Working prototypes, ar: النماذج الأولية }
+              - type: text
+                text:
+                  en: I designed and built Tanafusi to test how a behavioral hypothesis could become a usable and measurable experiment within a four-week summer program.
+                  ar: صممت وطورت تنافسي لاختبار كيف يمكن تحويل فرضية سلوكية إلى تجربة قابلة للاستخدام والقياس خلال برنامج صيفي مدته أربعة أسابيع.
+              - type: button
+                style: outline
+                label: { en: Explore the Tanafusi case study, ar: استكشف دراسة حالة تنافسي }
+                href: https://sliwilly.github.io/tanafusi-case-study/
+          - blocks:
+              - type: heading
+                level: 3
+                text: { en: Studies & research, ar: الدراسات والأبحاث }
+              - type: text
+                text:
+                  en: Research projects examine the relationship between user journeys, feedback, incentives, and meaningful participation.
+                  ar: تبحث هذه المشاريع في العلاقة بين رحلات المستخدم والتغذية الراجعة والحوافز والمشاركة ذات المعنى.
+      - type: projects

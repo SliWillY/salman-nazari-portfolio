@@ -1,0 +1,19 @@
+---
+import CloudinaryImage from '../../components/CloudinaryImage.astro';
+import Lightbox from '../../components/Lightbox.astro';
+import { cloudinaryUrl } from '../../lib/cloudinary';
+import { t } from '../../lib/i18n';
+import { href } from '../../lib/site';
+const { block, lang } = Astro.props;
+const alt = t(block.alt ?? block.caption, lang);
+const link = block.href ? href(block.href, lang) : block.lightbox && block.publicId ? cloudinaryUrl(block.publicId, 2400) : undefined;
+---
+<figure class:list={['b-image', `size-${block.size}`, `fit-${block.fit}`, { 'has-aspect': block.aspect }]} style={block.aspect ? `--media-aspect: ${block.aspect}` : undefined}>
+  {link ? (
+    <a href={link} data-lightbox={block.lightbox && !block.href ? '' : undefined} data-caption={t(block.caption, lang)}><CloudinaryImage publicId={block.publicId} alt={alt} /></a>
+  ) : (
+    <CloudinaryImage publicId={block.publicId} alt={alt} />
+  )}
+  {block.caption && <figcaption>{t(block.caption, lang)}</figcaption>}
+</figure>
+{block.lightbox && <Lightbox />}

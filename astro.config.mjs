@@ -1,10 +1,11 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
+import contentSchema from './src/integrations/content-schema.ts';
 
 export default defineConfig({
   site: process.env.SITE_URL || 'http://localhost:4321',
   base: process.env.BASE_PATH || '/',
   output: 'static',
-  integrations: [sitemap()],
+  integrations: [sitemap(), contentSchema()],
   build: { format: 'directory' }
 });

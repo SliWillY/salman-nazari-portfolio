@@ -1,0 +1,7 @@
+{
+  "yaml.schemas": {
+    "./.vscode/schemas/page.schema.json": "src/content/pages/*.yaml",
+    "./.vscode/schemas/project.schema.json": "src/content/projects/*/*.yaml",
+    "./.vscode/schemas/prefab.schema.json": "src/content/prefabs/*.yaml"
+  }
+}

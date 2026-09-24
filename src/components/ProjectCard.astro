@@ -1,0 +1,16 @@
+---
+import CloudinaryImage from './CloudinaryImage.astro';
+import { coverOf } from '../lib/projects';
+import { t } from '../lib/i18n';
+import { path } from '../lib/site';
+const { project, lang } = Astro.props;
+const { title, summary, year, draft } = project.data;
+---
+<a class="project-card" href={path(`/${lang}/${project.category}/${project.route}/`)}>
+  <div class="project-card-media"><CloudinaryImage publicId={coverOf(project)} alt="" width={900} sizes="(max-width: 800px) 100vw, 560px" /></div>
+  <div class="project-card-body">
+    <h2>{t(title, lang)}{draft && <span class="draft-badge">draft</span>}</h2>
+    <p>{t(summary, lang)}</p>
+    {year && <span class="project-year">{year}</span>}
+  </div>
+</a>

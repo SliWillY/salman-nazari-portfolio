@@ -1,13 +1,20 @@
 ---
-import { cloudinarySrcSet, cloudinaryUrl } from '../lib/cloudinary';
-const { publicId, alt = '', width = 1600, eager = false } = Astro.props;
+import { cloudinarySrcSet, cloudinaryUrl, placeholderImage } from '../lib/cloudinary';
+const { publicId, alt = '', width = 1600, eager = false, sizes = '(max-width: 700px) 100vw, (max-width: 1100px) 80vw, 1200px' } = Astro.props;
+const placeholder = placeholderImage(import.meta.env.DEV ? publicId : '');
 ---
-<img
-  src={cloudinaryUrl(publicId, width)}
-  srcset={cloudinarySrcSet(publicId)}
-  sizes="(max-width: 700px) 100vw, (max-width: 1100px) 80vw, 1200px"
-  alt={alt}
-  loading={eager ? 'eager' : 'lazy'}
-  decoding="async"
-  fetchpriority={eager ? 'high' : undefined}
-/>
+{publicId ? (
+  <img
+    src={cloudinaryUrl(publicId, width)}
+    srcset={cloudinarySrcSet(publicId)}
+    sizes={sizes}
+    alt={alt}
+    loading={eager ? 'eager' : 'lazy'}
+    decoding="async"
+    fetchpriority={eager ? 'high' : undefined}
+    data-placeholder={placeholder}
+    onerror="this.onerror=null;this.removeAttribute('srcset');this.src=this.dataset.placeholder;"
+  />
+) : (
+  <img src={placeholder} alt={alt} />
+)}

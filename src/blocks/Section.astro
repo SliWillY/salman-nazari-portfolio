@@ -1,0 +1,16 @@
+---
+import BlockRenderer from './BlockRenderer.astro';
+import { cloudinaryUrl } from '../lib/cloudinary';
+const { section, lang, ctx } = Astro.props;
+const bg = section.background?.image;
+const style = bg ? `--section-image: url('${cloudinaryUrl(bg, 2400)}'); --section-overlay: ${section.background.overlay}` : undefined;
+---
+<section
+  id={section.id}
+  class:list={['section', `theme-${section.theme}`, `width-${section.width}`, `spacing-${section.spacing}`, `align-${section.align}`, { 'has-background': bg }]}
+  style={style}
+>
+  <div class="section-inner">
+    {section.blocks.map((block: any) => <BlockRenderer block={block} lang={lang} ctx={ctx} />)}
+  </div>
+</section>

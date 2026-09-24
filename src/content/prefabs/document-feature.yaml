@@ -1,0 +1,29 @@
+name: Document feature
+description: "Presents a design document (GDD, LDD, case study PDF) — explanation on one side, the PDF card on the other."
+props:
+  title: { en: Game Design Document, ar: وثيقة تصميم اللعبة }
+  text: ""
+  pdf: ""
+  embed: false
+  theme: light
+section:
+  theme: "{{theme}}"
+  blocks:
+    - type: columns
+      widths: "3fr 2fr"
+      valign: center
+      columns:
+        - blocks:
+            - type: heading
+              text: "{{title}}"
+            - type: text
+              text: "{{text}}"
+        - blocks:
+            - type: pdf
+              publicId: "{{pdf}}"
+              title: "{{title}}"
+              embed: "{{embed}}"
+example:
+  title: { en: Level Design Document, ar: وثيقة تصميم المراحل }
+  text: { en: "Flow, pacing and encounter layout for the temple level.", ar: "التدفق والإيقاع وتوزيع المواجهات في مرحلة المعبد." }
+  pdf: portfolio/games/example/ldd

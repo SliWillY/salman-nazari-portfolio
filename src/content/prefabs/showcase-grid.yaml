@@ -1,0 +1,26 @@
+name: Showcase grid
+description: "Heading, short text and an image grid on a themed band. The workhorse for renders, game art and screenshots."
+props:
+  title: { en: Untitled work, ar: عمل بدون عنوان }
+  text: ""
+  images: [""]
+  theme: dark
+  layout: grid
+  columns: 3
+  aspect: "4 / 3"
+section:
+  theme: "{{theme}}"
+  width: wide
+  blocks:
+    - type: heading
+      text: "{{title}}"
+    - type: text
+      text: "{{text}}"
+    - type: gallery
+      layout: "{{layout}}"
+      columns: "{{columns}}"
+      aspect: "{{aspect}}"
+      items: "{{images}}"
+example:
+  title: { en: Pixel Art, ar: فن البكسل }
+  images: [portfolio/games/example/pixel-01, portfolio/games/example/pixel-02, portfolio/games/example/pixel-03]

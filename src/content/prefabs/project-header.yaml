@@ -1,0 +1,15 @@
+name: Project header
+description: "Full-width cover image with the project title and info on top. Use with `header: none` in the project file."
+props:
+  cover: ""
+  overlay: 0.55
+section:
+  theme: dark
+  width: full
+  spacing: l
+  background:
+    image: "{{cover}}"
+    overlay: "{{overlay}}"
+  blocks:
+    - type: hero
+    - type: project-meta
