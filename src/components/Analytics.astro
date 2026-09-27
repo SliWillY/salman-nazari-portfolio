@@ -1,0 +1,57 @@
+---
+// Google Analytics 4. The tag loads in production builds only, so local dev visits aren't counted.
+// GA's enhanced measurement already tracks page views, scrolling, outbound links (e.g. the Tanafusi case study),
+// file downloads and YouTube plays. The script below adds portfolio-specific clicks; in dev it logs them instead.
+---
+{import.meta.env.PROD && (
+  <Fragment>
+    <!-- Google tag (gtag.js) -->
+    <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-B5MPLJRW2E"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      // After the root or a /go/ share link redirects here, report the site the visitor originally came from.
+      var entryReferrer;
+      try { entryReferrer = sessionStorage.getItem('entry-referrer'); sessionStorage.removeItem('entry-referrer'); } catch (e) {}
+      gtag('config', 'G-B5MPLJRW2E', entryReferrer ? { page_referrer: entryReferrer } : {});
+    </script>
+  </Fragment>
+)}
+
+<script>
+  // Custom events. Parameters to register in GA (Admin → Custom definitions → event-scoped):
+  // content_type, item_id, language, theme, method.
+  type Params = Record<string, string>;
+  const send = (name: string, params: Params) => {
+    const gtag = (window as { gtag?: (...args: unknown[]) => void }).gtag;
+    if (gtag) gtag('event', name, params);
+    else if (import.meta.env.DEV) console.debug('[analytics]', name, params);
+  };
+  const lastSegment = (href: string) => new URL(href, location.href).pathname.split('/').filter(Boolean).pop() ?? '';
+
+  // Bubble phase: runs after each control's own handler, so e.g. the theme has already switched.
+  document.addEventListener('click', (event) => {
+    const target = event.target as Element;
+    const link = target.closest<HTMLAnchorElement>('a[href]');
+
+    // Home page category cards and project cards: which fields and projects people open.
+    const card = target.closest<HTMLAnchorElement>('.feature-card, .project-card');
+    if (card) return send('select_content', { content_type: card.classList.contains('feature-card') ? 'category' : 'project', item_id: lastSegment(card.href) });
+
+    // Images, certificates and document pages opened in the lightbox.
+    const zoom = target.closest<HTMLAnchorElement>('a[data-lightbox]');
+    if (zoom) return send('select_content', { content_type: 'image', item_id: zoom.dataset.caption || zoom.querySelector('img')?.alt || lastSegment(zoom.href) });
+
+    // Tanafusi-style screen stacks: which screens people raise.
+    const screen = target.closest<HTMLElement>('.stack-card');
+    if (screen) return send('select_content', { content_type: 'screen', item_id: screen.dataset.caption ?? '' });
+
+    if (target.closest('.lang-switch')) return send('language_switch', { language: target.closest('.lang-switch')!.getAttribute('hreflang') ?? '' });
+    if (target.closest('[data-theme-toggle]')) return send('theme_change', { theme: document.documentElement.dataset.theme ?? '' });
+
+    // Contact: email / phone links (GA doesn't count these as outbound clicks).
+    if (link && /^(mailto|tel):/.test(link.getAttribute('href')!)) return send('contact', { method: link.href.startsWith('mailto:') ? 'email' : 'phone' });
+  });
+</script>

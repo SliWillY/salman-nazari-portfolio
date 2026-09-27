@@ -6,6 +6,7 @@ export default defineConfig({
   site: process.env.SITE_URL || 'http://localhost:4321',
   base: process.env.BASE_PATH || '/',
   output: 'static',
-  integrations: [sitemap(), contentSchema()],
+  // /go/ share links are redirects, not pages: keep them out of the sitemap.
+  integrations: [sitemap({ filter: (page) => !page.includes('/go/') }), contentSchema()],
   build: { format: 'directory' }
 });

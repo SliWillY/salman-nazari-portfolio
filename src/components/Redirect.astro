@@ -1,0 +1,27 @@
+---
+// Instant redirect page (static hosting has no server redirects). Keeps the visitor's query string and #hash,
+// adds any `params` (e.g. UTM tags for share links), and hands the original external referrer to the next page,
+// where Analytics.astro reports it, so Google Analytics still credits the site the visitor came from.
+const { to, params = {} } = Astro.props as { to: string; params?: Record<string, string> };
+const target = `${to}${Object.keys(params).length ? `?${new URLSearchParams(params)}` : ''}`;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex" />
+    <title>Salman Nazari</title>
+    <script is:inline define:vars={{ target }}>
+      try {
+        if (document.referrer && new URL(document.referrer).host !== location.host) sessionStorage.setItem('entry-referrer', document.referrer);
+      } catch {}
+      const url = new URL(target, location.href);
+      new URLSearchParams(location.search).forEach((value, key) => url.searchParams.set(key, value));
+      url.hash = location.hash;
+      location.replace(url);
+    </script>
+    <meta http-equiv="refresh" content={`0; url=${target}`} />
+    <link rel="canonical" href={new URL(to, Astro.site)} />
+  </head>
+  <body><a href={target}>Salman Nazari</a></body>
+</html>

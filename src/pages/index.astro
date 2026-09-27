@@ -1,4 +1,6 @@
 ---
+// The site root opens the English home page, keeping any ?utm_… tags and the referrer (see Redirect.astro).
+import Redirect from '../components/Redirect.astro';
 import { path } from '../lib/site';
-return Astro.redirect(path('en/'));
 ---
+<Redirect to={path('en/')} />

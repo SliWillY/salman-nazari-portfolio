@@ -150,6 +150,26 @@ Images not uploaded yet show a "Media coming soon" placeholder (naming the expec
 
 Suggested folders: `portfolio/{3d,games,ux}/<project>/`, `portfolio/covers/`, `portfolio/profile/`, `portfolio/certificates/`.
 
+## Analytics
+
+Google Analytics 4 (`src/components/Analytics.astro`) loads on the deployed site only; in `pnpm dev` the custom events are logged to the browser console instead.
+
+**Where visitors come from.** Share a different link in each place, then see them in GA under *Reports → Acquisition → Traffic acquisition* (dimension *Session source* / *Session medium*):
+
+- Short links: add a line to `src/lib/share-links.ts`, e.g. `linkedin: { medium: 'social' }`, and share `https://sliwilly.github.io/salman-nazari-portfolio/go/linkedin/`.
+- Or tag any page URL by hand: `…/en/games-dev/?utm_source=linkedin&utm_medium=social`.
+
+**Custom events** (on top of GA's automatic page views, scrolls, outbound links and file downloads):
+
+| Event | When | Parameters |
+| --- | --- | --- |
+| `select_content` | a home category card, project card, lightbox image or screen-stack screen is clicked | `content_type` (category, project, image, screen), `item_id` |
+| `language_switch` | the EN / ع switch | `language` |
+| `theme_change` | the theme toggle | `theme` |
+| `contact` | an email or phone link | `method` |
+
+To use the parameters in GA reports, register each one once under *Admin → Custom definitions → Create custom dimension* (scope: Event).
+
 ## GitHub Pages
 
 `.github/workflows/deploy.yml` builds and deploys `main` to GitHub Pages. Enable Pages for the repository with **GitHub Actions** as the source.

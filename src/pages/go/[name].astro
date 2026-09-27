@@ -1,0 +1,14 @@
+---
+// Share links: /go/<name>/ → home page tagged with UTM parameters. The list lives in src/lib/share-links.ts.
+import Redirect from '../../components/Redirect.astro';
+import { path } from '../../lib/site';
+import { shareLinks, type ShareLink } from '../../lib/share-links';
+
+export function getStaticPaths() {
+  return Object.entries(shareLinks).map(([name, link]) => ({ params: { name }, props: { link } }));
+}
+
+const { name } = Astro.params;
+const { link } = Astro.props as { link: ShareLink };
+---
+<Redirect to={path(`${link.lang ?? 'en'}/`)} params={{ utm_source: name!, utm_medium: link.medium, utm_campaign: 'share_link' }} />
