@@ -62,7 +62,7 @@ The menu is defined in `src/lib/site.ts`.
 
 ## Projects
 
-Each project is one file: `src/content/projects/<category>/<route>.yaml`, where category is `3d-renders`, `games-dev`, `ux-and-gamification` or `animations`. It gets its own page at `/<lang>/<category>/<route>/`, and a card on the category page wherever that page has a `type: projects` block.
+Each project is one file: `src/content/projects/<category>/<route>.yaml`, where category is `3d-renders`, `games-dev` or `ux-and-gamification`. It gets its own page at `/<lang>/<category>/<route>/`, and a card on the category page wherever that page has a `type: projects` block.
 
 Project fields: `title`, `summary`, `cover`, `year`, `role`, `tools`, `order` (lower first), `draft`, `header`, `sections`. Start by copying `src/content/projects/3d-renders/example-scifi-corridor.yaml`.
 
@@ -148,7 +148,7 @@ Cloud name `vwkbtzdh` (override with `PUBLIC_CLOUDINARY_CLOUD_NAME`).
 
 Images not uploaded yet show a "Media coming soon" placeholder (naming the expected public ID in dev). Long videos: YouTube/Vimeo (`id` is the part after `watch?v=` or `vimeo.com/`); short clips can use Cloudinary.
 
-Suggested folders: `portfolio/{3d,games,ux,animations}/<project>/`, `portfolio/covers/`, `portfolio/profile/`, `portfolio/certificates/`.
+Suggested folders: `portfolio/{3d,games,ux}/<project>/`, `portfolio/covers/`, `portfolio/profile/`, `portfolio/certificates/`.
 
 ## GitHub Pages
 

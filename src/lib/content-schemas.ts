@@ -4,7 +4,7 @@ import { L } from './i18n';
 // Shapes of the YAML files. Blocks are checked loosely here and strictly
 // after prefabs are expanded (see src/lib/prefabs.ts).
 
-export const categories = ['3d-renders', 'games-dev', 'ux-and-gamification', 'animations'] as const;
+export const categories = ['3d-renders', 'games-dev', 'ux-and-gamification'] as const;
 
 export const prefabInstance = z.object({
   prefab: z.string(),

@@ -6,13 +6,12 @@ export const nav = [
   { slug: '3d-renders', en: '3D Renders', ar: 'تصاميم ثلاثية الأبعاد' },
   { slug: 'games-dev', en: 'Games Dev', ar: 'تطوير الألعاب' },
   { slug: 'ux-and-gamification', en: 'UX & Gamification', ar: 'تجربة المستخدم والتلعيب' },
-  { slug: 'animations', en: 'Animations', ar: 'الرسوم المتحركة' },
   { slug: 'certificates', en: 'Certificates', ar: 'الشهادات' }
 ];
 
 export const labels = {
-  en: { menu: 'Menu', close: 'Close menu', home: 'Home', explore: 'Explore', contact: 'Contact', language: 'Language', back: 'Back to home', skip: 'Skip to content', nav: 'Main', tagline: 'Game, 3D & UX Designer' },
-  ar: { menu: 'القائمة', close: 'إغلاق القائمة', home: 'الرئيسية', explore: 'استكشف', contact: 'تواصل', language: 'اللغة', back: 'العودة للرئيسية', skip: 'انتقل إلى المحتوى', nav: 'التنقل الرئيسي', tagline: 'مصمم ألعاب وثلاثي الأبعاد وتجربة مستخدم' }
+  en: { menu: 'Menu', close: 'Close menu', home: 'Home', explore: 'Explore', contact: 'Contact', language: 'Language', back: 'Back to home', skip: 'Skip to content', nav: 'Main', homeLink: 'Salman Nazari — home' },
+  ar: { menu: 'القائمة', close: 'إغلاق القائمة', home: 'الرئيسية', explore: 'استكشف', contact: 'تواصل', language: 'اللغة', back: 'العودة للرئيسية', skip: 'انتقل إلى المحتوى', nav: 'التنقل الرئيسي', homeLink: 'سلمان نظري — الصفحة الرئيسية' }
 } as const;
 
 // Theme toggle wording. The button's label reads e.g. "Theme: Dark. Switch to System."

@@ -1,0 +1,9 @@
+---
+// "salman.nazari" text wordmark, used as the home link. Always LTR, also on Arabic pages;
+// the accessible name is localized. Styles: .wordmark in global.css.
+import { labels, path, type Lang } from '../lib/site';
+const { lang, class: className } = Astro.props as { lang: Lang; class?: string };
+---
+<a href={path(`/${lang}/`)} class:list={['wordmark', className]} aria-label={labels[lang].homeLink} dir="ltr">
+  <span aria-hidden="true">salman<span class="wordmark__dot">.</span><span class="wordmark__accent">nazari</span></span>
+</a>

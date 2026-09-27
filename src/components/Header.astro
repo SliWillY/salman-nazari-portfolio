@@ -1,5 +1,5 @@
 ---
-import Logo from './Logo.astro';
+import Wordmark from './Wordmark.astro';
 import { nav, labels, themeLabels, path, type Lang } from '../lib/site';
 const { lang, currentSlug } = Astro.props as { lang: Lang; currentSlug: string };
 const t = labels[lang];
@@ -9,16 +9,10 @@ const languages = [{ code: 'en' as Lang, label: 'EN', name: 'English' }, { code:
 const target = languages.find((l) => l.code !== lang)!;
 ---
 <a class="skip-link" href="#main">{t.skip}</a>
-<!-- Always laid out left-to-right so logo, menu and language switch stay put when switching languages. -->
+<!-- Always laid out left-to-right so wordmark, menu and language switch stay put when switching languages. -->
 <header class="site-header" dir="ltr" data-header>
   <div class="site-header-inner">
-    <a class="brand" href={path(`/${lang}/`)} aria-label={`Salman Nazari — ${t.home}`}>
-      <Logo class="brand-mark" />
-      <span class="brand-text">
-        <span class="brand-name">Salman Nazari</span>
-        <span class="brand-tagline" lang={lang} dir="auto">{t.tagline}</span>
-      </span>
-    </a>
+    <Wordmark lang={lang} />
 
     <nav class="primary-nav" id="primary-nav" aria-label={t.nav} data-nav>
       <ul>
@@ -70,7 +64,7 @@ const target = languages.find((l) => l.code !== lang)!;
     if (!isOpen()) return;
     if (event.key === 'Escape') { setOpen(false); toggle.focus(); return; }
     if (event.key !== 'Tab') return;
-    // Keep Tab cycling inside the header (logo, menu links, language switch, close button).
+    // Keep Tab cycling inside the header (wordmark, theme toggle, menu links, language switch, close button).
     const items = [...header.querySelectorAll<HTMLElement>('a[href], button')];
     const first = items[0];
     const last = items[items.length - 1];

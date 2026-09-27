@@ -1271,8 +1271,7 @@
               "enum": [
                 "3d-renders",
                 "games-dev",
-                "ux-and-gamification",
-                "animations"
+                "ux-and-gamification"
               ]
             },
             "columns": {
