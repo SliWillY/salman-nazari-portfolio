@@ -1,0 +1,19 @@
+---
+// "SN" monogram drawn as strokes (no font dependency) with an accent offset copy
+// that reads as a 3D extrusion. public/favicon.svg uses the same paths.
+// The tile takes the text colour and the letters the page colour, so it inverts with the theme.
+const { size = 40, class: className } = Astro.props;
+---
+<svg class={className} width={size} height={size} viewBox="0 0 40 40" aria-hidden="true" focusable="false">
+  <rect width="40" height="40" rx="10" fill="currentColor" />
+  <g fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" transform="translate(-0.9 -0.5)">
+    <g stroke="var(--logo-accent, var(--accent))" transform="translate(1.8 1.8)">
+      <path d="M17.2 13.4A4.5 4.5 0 1 0 13 19.5A4.5 4.5 0 1 1 8.8 25.6" />
+      <path d="M21.5 28.5V10.5L31 28.5V10.5" />
+    </g>
+    <g stroke="var(--logo-ink, var(--bg))">
+      <path d="M17.2 13.4A4.5 4.5 0 1 0 13 19.5A4.5 4.5 0 1 1 8.8 25.6" />
+      <path d="M21.5 28.5V10.5L31 28.5V10.5" />
+    </g>
+  </g>
+</svg>

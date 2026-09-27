@@ -1,0 +1,88 @@
+---
+// Arrow/keyboard paging for horizontal scroll-snap sliders marked data-gallery:
+// a .gallery-track of slides, .gallery-btn[data-dir] buttons and an optional [data-current] counter.
+// With data-bounded the slider stops at the ends (no wrap-around) and disables the arrow that can't move,
+// so the first page makes it obvious which way "next" is, in LTR and RTL.
+// Used by the gallery slider and the PDF page slider; Astro bundles the script once per page.
+---
+<script>
+  const DURATION = 220; // ms per page turn
+  const easeOut = (t: number) => 1 - (1 - t) ** 3;
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+
+  for (const gallery of document.querySelectorAll<HTMLElement>('[data-gallery]')) {
+    const track = gallery.querySelector<HTMLElement>('.gallery-track')!;
+    const slides = [...track.children] as HTMLElement[];
+    const current = gallery.querySelector<HTMLElement>('[data-current]');
+    const buttons = [...gallery.querySelectorAll<HTMLButtonElement>('.gallery-btn')];
+    const bounded = gallery.hasAttribute('data-bounded');
+    const count = slides.length;
+    let frame = 0;
+    let target: number | null = null; // page being animated to, so quick repeated clicks keep advancing
+
+    // In RTL layouts scrollLeft runs negative, so "next" moves left.
+    const sign = () => (getComputedStyle(track).direction === 'rtl' ? -1 : 1);
+    const index = () => Math.round(Math.abs(track.scrollLeft) / track.clientWidth);
+
+    // Time-based (not frame-based) animation: same speed at 60, 120, 144 or 240 Hz, just smoother on faster screens.
+    // Snapping and CSS smooth scrolling are paused while it runs so they don't fight the per-frame updates.
+    function stop() {
+      cancelAnimationFrame(frame);
+      target = null;
+      track.style.scrollSnapType = '';
+      track.style.scrollBehavior = '';
+    }
+
+    function animateTo(page: number) {
+      stop();
+      const from = track.scrollLeft;
+      const to = sign() * page * track.clientWidth;
+      if (reducedMotion.matches || from === to) {
+        track.scrollLeft = to;
+        return;
+      }
+      target = page;
+      update();
+      track.style.scrollSnapType = 'none';
+      track.style.scrollBehavior = 'auto';
+      const start = performance.now();
+      const step = (now: number) => {
+        const t = Math.min((now - start) / DURATION, 1);
+        track.scrollLeft = from + (to - from) * easeOut(t);
+        if (t < 1) frame = requestAnimationFrame(step);
+        else stop();
+      };
+      frame = requestAnimationFrame(step);
+    }
+
+    const go = (dir: number) => {
+      const next = (target ?? index()) + dir;
+      animateTo(bounded ? Math.min(Math.max(next, 0), count - 1) : (next + count) % count);
+    };
+
+    // Load the neighbouring pages early so a page never slides in blank.
+    const preload = (i: number) => {
+      for (const n of [i - 1, i + 1, i + 2]) slides[n]?.querySelectorAll('img').forEach((img) => (img.loading = 'eager'));
+    };
+
+    function update() {
+      const i = target ?? index();
+      if (current) current.textContent = String(i + 1);
+      preload(i);
+      if (!bounded) return;
+      for (const btn of buttons) btn.disabled = btn.dataset.dir === '-1' ? i === 0 : i === count - 1;
+    }
+
+    buttons.forEach((btn) => btn.addEventListener('click', () => go(Number(btn.dataset.dir))));
+    track.addEventListener('keydown', (event) => {
+      if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+      event.preventDefault();
+      go((event.key === 'ArrowRight' ? 1 : -1) * sign());
+    });
+    // A touch/trackpad swipe takes over from a running animation.
+    track.addEventListener('pointerdown', () => { if (target !== null) stop(); });
+    track.addEventListener('wheel', () => { if (target !== null) stop(); }, { passive: true });
+    track.addEventListener('scroll', update, { passive: true });
+    update();
+  }
+</script>

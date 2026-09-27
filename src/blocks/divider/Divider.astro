@@ -1,4 +1,8 @@
 ---
 const { block } = Astro.props;
 ---
-<hr class:list={['b-divider', `style-${block.style}`]} />
+{block.style === 'ornament' ? (
+  <div class="b-divider style-ornament" role="separator"><span class="dot"></span><span class="diamond"></span><span class="dot"></span></div>
+) : (
+  <hr class:list={['b-divider', `style-${block.style}`]} />
+)}

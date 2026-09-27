@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
+  <style>.tile{fill:#20201e}.ink{stroke:#f4f2ed}@media (prefers-color-scheme:dark){.tile{fill:#ece9e1}.ink{stroke:#1a1917}}</style>
+  <rect class="tile" width="40" height="40" rx="10"/>
+  <g fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" transform="translate(-0.9 -0.5)">
+    <g stroke="#c95738" transform="translate(1.8 1.8)">
+      <path d="M17.2 13.4A4.5 4.5 0 1 0 13 19.5A4.5 4.5 0 1 1 8.8 25.6"/>
+      <path d="M21.5 28.5V10.5L31 28.5V10.5"/>
+    </g>
+    <g class="ink">
+      <path d="M17.2 13.4A4.5 4.5 0 1 0 13 19.5A4.5 4.5 0 1 1 8.8 25.6"/>
+      <path d="M21.5 28.5V10.5L31 28.5V10.5"/>
+    </g>
+  </g>
+</svg>

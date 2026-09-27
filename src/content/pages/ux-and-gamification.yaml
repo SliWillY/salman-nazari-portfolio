@@ -5,27 +5,95 @@ description:
 eyebrow: { en: Systems and behavior, ar: الأنظمة والسلوك }
 
 sections:
+  # Tanafusi: featured case study — summary, key signals, one framed screenshot; the button opens the full study.
   - blocks:
-      - type: columns
-        columns:
-          - blocks:
-              - type: heading
-                level: 3
-                text: { en: Working prototypes, ar: النماذج الأولية }
-              - type: text
-                text:
-                  en: I designed and built Tanafusi to test how a behavioral hypothesis could become a usable and measurable experiment within a four-week summer program.
-                  ar: صممت وطورت تنافسي لاختبار كيف يمكن تحويل فرضية سلوكية إلى تجربة قابلة للاستخدام والقياس خلال برنامج صيفي مدته أربعة أسابيع.
-              - type: button
-                style: outline
-                label: { en: Explore the Tanafusi case study, ar: استكشف دراسة حالة تنافسي }
-                href: https://sliwilly.github.io/tanafusi-case-study/
-          - blocks:
-              - type: heading
-                level: 3
-                text: { en: Studies & research, ar: الدراسات والأبحاث }
-              - type: text
-                text:
-                  en: Research projects examine the relationship between user journeys, feedback, incentives, and meaningful participation.
-                  ar: تبحث هذه المشاريع في العلاقة بين رحلات المستخدم والتغذية الراجعة والحوافز والمشاركة ذات المعنى.
-      - type: projects
+      - type: image-text
+        image: "03-student-analytics_aeokka"
+        alt: { en: "Tanafusi student analytics screen", ar: "شاشة تحليلات الطالب في تنافسي" }
+        aspect: "16 / 10"
+        frame: browser
+        # Screen stack: hover / tap the screenshot to fan these out. Fill in each Cloudinary public ID after uploading
+        # the screenshots from the case study (assets/screenshots/); entries with an empty image are skipped, and the
+        # stack switches on once at least two screens have an ID.
+        gallery:
+          - image: "03-student-analytics_aeokka"
+            alt: { en: "Tanafusi student analytics screen", ar: "شاشة تحليلات الطالب في تنافسي" }
+            caption: { en: Student analytics, ar: تحليلات الطالب }
+          - image: "11-student-dashboard_1_fz9obr"   # TODO: 11-student-dashboard.webp
+            alt: { en: "Student dashboard showing level, progress and ranking", ar: "لوحة الطالب تعرض المستوى والتقدم والترتيب" }
+            caption: { en: Student dashboard, ar: لوحة الطالب }
+          - image: "02-daily-logging_hfka5d"   # TODO: 02-daily-logging.webp
+            alt: { en: "Daily activity logging screen", ar: "شاشة تسجيل النشاط اليومي" }
+            caption: { en: Daily logging, ar: التسجيل اليومي }
+          - image: "04-admin-leaderboards_bcbjfp"   # TODO: 04-admin-leaderboards.webp
+            alt: { en: "Admin view of individual, team and clan leaderboards", ar: "عرض المشرف للوحات الصدارة للأفراد والفرق والعشائر" }
+            caption: { en: Leaderboards, ar: لوحات الصدارة }
+          - image: "01-admin-dashboard_bhjysm"   # TODO: 09-student-store.webp
+            alt: { en: "Admin Dashboard", ar: "لوحة المشرف" }
+            caption: { en: Admin Dashboard, ar: لوحة المشرف }
+        eyebrow: { en: "Case study · Web app · 4-week program", ar: "دراسة حالة · تطبيق ويب · برنامج من 4 أسابيع" }
+        heading: { en: Tanafusi, ar: تنافسي }
+        level: 2
+        text:
+          en: A gamification platform for a four-week summer program. Students log daily activity and earn points, streaks and rewards, while teams and clans turn that effort into belonging.
+          ar: منصة تلعيب لبرنامج صيفي مدته أربعة أسابيع. يسجّل الطلاب نشاطهم اليومي ويكسبون النقاط والسلاسل والمكافآت، بينما تحوّل الفرق والعشائر هذا الجهد إلى انتماء.
+        details:
+          - label: { en: Hypothesis, ar: الفرضية }
+            text: { en: "External rewards start the movement; belonging gives it social meaning.", ar: "المكافآت الخارجية تبدأ الحركة، والانتماء يمنحها معنى اجتماعياً." }
+          - label: { en: My role, ar: دوري }
+            tags:
+              - { en: Research, ar: البحث }
+              - { en: System design, ar: تصميم النظام }
+              - { en: UX, ar: تجربة المستخدم }
+              - { en: Build, ar: التطوير }
+              - { en: Testing, ar: الاختبار }
+          - label: { en: Stack, ar: التقنيات }
+            tags: [Flask, PostgreSQL, JavaScript]
+        button:
+          label: { en: Read the full case study, ar: اقرأ دراسة الحالة كاملة }
+          href: https://sliwilly.github.io/tanafusi-case-study/
+          style: primary
+
+  # Studies & research: own light band, centred header on the same axis as the decks; each study numbered with method chips.
+  - theme: light
+    spacing: l
+    align: center
+    blocks:
+      - type: heading
+        level: 2
+        eyebrow: { en: Research, ar: الأبحاث }
+        text: { en: Studies & research, ar: الدراسات والأبحاث }
+      - type: text
+        text:
+          en: Research projects examine the relationship between user journeys, feedback, incentives, and meaningful participation.
+          ar: تبحث هذه المشاريع في العلاقة بين رحلات المستخدم والتغذية الراجعة والحوافز والمشاركة ذات المعنى.
+      - type: divider
+        style: ornament
+
+      - prefab: pdf-slider
+        props:
+          pdf: UX_resarch_AmazonPrimeVideo_crhlxg
+          pages: 18
+          eyebrow: { en: "Study 01 · UX research", ar: "دراسة 01 · بحث تجربة المستخدم" }
+          title: { en: "Amazon Prime Video: UX research & redesign", ar: "أمازون برايم فيديو: بحث تجربة المستخدم وإعادة التصميم" }
+          text: { en: "Personas, journey maps and wireframes that fix three friction points in Prime Video's mobile player.", ar: "شخصيات المستخدمين وخرائط الرحلة ونماذج أولية تعالج ثلاث نقاط احتكاك في مشغّل برايم فيديو على الجوال." }
+          tags:
+            - { en: Personas, ar: شخصيات المستخدمين }
+            - { en: Journey mapping, ar: خرائط الرحلة }
+            - { en: Pain points, ar: نقاط الألم }
+            - { en: Sketches, ar: الرسومات الأولية }
+            - { en: Wireframes, ar: النماذج الهيكلية }
+
+      - prefab: pdf-slider
+        props:
+          pdf: Quran_school_Gamification_pmddvo
+          pages: 22
+          eyebrow: { en: "Study 02 · Gamification design", ar: "دراسة 02 · تصميم التلعيب" }
+          title: { en: "Quran School: Gamification", ar: "مدرسة القرآن: التلعيب" }
+          text: { en: "Gamifying Quran schools with quests, XP and social play to bring students back after COVID-19.", ar: "تلعيب حلقات القرآن بالمهام ونقاط الخبرة واللعب الاجتماعي لإعادة الطلاب بعد جائحة كورونا." }
+          tags:
+            - { en: 6D framework, ar: إطار 6D }
+            - { en: Personas, ar: شخصيات المستخدمين }
+            - { en: Journey mapping, ar: خرائط الرحلة }
+            - { en: Progression loops, ar: حلقات التقدم }
+            - { en: Motivation design, ar: تصميم الدوافع }

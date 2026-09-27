@@ -3,9 +3,10 @@ import { t } from '../../lib/i18n';
 import { href } from '../../lib/site';
 const { block, lang } = Astro.props;
 const external = /^(https?:|mailto:)/.test(block.href);
+const arrow = lang === 'ar' ? '↖' : '↗';
 ---
 <div class:list={['b-button', block.align && `align-${block.align}`]}>
   <a class:list={['button', `button-${block.style}`]} href={href(block.href, lang)} target={external ? '_blank' : undefined} rel={external ? 'noreferrer' : undefined}>
-    {t(block.label, lang)}{external && <span aria-hidden="true"> ↗</span>}
+    {t(block.label, lang)}{external && <span aria-hidden="true"> {arrow}</span>}
   </a>
 </div>

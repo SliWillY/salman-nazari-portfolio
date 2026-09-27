@@ -69,6 +69,7 @@
           "enum": [
             "contact-cta",
             "document-feature",
+            "pdf-slider",
             "project-header",
             "section-title",
             "showcase-grid",
@@ -307,7 +308,8 @@
             "style": {
               "enum": [
                 "line",
-                "short"
+                "short",
+                "ornament"
               ],
               "default": "line"
             }
@@ -317,7 +319,7 @@
           ],
           "additionalProperties": false,
           "title": "Divider",
-          "description": "A horizontal line: full width or a short accent mark."
+          "description": "A horizontal line: full width, a short accent mark, or an `ornament` (fading lines around a small accent diamond) with generous space, to open a new group of content."
         },
         {
           "type": "object",
@@ -802,6 +804,28 @@
                 }
               ]
             },
+            "eyebrow": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "en": {
+                      "type": "string"
+                    },
+                    "ar": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "en"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            },
             "heading": {
               "anyOf": [
                 {
@@ -823,6 +847,17 @@
                   "additionalProperties": false
                 }
               ]
+            },
+            "level": {
+              "anyOf": [
+                {
+                  "const": 2
+                },
+                {
+                  "const": 3
+                }
+              ],
+              "default": 3
             },
             "text": {
               "anyOf": [
@@ -846,6 +881,87 @@
                 }
               ]
             },
+            "details": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "label": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "en": {
+                            "type": "string"
+                          },
+                          "ar": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "en"
+                        ],
+                        "additionalProperties": false
+                      }
+                    ]
+                  },
+                  "text": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "en": {
+                            "type": "string"
+                          },
+                          "ar": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "en"
+                        ],
+                        "additionalProperties": false
+                      }
+                    ]
+                  },
+                  "tags": {
+                    "type": "array",
+                    "items": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "en": {
+                              "type": "string"
+                            },
+                            "ar": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "en"
+                          ],
+                          "additionalProperties": false
+                        }
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "label"
+                ],
+                "additionalProperties": false
+              }
+            },
             "side": {
               "enum": [
                 "start",
@@ -856,6 +972,72 @@
             "aspect": {
               "type": "string",
               "default": "4 / 3"
+            },
+            "frame": {
+              "enum": [
+                "none",
+                "browser"
+              ],
+              "default": "none"
+            },
+            "gallery": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "image": {
+                    "type": "string"
+                  },
+                  "alt": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "en": {
+                            "type": "string"
+                          },
+                          "ar": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "en"
+                        ],
+                        "additionalProperties": false
+                      }
+                    ]
+                  },
+                  "caption": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "en": {
+                            "type": "string"
+                          },
+                          "ar": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "en"
+                        ],
+                        "additionalProperties": false
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "image"
+                ],
+                "additionalProperties": false
+              }
             },
             "button": {
               "type": "object",
@@ -884,6 +1066,13 @@
                 },
                 "href": {
                   "type": "string"
+                },
+                "style": {
+                  "enum": [
+                    "primary",
+                    "outline"
+                  ],
+                  "default": "outline"
                 }
               },
               "required": [
@@ -899,7 +1088,7 @@
           ],
           "additionalProperties": false,
           "title": "Image + Text",
-          "description": "An image beside a heading, Markdown text and an optional button. `side: end` puts the image on the other side."
+          "description": "An image beside a heading, Markdown text and an optional button. `side: end` puts the image on the other side. Optional: `eyebrow` above the heading, `details` rows (a label with text or chips) for things like hypothesis / role, and `frame: browser` to present a screenshot as a product, and `gallery` (extra screens) to turn it into a hover-to-reveal screen stack."
         },
         {
           "type": "object",
@@ -935,6 +1124,28 @@
                 }
               ]
             },
+            "eyebrow": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "en": {
+                      "type": "string"
+                    },
+                    "ar": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "en"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            },
             "text": {
               "anyOf": [
                 {
@@ -957,9 +1168,53 @@
                 }
               ]
             },
+            "tags": {
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "en": {
+                        "type": "string"
+                      },
+                      "ar": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "en"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              }
+            },
             "embed": {
               "type": "boolean",
               "default": false
+            },
+            "pages": {
+              "type": "number"
+            },
+            "layout": {
+              "enum": [
+                "stack",
+                "slider"
+              ],
+              "default": "stack"
+            },
+            "size": {
+              "enum": [
+                "s",
+                "m",
+                "l",
+                "full"
+              ],
+              "default": "l"
             },
             "caption": {
               "anyOf": [
@@ -990,7 +1245,7 @@
           ],
           "additionalProperties": false,
           "title": "PDF",
-          "description": "A PDF from Cloudinary (`publicId`) or any `url`. Shows a card with a page-1 thumbnail, or the full PDF with `embed: true`."
+          "description": "A PDF from Cloudinary (`publicId`) or any `url`. Shows a card with a page-1 thumbnail, the full PDF viewer with `embed: true`, or clean page images (click for full screen) with `pages: N` (Cloudinary only) — stacked, or one at a time with arrows via `layout: slider`."
         },
         {
           "type": "object",

@@ -4,6 +4,7 @@ import { t } from '../../lib/i18n';
 import { href } from '../../lib/site';
 const { block, lang } = Astro.props;
 const explore = lang === 'ar' ? 'استكشف' : 'Explore';
+const arrow = lang === 'ar' ? '↖' : '↗';
 ---
 <div class="b-cards" style={`--columns: ${block.columns}`}>
   {block.items.map((item: any) => {
@@ -15,7 +16,7 @@ const explore = lang === 'ar' ? 'استكشف' : 'Explore';
           <h2>{t(item.title, lang)}</h2>
           {item.text && <p>{t(item.text, lang)}</p>}
         </div>
-        <span class="feature-link">{t(item.cta, lang) || explore} ↗</span>
+        <span class="feature-link">{t(item.cta, lang) || explore} {arrow}</span>
       </a>
     );
   })}

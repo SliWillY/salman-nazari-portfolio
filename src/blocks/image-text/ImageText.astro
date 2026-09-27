@@ -1,15 +1,65 @@
 ---
 import CloudinaryImage from '../../components/CloudinaryImage.astro';
+import ScreenStack from './ScreenStack.astro';
+import FrameBar from '../../components/FrameBar.astro';
 import { t } from '../../lib/i18n';
 import { markdown } from '../../lib/markdown';
 import { href } from '../../lib/site';
 const { block, lang } = Astro.props;
+const Heading = block.level === 2 ? 'h2' : 'h3';
+const button = block.button;
+const external = button && /^https?:/.test(button.href);
+const link = button && href(button.href, lang);
+const arrow = lang === 'ar' ? '↖' : '↗';
+const newTab = lang === 'ar' ? '(يفتح في علامة تبويب جديدة)' : '(opens in a new tab)';
+const alt = t(block.alt, lang);
+// Screen stack: `image` is the front screen, then the gallery (empty entries skipped, `image` not repeated).
+const gallery = (block.gallery ?? []).filter((screen: any) => screen.image);
+const front = gallery.find((screen: any) => screen.image === block.image) ?? { image: block.image, alt: block.alt };
+const screens = [front, ...gallery.filter((screen: any) => screen !== front)]
+  .filter((screen: any) => screen.image)
+  .map((screen: any) => ({ image: screen.image, alt: t(screen.alt, lang), caption: t(screen.caption, lang) }));
+const stack = screens.length > 1;
+const framed = block.frame === 'browser' || stack;
+const sizes = '(max-width: 800px) 100vw, 600px';
 ---
-<div class:list={['b-image-text', `side-${block.side}`]} style={`--media-aspect: ${block.aspect}`}>
-  <div class="b-image-text-media"><CloudinaryImage publicId={block.image} alt={t(block.alt, lang)} sizes="(max-width: 800px) 100vw, 560px" /></div>
+<div class:list={['b-image-text', `side-${block.side}`, { 'is-framed': framed }]} style={`--media-aspect: ${block.aspect}`}>
+  {stack ? <ScreenStack screens={screens} lang={lang} /> : (
+  <div class:list={['b-image-text-media', { 'frame-browser': framed }]}>
+    {framed ? (
+      <div class="frame-window">
+        <FrameBar />
+        {link ? (
+          <a href={link} target={external ? '_blank' : undefined} rel={external ? 'noopener noreferrer' : undefined} tabindex="-1"><CloudinaryImage publicId={block.image} alt={alt} sizes={sizes} /></a>
+        ) : (
+          <CloudinaryImage publicId={block.image} alt={alt} sizes={sizes} />
+        )}
+      </div>
+    ) : (
+      <CloudinaryImage publicId={block.image} alt={alt} sizes={sizes} />
+    )}
+  </div>
+  )}
   <div class="b-image-text-body">
-    {block.heading && <h3>{t(block.heading, lang)}</h3>}
+    {block.eyebrow && <span class="eyebrow">{t(block.eyebrow, lang)}</span>}
+    {block.heading && <Heading class="b-image-text-title">{t(block.heading, lang)}</Heading>}
     <div class="prose" set:html={markdown(t(block.text, lang))} />
-    {block.button && <a class="button button-outline" href={href(block.button.href, lang)}>{t(block.button.label, lang)}</a>}
+    {block.details && (
+      <dl class="b-image-text-details">
+        {block.details.map((row: any) => (
+          <div>
+            <dt>{t(row.label, lang)}</dt>
+            {row.text && <dd>{t(row.text, lang)}</dd>}
+            {row.tags && <dd><ul class="chips">{row.tags.map((tag: any) => <li>{t(tag, lang)}</li>)}</ul></dd>}
+          </div>
+        ))}
+      </dl>
+    )}
+    {button && (
+      <a class:list={['button', `button-${button.style}`, 'b-image-text-cta']} href={link} target={external ? '_blank' : undefined} rel={external ? 'noopener noreferrer' : undefined}>
+        {t(button.label, lang)}
+        {external && <Fragment><span class="cta-arrow" aria-hidden="true">{arrow}</span><span class="sr-only">{newTab}</span></Fragment>}
+      </a>
+    )}
   </div>
 </div>

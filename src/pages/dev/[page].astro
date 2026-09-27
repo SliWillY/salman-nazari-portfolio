@@ -35,7 +35,7 @@ const prefabs = await Promise.all([...(await loadPrefabs())].map(async ([id, pre
     <div class="section-inner">
       <span class="eyebrow">Dev only</span>
       <h1 style="font-size: clamp(2.2rem, 6vw, 4rem); letter-spacing: -.06em; margin: .3rem 0 1rem">Blocks &amp; Prefabs</h1>
-      <p style="max-width: 680px; color: var(--muted)">Copy a snippet into a page (<code>src/content/pages/*.yaml</code>) or project (<code>src/content/projects/&lt;category&gt;/*.yaml</code>). Blocks go inside a section’s <code>blocks:</code>; prefabs go straight into <code>sections:</code>. <a href={lang === 'ar' ? '/dev/blocks/' : '/dev/blocks-ar/'} style="color: var(--accent)">{lang === 'ar' ? 'English preview' : 'Arabic preview'} ↗</a></p>
+      <p style="max-width: 680px; color: var(--text-muted)">Copy a snippet into a page (<code>src/content/pages/*.yaml</code>) or project (<code>src/content/projects/&lt;category&gt;/*.yaml</code>). Blocks go inside a section’s <code>blocks:</code>; prefabs go straight into <code>sections:</code>. <a href={lang === 'ar' ? '/dev/blocks/' : '/dev/blocks-ar/'} style="color: var(--accent)">{lang === 'ar' ? 'English preview' : 'Arabic preview'} ↗</a></p>
       <nav class="catalog-nav" aria-label="Catalog">
         {groups.map((group) => blocks.filter((b) => b.meta.group === group).map((b) => <a href={`#block-${b.type}`}>{b.meta.label}</a>))}
         {prefabs.map((p) => <a href={`#prefab-${p.id}`}>◆ {p.prefab.name}</a>)}

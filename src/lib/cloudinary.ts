@@ -39,8 +39,11 @@ export function cloudinaryVideoUrl(publicId: string) {
 }
 
 // Shown while media has not been uploaded yet; in dev it names the missing public ID.
+// Colours mirror the --placeholder / --text-muted / --accent tokens; an <img> can't read CSS variables,
+// but it does follow the page's color-scheme through prefers-color-scheme.
 export function placeholderImage(label = '') {
   const text = label.replace(/[<>&"]/g, '');
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450"><rect width="800" height="450" fill="#dedbd2"/><text x="400" y="${text ? 215 : 232}" font-family="sans-serif" font-size="26" fill="#686862" text-anchor="middle">Media coming soon</text>${text ? `<text x="400" y="255" font-family="monospace" font-size="18" fill="#c95738" text-anchor="middle">${text}</text>` : ''}</svg>`;
+  const style = '<style>rect{fill:#dedbd2}.t{fill:#686862}.id{fill:#c95738}@media (prefers-color-scheme:dark){rect{fill:#2b2a27}.t{fill:#a39f95}.id{fill:#e38a6d}}</style>';
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450">${style}<rect width="800" height="450"/><text class="t" x="400" y="${text ? 215 : 232}" font-family="sans-serif" font-size="26" text-anchor="middle">Media coming soon</text>${text ? `<text class="id" x="400" y="255" font-family="monospace" font-size="18" text-anchor="middle">${text}</text>` : ''}</svg>`;
   return `data:image/svg+xml,${encodeURIComponent(svg)}`;
 }

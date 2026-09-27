@@ -37,8 +37,42 @@ sections:
                     - مشرف تعليمي — 150 ساعة
                     - مشرف تعليمي — 81 ساعة
 
-  # Add certificate scans here once uploaded, e.g.:
-  # - blocks:
-  #     - type: pdf
-  #       publicId: portfolio/certificates/cs50x
-  #       title: { en: Harvard CS50x certificate, ar: شهادة Harvard CS50x }
+  # TEST: big, centered, PDF shown as a clean page image (click = full screen). Delete this section once decided.
+  - width: wide
+    align: center
+  - blocks:
+    - type: pdf
+      publicId: CS50x_mwxvel
+      pages: 1
+      title: { en: "CS50x: Introduction to Computer Science - Harvard", ar: "مقدمة في علوم الحاسب - هارفارد" }
+  - blocks:
+    - type: pdf
+      publicId: Coursera_Attract_and_Engage_Customers_with_Digital_HVHZAESH9GTX_yeiawm
+      pages: 1
+      title: { en: "Attract and Engage Customers with Digital Marketing - Google", ar: "جذب العملاء والتفاعل معهم عبر التسويق الرقمي - جوجل" }    
+  - blocks:
+    - type: pdf
+      publicId: Coursera_Foundations_of_Digital_Marketing_and_E-commerce_Y2LH7GZBK8CJ_axgxna
+      pages: 1
+      title: { en: "Foundations of Digital Marketing and E-commerce - Google", ar: "أساسيات التسويق الرقمي والتجارة الإلكترونية - جوجل" }    
+  - blocks:
+    - type: pdf
+      publicId: participation-certificate-Youth_horizons_of_goodness-2_1_cvokzd
+      pages: 1
+      title: { en: Youth Horizons of Goodness — Educational Supervision, ar: اشراف تعليمي - آفاق الخير للشباب}
+      text: { en: 150 volunteer hours, ar: 150 ساعة تطوعية }
+  - blocks:
+    - type: pdf
+      publicId: participation-certificate-Youth_horizons_of_goodness-1_1_b7ehpm
+      pages: 1
+      title: { en: Youth Horizons of Goodness — Educational Supervision, ar: اشراف تعليمي - آفاق الخير للشباب}
+      text: { en: 81 volunteer hours, ar: 81 ساعة تطوعية }
+  - blocks:
+    - type: pdf
+      publicId: participation-certificate-quran-1_2_b62lp3
+      pages: 1
+      title: { en: Khairukum Society for Quran — Quran teacher, ar: معلم حلقات القران الكريم }
+      text: { en: 120 volunteer hours, ar: 120 ساعة تطوعية }
+
+
+

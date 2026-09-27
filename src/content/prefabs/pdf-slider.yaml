@@ -1,0 +1,24 @@
+name: PDF slider
+description: "A multi-page PDF (study, deck, report) shown one page at a time with ← → arrows, under a header with its eyebrow, title, summary, chips, page count and open link. Click a page for full screen. Drop it into any section's blocks, even inside columns."
+props:
+  pdf: ""        # Cloudinary public ID of the PDF
+  pages: 1       # total number of pages in the PDF
+  title: { en: Document, ar: مستند }
+  eyebrow: ""    # optional small label above the title, e.g. "Study 01 · UX research"
+  text: ""       # optional one-line summary under the title
+  tags: []       # optional method / topic chips, e.g. [Personas, Journey mapping]
+  size: l        # s / m / l / full
+blocks:
+  - type: pdf
+    publicId: "{{pdf}}"
+    pages: "{{pages}}"
+    layout: slider
+    size: "{{size}}"
+    title: "{{title}}"
+    eyebrow: "{{eyebrow}}"
+    text: "{{text}}"
+    tags: "{{tags}}"
+example:
+  pdf: UX_resarch_AmazonPrimeVideo_crhlxg
+  pages: 18
+  title: { en: UX research — Amazon Prime Video, ar: بحث تجربة المستخدم — أمازون برايم فيديو }

@@ -1,0 +1,10 @@
+---
+// Window title bar for framed screenshots: an optional title and three window dots.
+// Laid out with logical properties, so the title sits at the reading start and the dots at the end:
+// title left / dots right in English, mirrored in Arabic. Decorative only (aria-hidden).
+const { title = '' } = Astro.props;
+---
+<span class="frame-bar" aria-hidden="true">
+  <span class="frame-title">{title}</span>
+  <span class="frame-dots"><span></span><span></span><span></span></span>
+</span>

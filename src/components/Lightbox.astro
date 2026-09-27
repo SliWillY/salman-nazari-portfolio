@@ -28,10 +28,12 @@
         if (target === dialog || target.closest('.lightbox-close')) dialog!.close();
       });
       dialog.addEventListener('keydown', (event) => {
-        const rtl = document.dir === 'rtl' ? -1 : 1;
+        const rtl = dialog!.dir === 'rtl' ? -1 : 1;
         if (event.key === 'ArrowRight') go(rtl);
         if (event.key === 'ArrowLeft') go(-rtl);
       });
+      // Appended to <body> (outside .page), so copy the page's text direction.
+      dialog.dir = document.querySelector<HTMLElement>('[data-page]')?.dir ?? 'ltr';
       document.body.append(dialog);
     }
     const name = link.dataset.lightbox;

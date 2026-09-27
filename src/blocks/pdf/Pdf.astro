@@ -1,4 +1,6 @@
 ---
+import Lightbox from '../../components/Lightbox.astro';
+import Slider from '../../components/Slider.astro';
 import { cloudinaryPdfPreview, cloudinaryPdfUrl } from '../../lib/cloudinary';
 import { t } from '../../lib/i18n';
 const { block, lang } = Astro.props;
@@ -6,17 +8,70 @@ const url = block.url || cloudinaryPdfUrl(block.publicId);
 const preview = block.publicId ? cloudinaryPdfPreview(block.publicId) : undefined;
 const title = t(block.title, lang);
 const open = lang === 'ar' ? 'فتح المستند' : 'Open document';
+const arrow = lang === 'ar' ? '↖' : '↗';
+const pages = block.pages ? Array.from({ length: block.pages }, (_, i) => i + 1) : [];
+const group = `pdf-${block.publicId}`;
+const slider = block.layout === 'slider' && pages.length > 1;
+const labels = lang === 'ar' ? { prev: 'الصفحة السابقة', next: 'الصفحة التالية', of: 'من' } : { prev: 'Previous page', next: 'Next page', of: 'of' };
 ---
-<figure class="b-pdf">
-  {block.embed && <iframe class="pdf-embed" src={url} title={title} loading="lazy" />}
-  <a class="document-card" href={url} target="_blank" rel="noreferrer">
-    {preview && !block.embed && <img class="document-preview" src={preview} alt="" loading="lazy" onerror="this.remove()" />}
-    <span class="document-icon" aria-hidden="true">PDF</span>
-    <span>
-      <strong>{title}</strong>
-      {block.text && <span class="document-text">{t(block.text, lang)}</span>}
-      <span class="document-link">{open} ↗</span>
-    </span>
-  </a>
-  {block.caption && <figcaption>{t(block.caption, lang)}</figcaption>}
-</figure>
+{pages.length ? (
+  <figure class:list={['b-pdf', 'pdf-pages', `size-${block.size}`, { 'pdf-slider': slider }]} data-gallery={slider ? '' : undefined} data-bounded={slider ? '' : undefined}>
+    {slider && (
+      <figcaption class="pdf-head">
+        <span class="pdf-head-text">
+          {block.eyebrow && <span class="eyebrow">{t(block.eyebrow, lang)}</span>}
+          <strong class="pdf-title">{block.caption ? t(block.caption, lang) : title}</strong>
+          {block.text && <span class="document-text">{t(block.text, lang)}</span>}
+          {block.tags?.length > 0 && <ul class="chips">{block.tags.map((tag: any) => <li>{t(tag, lang)}</li>)}</ul>}
+        </span>
+        <span class="pdf-head-meta">
+          <span class="gallery-count" aria-live="polite"><span data-current>1</span> / {pages.length}</span>
+          <a class="document-link" href={url} target="_blank" rel="noreferrer">{open} {arrow}</a>
+        </span>
+      </figcaption>
+    )}
+    <div class="pdf-stage">
+      <div class="gallery-track" tabindex={slider ? 0 : undefined} role={slider ? 'region' : undefined} aria-roledescription={slider ? 'carousel' : undefined} aria-label={slider ? title : undefined}>
+        {pages.map((page) => (
+          <div class="gallery-slide" aria-roledescription={slider ? 'slide' : undefined} aria-label={slider ? `${page} ${labels.of} ${pages.length}` : undefined}>
+            <a href={cloudinaryPdfPreview(block.publicId, 2400, page)} data-lightbox={group} data-caption={pages.length > 1 ? `${title} — ${page} / ${pages.length}` : title}>
+              <img
+                src={cloudinaryPdfPreview(block.publicId, 1600, page)}
+                srcset={[800, 1200, 1600, 2400].map((w) => `${cloudinaryPdfPreview(block.publicId, w, page)} ${w}w`).join(', ')}
+                sizes="(max-width: 900px) 100vw, 900px"
+                alt={pages.length > 1 ? `${title} — ${page}` : title}
+                loading={page === 1 ? undefined : 'lazy'}
+                decoding="async"
+              />
+            </a>
+          </div>
+        ))}
+      </div>
+      {slider && <button type="button" class="gallery-btn" data-dir="-1" aria-label={labels.prev}>←</button>}
+      {slider && <button type="button" class="gallery-btn" data-dir="1" aria-label={labels.next}>→</button>}
+    </div>
+    {!slider && (
+      <figcaption>
+        <strong class="pdf-title">{block.caption ? t(block.caption, lang) : title}</strong>
+        {block.text && <span class="document-text">{t(block.text, lang)}</span>}
+        <a class="document-link" href={url} target="_blank" rel="noreferrer">{open} {arrow}</a>
+      </figcaption>
+    )}
+  </figure>
+) : (
+  <figure class="b-pdf">
+    {block.embed && <iframe class="pdf-embed" src={url} title={title} loading="lazy" />}
+    <a class="document-card" href={url} target="_blank" rel="noreferrer">
+      {preview && !block.embed && <img class="document-preview" src={preview} alt="" loading="lazy" onerror="this.remove()" />}
+      <span class="document-icon" aria-hidden="true">PDF</span>
+      <span>
+        <strong>{title}</strong>
+        {block.text && <span class="document-text">{t(block.text, lang)}</span>}
+        <span class="document-link">{open} {arrow}</span>
+      </span>
+    </a>
+    {block.caption && <figcaption>{t(block.caption, lang)}</figcaption>}
+  </figure>
+)}
+{pages.length > 0 && <Lightbox />}
+{slider && <Slider />}

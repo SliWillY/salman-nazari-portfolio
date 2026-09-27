@@ -1,0 +1,193 @@
+---
+// Interactive "screen stack" for image-text, a flat 2D cascade (no 3D): the front screenshot rests in its browser
+// frame; bringing the pointer near it (or focus / tap) fans the other screens out behind it, each one stepped up and toward the text column.
+// Each screen's caption is its window title. Hovering a screen lifts it a little; pressing it slides it up until ~80% shows above the screen in front
+// (press again to lower it). Arrow keys browse, Enter / Space raise, Esc lowers then collapses.
+// Under 640px it becomes a swipeable strip. States are CSS classes; the script only toggles them.
+import CloudinaryImage from '../../components/CloudinaryImage.astro';
+import FrameBar from '../../components/FrameBar.astro';
+
+type Screen = { image: string; alt: string; caption: string };
+const { screens, lang } = Astro.props as { screens: Screen[]; lang: string };
+const n = screens.length;
+const label = lang === 'ar'
+  ? `${n} شاشات — الأسهم للتنقل، Enter لرفع الشاشة، Esc للإغلاق`
+  : `${n} screens — arrow keys to browse, Enter to raise a screen, Esc to close`;
+---
+<div class="b-image-text-media frame-browser stack-root" data-stack style={`--n: ${n}; --c: ${(n - 1) / 2}`}>
+  <div class="stack" role="group" aria-label={label}>
+    {screens.map((screen, i) => (
+      <button type="button" class="stack-card" data-caption={screen.caption} aria-pressed={i === 0 ? undefined : 'false'} tabindex={i === 0 ? 0 : -1} style={`--i: ${i}`}>
+        <span class="stack-card-inner">
+          <span class="stack-screen">
+            <FrameBar title={screen.caption} />
+            <CloudinaryImage publicId={screen.image} alt={screen.alt || screen.caption} width={1200} sizes="(max-width: 800px) 100vw, 600px" />
+          </span>
+        </span>
+      </button>
+    ))}
+  </div>
+  <p class="sr-only" aria-live="polite" data-stack-caption></p>
+</div>
+
+<script>
+  const ms = (value: string) => (parseFloat(value) || 0) * (value.trim().endsWith('ms') ? 1 : 1000);
+
+  // Last input type across the page ('mouse' | 'pen' | 'touch' | 'keyboard'): a Tab press happens before focus
+  // reaches a stack, so this has to be tracked at the document level.
+  let input = 'mouse';
+  document.addEventListener('pointerdown', (event) => { input = event.pointerType; }, true);
+  document.addEventListener('keydown', () => { input = 'keyboard'; }, true);
+
+  for (const root of document.querySelectorAll<HTMLElement>('[data-stack]')) {
+    const cards = [...root.querySelectorAll<HTMLButtonElement>('.stack-card')];
+    const caption = root.querySelector<HTMLElement>('[data-stack-caption]')!;
+    const strip = matchMedia('(max-width: 640px)');
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+    let open = false;
+    let hover = -1;   // screen under the pointer / keyboard focus: lifted a little
+    let raised = -1;  // pressed screen: slid up to show ~80%
+    let stop = 0;     // roving tab stop: the last screen viewed
+    let timer = 0;
+    let preloaded = false;
+
+    // Fan-out time = duration + one stagger step per layer; after it, hover / raise respond without the stagger delay.
+    const settleTime = () => {
+      if (reduced.matches) return 0;
+      const style = getComputedStyle(root);
+      return ms(style.getPropertyValue('--duration')) + ms(style.getPropertyValue('--stagger')) * cards.length;
+    };
+
+    // The back screens are lazy; fetch them as soon as the visitor shows intent, so the fan-out never shows blank frames.
+    const preload = () => {
+      if (preloaded) return;
+      preloaded = true;
+      for (const img of root.querySelectorAll('img')) img.loading = 'eager';
+    };
+
+    function render() {
+      cards.forEach((card, i) => {
+        card.classList.toggle('is-hover', i === hover);
+        card.classList.toggle('is-raised', i === raised);
+        if (i > 0) card.setAttribute('aria-pressed', String(i === raised));
+        card.tabIndex = i === stop ? 0 : -1; // roving tabindex: one Tab stop for the whole stack
+      });
+      const shown = raised >= 0 ? raised : hover;
+      caption.textContent = shown >= 0 ? cards[shown].dataset.caption ?? '' : '';
+    }
+
+    function setHover(index: number) {
+      hover = index;
+      if (index >= 0) stop = index;
+      render();
+    }
+
+    // The front screen is already fully visible, so only the screens behind it can be raised.
+    function toggleRaise(index: number) {
+      raised = index > 0 && raised !== index ? index : -1;
+      render();
+    }
+
+    function setOpen(value: boolean) {
+      if (value === open || (value && strip.matches)) return;
+      open = value;
+      clearTimeout(timer);
+      root.classList.add('is-live'); // will-change only while animating / interacting
+      root.classList.remove('is-settled');
+      root.classList.toggle('is-open', value);
+      if (value) {
+        preload();
+        timer = window.setTimeout(() => root.classList.add('is-settled'), settleTime());
+      } else {
+        hover = -1;
+        raised = -1;
+        render();
+        timer = window.setTimeout(() => root.classList.remove('is-live'), settleTime());
+      }
+    }
+
+    const cardFrom = (target: EventTarget | null) => (target as HTMLElement | null)?.closest<HTMLButtonElement>('.stack-card') ?? null;
+
+    root.addEventListener('pointerdown', preload);
+
+    // Proximity (mouse / pen): the stack opens once the pointer comes within --reach of the image, and while open
+    // it stays open anywhere within --reach-open of the fanned-out screens (including a raised one), so the zone
+    // grows with the stack. A distance check instead of an invisible overlay, so the text and button beside the
+    // image stay clickable.
+    const px = (name: string) => parseFloat(getComputedStyle(root).getPropertyValue(name)) || 0;
+    let pointer: { x: number; y: number } | null = null;
+    let frame = 0;
+    function near(x: number, y: number) {
+      const rects = open ? cards.map((card) => card.getBoundingClientRect()) : [root.getBoundingClientRect()];
+      const reach = px(open ? '--reach-open' : '--reach');
+      return rects.some((r) => x >= r.left - reach && x <= r.right + reach && y >= r.top - reach && y <= r.bottom + reach);
+    }
+    function checkProximity() {
+      frame = 0;
+      if (!pointer || strip.matches) return;
+      const inside = near(pointer.x, pointer.y);
+      if (inside) { preload(); setOpen(true); }
+      else if (!root.contains(document.activeElement) || input !== 'keyboard') setOpen(false);
+    }
+    const track = (event: PointerEvent) => {
+      if (event.pointerType === 'touch') return;
+      pointer = { x: event.clientX, y: event.clientY };
+      // In the zone but not over a screen: nothing is lifted.
+      if (open && !root.contains(event.target as Node) && hover !== -1) setHover(-1);
+      if (!frame) frame = requestAnimationFrame(checkProximity);
+    };
+    document.addEventListener('pointermove', track, { passive: true });
+    document.addEventListener('scroll', () => { if (pointer && !frame) frame = requestAnimationFrame(checkProximity); }, { passive: true });
+    document.documentElement.addEventListener('pointerleave', () => { pointer = null; if (input !== 'keyboard') setOpen(false); });
+    // Lift whichever screen is under the pointer. The lift moves only the picture, not the screen's hit area
+    // (see CSS), so the pointer never slips off the edge and flickers.
+    root.addEventListener('pointermove', (event) => {
+      if (event.pointerType === 'touch' || !root.classList.contains('is-settled')) return;
+      const card = cardFrom(event.target);
+      const index = card ? cards.indexOf(card) : -1;
+      if (index !== hover) setHover(index);
+    });
+
+    root.addEventListener('focusin', (event) => {
+      if (input !== 'keyboard') return; // pointer focus is handled by the pointer events
+      setOpen(true);
+      const card = cardFrom(event.target);
+      if (card) setHover(cards.indexOf(card));
+    });
+    root.addEventListener('focusout', (event) => {
+      if (!root.contains(event.relatedTarget as Node | null) && input === 'keyboard') setOpen(false);
+    });
+
+    // Mouse click, Enter / Space, or tap: raise / lower the screen. On touch, the first tap only fans the stack out.
+    root.addEventListener('click', (event) => {
+      const card = cardFrom(event.target);
+      if (!card || strip.matches) return;
+      if (!open) { setOpen(true); return; }
+      toggleRaise(cards.indexOf(card));
+    });
+    document.addEventListener('pointerdown', (event) => {
+      if (open && event.pointerType === 'touch' && !root.contains(event.target as Node)) setOpen(false);
+    });
+
+    root.addEventListener('keydown', (event) => {
+      const card = cardFrom(event.target);
+      if (!card) return;
+      if (event.key === 'Escape') {
+        if (raised >= 0) { event.preventDefault(); toggleRaise(-1); }
+        else if (open) { event.preventDefault(); setOpen(false); }
+        return;
+      }
+      // Left / Right follow the way the stack fans out on screen (--dir: +1 = right, −1 = left).
+      const right = parseFloat(getComputedStyle(root).getPropertyValue('--dir')) > 0;
+      const steps: Record<string, number> = { ArrowUp: 1, ArrowDown: -1, ArrowRight: right ? 1 : -1, ArrowLeft: right ? -1 : 1 };
+      const index = cards.indexOf(card);
+      let next = event.key in steps ? index + steps[event.key] : event.key === 'Home' ? 0 : event.key === 'End' ? cards.length - 1 : -1;
+      if (next === -1 && !(event.key in steps)) return;
+      event.preventDefault();
+      next = Math.min(Math.max(next, 0), cards.length - 1);
+      setOpen(true);
+      setHover(next);
+      cards[next].focus();
+    });
+  }
+</script>

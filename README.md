@@ -85,7 +85,7 @@ See every field and a live preview in the catalog (`/dev/blocks/`). In VS Code, 
 2. Add `schema.ts` exporting `meta` (label, group, description), `schema` (zod, with `type: z.literal('<type>')`) and `example`.
 3. Add one `.astro` component in the same folder; it receives `block` (validated fields), `lang` and `ctx`. Use `t(value, lang)` from `src/lib/i18n.ts` for text.
 
-That's it: blocks are discovered automatically; there is no registry to edit. Copy an existing block (e.g. `quote/`) as a starting point. Styles go in `src/styles/global.css`.
+That's it: blocks are discovered automatically; there is no registry to edit. Copy an existing block (e.g. `quote/`) as a starting point. Styles go in `src/styles/global.css`, and use only the colour tokens defined at its top (`--bg`, `--surface`, `--text`, `--text-muted`, `--border`, `--accent`, …), never raw colours: that is what makes the block work in dark mode and on every section theme.
 
 ## Prefabs
 
@@ -128,7 +128,7 @@ sections:
 - **Nesting:** a prefab's blocks may contain other prefab instances.
 - Using a prop the prefab doesn't have is an error (catches typos).
 
-Starter prefabs: `section-title`, `showcase-grid`, `showcase-slider`, `video-showcase`, `document-feature`, `project-header`, `contact-cta` (set your email in its `href` first).
+Starter prefabs: `section-title`, `showcase-grid`, `showcase-slider`, `video-showcase`, `document-feature`, `pdf-slider` (goes inside a section's `blocks:`), `project-header`, `contact-cta` (set your email in its `href` first).
 
 ## Errors
 
