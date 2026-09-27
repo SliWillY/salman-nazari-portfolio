@@ -1,0 +1,28 @@
+---
+// UX & Gamification — "interaction → reward". Rest: a screen with a button, a partly filled XP bar and a faint badge.
+// Story: a cursor glides in and clicks the button (press + ripple), the XP bar fills, and the badge pops: level up.
+// The bar fills from the inline start (right in Arabic). Timeline: global.css, "card icons".
+const star = 'M64 6 66 11.25 71.6 11.5 67.2 15.1 68.7 20.5 64 17.4 59.3 20.5 60.8 15.1 56.4 11.5 62 11.25Z';
+const cursor = 'M0 0v11l3-2.7 2.2 4.7 1.8-.8-2.2-4.6h3.7Z';
+---
+<svg class="card-icon ci-ux" viewBox="0 0 80 80" aria-hidden="true" focusable="false">
+  <g class="ci-rest">
+    <rect class="ci-line" x="10" y="12" width="52" height="38" rx="3" />
+    <path class="ci-line" d="M10 19h52M16 26h24" /><path class="ci-line ci-faint" d="M16 31h14" />
+    <rect class="ci-line" x="22" y="36" width="28" height="8" rx="4" />
+    <rect class="ci-line" x="10" y="58" width="52" height="5" rx="2.5" />
+    <rect class="ci-accent u-bar-fill" x="11.5" y="59.5" width="49" height="2" rx="1" />
+    <path class="ci-line u-badge-outline" d={star} />
+  </g>
+  <g class="ci-play">
+    <rect class="ci-line" x="10" y="12" width="52" height="38" rx="3" />
+    <path class="ci-line" d="M10 19h52M16 26h24" /><path class="ci-line ci-faint" d="M16 31h14" />
+    <rect class="ci-line u-button" x="22" y="36" width="28" height="8" rx="4" />
+    <circle class="u-ripple" cx="36" cy="40" r="5" />
+    <rect class="ci-line" x="10" y="58" width="52" height="5" rx="2.5" />
+    <rect class="ci-accent u-bar-fill" x="11.5" y="59.5" width="49" height="2" rx="1" />
+    <path class="ci-line u-badge-outline" d={star} />
+    <path class="ci-accent u-badge" d={star} />
+    <g transform="translate(36 40)"><g class="u-cursor-move"><g class="u-cursor-press"><path class="u-cursor" d={cursor} /></g></g></g>
+  </g>
+</svg>

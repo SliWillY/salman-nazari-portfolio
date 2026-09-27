@@ -1,0 +1,27 @@
+---
+// Games Dev — "build a level, play it". Rest: three platforms, the character on the first, a coin above the last.
+// Story: platforms snap in, the character drops in and hops across, bumps the coin from below, which spins, flashes and pops
+// into a "+1". Mirrored in Arabic so the run goes toward the inline end. Timeline: global.css, "card icons".
+const platforms = [[8, 56], [30, 48], [52, 40]];
+const character = { body: { x: 13, y: 45.5 }, eyes: [[17.5, 49.5], [20.5, 49.5]] };
+---
+<svg class="card-icon ci-game" viewBox="0 0 80 80" aria-hidden="true" focusable="false">
+  <g class="ci-rest">
+    {platforms.map(([x, y]) => <rect class="ci-line" x={x} y={y} width="20" height="6" rx="1.5" />)}
+    <rect class="ci-line" x={character.body.x} y={character.body.y} width="10" height="10" rx="3" />
+    {character.eyes.map(([cx, cy]) => <circle class="ci-fill" cx={cx} cy={cy} r="1.1" />)}
+    <circle class="ci-line" cx="62" cy="20" r="4.5" /><path class="ci-line" d="M62 17.5v5" />
+  </g>
+  <g class="ci-play">
+    {platforms.map(([x, y], k) => <rect class="ci-line g-platform" x={x} y={y} width="20" height="6" rx="1.5" style={`--k: ${k}`} />)}
+    <g class="g-coin-in"><g class="g-coin-pop"><g class="g-coin-spin">
+      <circle class="ci-line" cx="62" cy="20" r="4.5" /><path class="ci-line" d="M62 17.5v5" />
+      <circle class="ci-accent g-coin-flash" cx="62" cy="20" r="4.5" />
+    </g></g></g>
+    <g class="g-char-x"><g class="g-char-y">
+      <rect class="ci-line g-body" x={character.body.x} y={character.body.y} width="10" height="10" rx="3" />
+      {character.eyes.map(([cx, cy]) => <circle class="ci-fill" cx={cx} cy={cy} r="1.1" />)}
+    </g></g>
+    <g class="g-plus-flip"><text class="g-plus" x="62" y="12" text-anchor="middle">+1</text></g>
+  </g>
+</svg>

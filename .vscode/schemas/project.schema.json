@@ -360,6 +360,13 @@
                   "image": {
                     "type": "string"
                   },
+                  "icon": {
+                    "enum": [
+                      "render",
+                      "game",
+                      "ux"
+                    ]
+                  },
                   "cta": {
                     "anyOf": [
                       {
@@ -397,7 +404,7 @@
           ],
           "additionalProperties": false,
           "title": "Cards",
-          "description": "Link cards with optional image, e.g. the home page sections. `href` can be a site page (`games-dev`) or a full URL."
+          "description": "Link cards with an optional image or animated icon (render | game | ux), e.g. the home page sections. `href` can be a site page (`games-dev`) or a full URL."
         },
         {
           "type": "object",

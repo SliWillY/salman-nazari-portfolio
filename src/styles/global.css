@@ -16,6 +16,7 @@
   --shadow: 0 1px 2px rgb(0 0 0 / .04), 0 10px 30px -18px rgb(0 0 0 / .25);
   --shadow-header: 0 6px 24px -18px rgba(32, 32, 30, .45);
   --media-filter: none; /* applied to screenshots and document pages, never to artwork */
+  --face-top: 5%; --face-left: 16%; --face-right: 30%; --face-flat: 12%; /* card-icon cube shading (--text into --bg): top face lightest */
   --scrim: #000;
   --overlay-bg: rgba(12, 12, 11, .95); --overlay-text: #fff; --overlay-text-muted: rgba(255, 255, 255, .75);
   --code-bg: #1c1c1a; --code-text: #e9e6dc;
@@ -47,6 +48,7 @@
     --shadow: 0 1px 2px rgb(0 0 0 / .3), 0 12px 32px -20px rgb(0 0 0 / .7);
     --shadow-header: 0 6px 24px -18px rgb(0 0 0 / .9);
     --media-filter: brightness(.88);
+    --face-top: 46%; --face-left: 26%; --face-right: 13%; --face-flat: 22%;
     --overlay-bg: rgba(12, 12, 11, .96); --overlay-text: #ece9e1; --overlay-text-muted: #b5b1a7;
     --code-bg: #262522; --code-text: #e9e6dc;
     --danger: #e5736a; --danger-bg: #2e1c1a; --danger-text: #f2b8b0;
@@ -65,6 +67,7 @@
   --shadow: 0 1px 2px rgb(0 0 0 / .3), 0 12px 32px -20px rgb(0 0 0 / .7);
   --shadow-header: 0 6px 24px -18px rgb(0 0 0 / .9);
   --media-filter: brightness(.88);
+  --face-top: 46%; --face-left: 26%; --face-right: 13%; --face-flat: 22%;
   --overlay-bg: rgba(12, 12, 11, .96); --overlay-text: #ece9e1; --overlay-text-muted: #b5b1a7;
   --code-bg: #262522; --code-text: #e9e6dc;
   --danger: #e5736a; --danger-bg: #2e1c1a; --danger-text: #f2b8b0;
@@ -213,6 +216,7 @@ main { min-height: 70vh; }
 .spacing-l { padding-block: 112px; }
 .section-inner > .block + .block, .b-column > .block + .block { margin-top: 32px; }
 .section-inner > .block-heading + .block, .b-column > .block-heading + .block { margin-top: 16px; }
+.section-inner > .block-heading + .block-cards { margin-top: 28px; } /* a card row needs a little more air under its heading */
 /* Consecutive PDF sliders (e.g. a list of studies): generous space and a divider so each reads as its own project. */
 .section-inner > .block-pdf:has(.pdf-slider) + .block-pdf:has(.pdf-slider) { margin-top: clamp(56px, 8vw, 96px); padding-top: clamp(56px, 8vw, 96px); border-top: 1px solid var(--border); }
 .align-center { text-align: center; }
@@ -477,13 +481,126 @@ figcaption { margin-top: 8px; color: var(--text-muted); font-size: .8rem; }
 :lang(ar) .b-hero.size-home h1 { max-width: 1000px; font-size: clamp(2.2rem, 11vw, 7.5rem); line-height: 1.25; }
 :lang(ar) .b-hero h1, :lang(ar) .b-heading :is(h1, h2, h3) { letter-spacing: 0; line-height: 1.2; }
 .b-cards { display: grid; gap: 16px; grid-template-columns: repeat(var(--columns), minmax(0, 1fr)); }
-.feature-card { padding: 24px; min-height: 260px; border: 1px solid var(--border); display: flex; flex-direction: column; justify-content: space-between; transition: transform .2s ease, background .2s ease; }
-.feature-card:hover { transform: translateY(-4px); background: var(--hover); }
+.feature-card {
+  --icon-size: 80px;      /* animated card icon */
+  --icon-duration: 1.8s;  /* length of each icon's story; every step is timed as a fraction of it */
+  --icon-stroke: 1.5px;
+  --card-lift: 4px;       /* hover / focus lift */
+  padding: 24px; min-height: 260px; border: 1px solid var(--border); display: flex; flex-direction: column; justify-content: space-between;
+  transition: transform .2s ease, background .2s ease, border-color .2s ease;
+}
+.feature-card:is(:hover, :focus-visible) { transform: translateY(calc(var(--card-lift) * -1)); background: var(--hover); border-color: color-mix(in srgb, var(--accent) 60%, var(--border)); }
 .feature-card-media { margin: -24px -24px 20px; }
 .feature-card-media img { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; }
-.feature-card h2 { font-size: 1.7rem; letter-spacing: -.05em; margin: 0 0 8px; }
+.feature-card h3 { font-size: 1.7rem; line-height: 1.15; letter-spacing: -.05em; margin: 0 0 8px; }
+:lang(ar) .feature-card h3 { line-height: 1.3; letter-spacing: 0; }
 .feature-card p { color: var(--text-muted); margin: 0; }
 .feature-link { color: var(--accent); font-size: .86rem; margin-top: 16px; }
+.feature-arrow { display: inline-block; transition: transform .2s ease; }
+.feature-card:is(:hover, :focus-visible) .feature-arrow { transform: translate(2px, -2px); }
+[dir="rtl"] .feature-card:is(:hover, :focus-visible) .feature-arrow { transform: translate(-2px, -2px); }
+
+/* ---------- card icons (cards/icons/*.astro) ----------
+   Two layers: .ci-rest is the static resting icon; .ci-play holds the story and shows while .is-playing.
+   Leaving adds .is-leaving: the resting icon returns underneath and the story fades out over it (no snapping).
+   Every step runs for calc(var(--d) * length) after calc(var(--d) * start); times below are at --icon-duration 1.8s. */
+.card-icon { --d: var(--icon-duration); display: block; width: var(--icon-size); height: var(--icon-size); margin: -6px 0 8px; margin-inline-start: -6px; overflow: visible; color: var(--text); }
+.card-icon * { transform-box: fill-box; transform-origin: center; }
+.card-icon .ci-line { fill: none; stroke: currentColor; stroke-width: var(--icon-stroke); stroke-linecap: round; stroke-linejoin: round; }
+.card-icon .ci-fill { fill: currentColor; }
+.card-icon .ci-accent { fill: var(--accent); }
+.card-icon .ci-faint { opacity: .45; }
+.card-icon .ci-play { opacity: 0; }
+.card-icon.is-playing .ci-play { opacity: 1; }
+.card-icon.is-playing .ci-rest { opacity: 0; transition: opacity .15s ease; }
+.card-icon.is-leaving .ci-play { opacity: 0; transition: opacity .2s ease; }
+.card-icon.is-leaving .ci-rest { opacity: 1; transition: none; }
+@keyframes ci-pop { 0% { opacity: 0; transform: scale(0); } 60% { opacity: 1; transform: scale(1.35); } 100% { opacity: 1; transform: scale(1); } }
+@keyframes ci-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes ci-out { from { opacity: 1; } to { opacity: 0; } }
+@keyframes ci-draw { 0% { opacity: 0; stroke-dashoffset: 1; } 1% { opacity: 1; } 100% { opacity: 1; stroke-dashoffset: 0; } }
+
+/* 3D Renders: 0-330ms vertices pop · 180-900ms edges draw · 760-940ms flat faces fill ·
+   970-1510ms render bucket steps across 4 columns, each column turns lit as it finishes (1080-1510ms) · 1510-1760ms glint. */
+.card-icon .r-face-top { fill: color-mix(in srgb, currentColor var(--face-top), var(--bg)); }
+.card-icon .r-face-left { fill: color-mix(in srgb, currentColor var(--face-left), var(--bg)); }
+.card-icon .r-face-right { fill: color-mix(in srgb, currentColor var(--face-right), var(--bg)); }
+.card-icon .r-face-flat { fill: color-mix(in srgb, currentColor var(--face-flat), var(--bg)); }
+.card-icon .r-dot { fill: currentColor; }
+.card-icon .r-edge { stroke-dasharray: 1 1; }
+.card-icon .r-bucket { fill: none; stroke: var(--accent); stroke-width: 1; }
+.card-icon.is-playing .r-dot { animation: ci-pop calc(var(--d) * .1) cubic-bezier(.34, 1.56, .64, 1) calc(var(--d) * var(--k) * .025) both, ci-out calc(var(--d) * .12) ease calc(var(--d) * .58) forwards; }
+.card-icon.is-playing .r-edge { animation: ci-draw calc(var(--d) * .16) ease-out calc(var(--d) * (.1 + var(--k) * .03)) both; }
+.card-icon.is-playing .r-solid { animation: ci-in calc(var(--d) * .1) ease calc(var(--d) * .42) both; }
+.card-icon.is-playing .r-tile { animation: ci-in calc(var(--d) * .03) ease calc(var(--d) * (.6 + var(--k) * .07)) both; }
+.card-icon.is-playing .r-bucket-show { animation: r-bucket-show calc(var(--d) * .3) linear calc(var(--d) * .54) both; }
+.card-icon.is-playing .r-bucket { animation: r-bucket-step calc(var(--d) * .28) steps(4, jump-none) calc(var(--d) * .56) both; }
+.card-icon.is-playing .r-glint { animation: r-glint calc(var(--d) * .14) cubic-bezier(.34, 1.56, .64, 1) calc(var(--d) * .84) both; }
+@keyframes r-bucket-show { 0% { opacity: 0; } 8%, 88% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes r-bucket-step { from { transform: translateX(0); } to { transform: translateX(31.5px); } }
+@keyframes r-glint { 0% { opacity: 0; transform: scale(0) rotate(-45deg); } 60% { opacity: 1; transform: scale(1.3) rotate(10deg); } 100% { opacity: 1; transform: scale(1) rotate(0); } }
+
+/* Games Dev: 0-560ms platforms snap in (the coin fades in 250-430ms) · 450-810ms character drops onto the first ·
+   990-1170ms hop to the second · 1190-1440ms jump to the third, bumping the coin from below at ~1300ms ·
+   1290-1470ms coin spins and flashes · 1440-1530ms coin pops · 1440-1800ms "+1" floats up and fades. */
+.card-icon .g-plus { font-size: 9px; font-weight: 700; fill: var(--accent); opacity: 0; direction: ltr; unicode-bidi: isolate; } /* "+1", not "1+", in Arabic */
+.card-icon .g-coin-flash { opacity: 0; }
+.card-icon .g-body { transform-origin: 50% 100%; }
+[dir="rtl"] .ci-game { transform: scaleX(-1); }
+[dir="rtl"] .ci-game .g-plus-flip { transform: scaleX(-1); } /* keep "+1" readable */
+.card-icon.is-playing .g-platform { animation: g-snap calc(var(--d) * .17) ease-out calc(var(--d) * var(--k) * .07) both; }
+.card-icon.is-playing .g-coin-in { animation: ci-in calc(var(--d) * .1) ease calc(var(--d) * .14) both; }
+.card-icon.is-playing .g-char-y { animation: g-hop-y calc(var(--d) * .55) linear calc(var(--d) * .25) both; }
+.card-icon.is-playing .g-char-x { animation: g-hop-x calc(var(--d) * .55) linear calc(var(--d) * .25) both; }
+.card-icon.is-playing .g-body { animation: g-squash calc(var(--d) * .55) linear calc(var(--d) * .25) both; }
+.card-icon.is-playing .g-coin-spin { animation: g-spin calc(var(--d) * .1) ease-in-out calc(var(--d) * .715) both; }
+.card-icon.is-playing .g-coin-flash { animation: g-flash calc(var(--d) * .1) ease calc(var(--d) * .715) both; }
+.card-icon.is-playing .g-coin-pop { animation: g-pop calc(var(--d) * .05) ease-out calc(var(--d) * .8) both; }
+.card-icon.is-playing .g-plus { animation: g-plus calc(var(--d) * .2) ease-out calc(var(--d) * .8) both; }
+@keyframes g-snap { 0% { opacity: 0; transform: translateY(-12px); } 55% { opacity: 1; transform: translateY(2px); } 78% { transform: translateY(-1px); } 100% { opacity: 1; transform: translateY(0); } }
+@keyframes g-hop-y {
+  0% { opacity: 0; transform: translateY(-30px); animation-timing-function: ease-in; }
+  8% { opacity: 1; }
+  20%, 30% { transform: translateY(0); animation-timing-function: ease-out; }
+  45% { transform: translateY(-16px); animation-timing-function: ease-in; }
+  60%, 66% { transform: translateY(-8px); animation-timing-function: ease-out; }
+  86% { transform: translateY(-21.5px); animation-timing-function: ease-in; }
+  100% { opacity: 1; transform: translateY(-16px); }
+}
+@keyframes g-hop-x { 0%, 30% { transform: translateX(0); } 60%, 66% { transform: translateX(22px); } 88%, 100% { transform: translateX(44px); } }
+@keyframes g-squash { 0%, 18%, 28%, 57%, 65%, 97% { transform: scale(1); } 22% { transform: scale(1.15, .85); } 61% { transform: scale(1.1, .9); } 100% { transform: scale(1.06, .94); } }
+@keyframes g-spin { 0%, 100% { transform: scaleX(1); } 50% { transform: scaleX(.15); } }
+@keyframes g-flash { 0% { opacity: 0; } 40%, 100% { opacity: 1; } }
+@keyframes g-pop { 0% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(1.3); } }
+@keyframes g-plus { 0% { opacity: 0; transform: translateY(4px); } 25% { opacity: 1; transform: translateY(0); } 70% { opacity: 1; } 100% { opacity: 0; transform: translateY(-9px); } }
+
+/* UX & Gamification: 0-450ms cursor glides in · 470-610ms click (cursor + button press) · 500-860ms ripple ·
+   610-1190ms XP bar fills (ease-out) · 1150-1510ms badge pops with a turn and a bounce. */
+.card-icon .u-bar-fill { transform: scaleX(.4); transform-origin: 0 50%; }
+[dir="rtl"] .card-icon .u-bar-fill { transform-origin: 100% 50%; }
+.card-icon .u-badge-outline { fill: var(--bg); stroke-opacity: .35; }
+.card-icon .u-badge { opacity: 0; }
+.card-icon .u-ripple { fill: none; stroke: var(--accent); stroke-width: 1; opacity: 0; }
+.card-icon .u-cursor { fill: var(--bg); stroke: currentColor; stroke-width: 1.2; stroke-linejoin: round; }
+.card-icon .u-cursor-move { opacity: 0; }
+.card-icon .u-cursor-press { transform-origin: 0 0; }
+.card-icon.is-playing .u-cursor-move { animation: u-cursor-in calc(var(--d) * .25) cubic-bezier(.2, .8, .2, 1) both; }
+.card-icon.is-playing .u-cursor-press { animation: u-press calc(var(--d) * .08) ease-in-out calc(var(--d) * .26) both; }
+.card-icon.is-playing .u-button { animation: u-press calc(var(--d) * .08) ease-in-out calc(var(--d) * .26) both; }
+.card-icon.is-playing .u-ripple { animation: u-ripple calc(var(--d) * .2) ease-out calc(var(--d) * .28) both; }
+.card-icon.is-playing .ci-play .u-bar-fill { animation: u-fill calc(var(--d) * .32) cubic-bezier(.2, .8, .2, 1) calc(var(--d) * .34) both; }
+.card-icon.is-playing .u-badge { animation: u-badge calc(var(--d) * .2) ease-out calc(var(--d) * .64) both; }
+@keyframes u-cursor-in { 0% { opacity: 0; transform: translate(20px, 18px); } 30% { opacity: 1; } 100% { opacity: 1; transform: translate(0, 0); } }
+@keyframes u-press { 0%, 100% { transform: scale(1); } 45% { transform: scale(.9); } }
+@keyframes u-ripple { 0% { opacity: 0; transform: scale(.4); } 1% { opacity: .9; } 100% { opacity: 0; transform: scale(2.6); } }
+@keyframes u-fill { from { transform: scaleX(.4); } to { transform: scaleX(1); } }
+@keyframes u-badge { 0% { opacity: 0; transform: scale(0) rotate(-25deg); } 55% { opacity: 1; transform: scale(1.25) rotate(8deg); } 80% { transform: scale(.95) rotate(-2deg); } 100% { opacity: 1; transform: scale(1) rotate(0); } }
+
+/* Tablet: three-up cards become two plus one full-width. */
+@media (min-width: 801px) and (max-width: 1080px) {
+  .b-cards[style*="--columns: 3"] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .b-cards[style*="--columns: 3"] > :last-child:nth-child(odd) { grid-column: 1 / -1; }
+}
 .b-projects { display: grid; grid-template-columns: repeat(var(--columns), minmax(0, 1fr)); gap: 32px 20px; }
 .b-projects-empty { color: var(--text-muted); }
 .project-card { display: block; }
@@ -534,6 +651,8 @@ figcaption { margin-top: 8px; color: var(--text-muted); font-size: .8rem; }
   .b-hero { padding-top: 32px; }
   .b-hero.size-home { padding: 40px 16px 48px; }
   .b-cards, .b-projects, .b-columns, .b-image-text, .catalog-head { grid-template-columns: 1fr; }
+  .feature-card { --icon-size: 72px; }
+  .feature-card h3 { font-size: 1.45rem; } /* stays clearly below the section heading, which shrinks on phones */
   .b-image-text.side-end .b-image-text-media { order: 0; }
   .b-image-text, .b-image-text.is-framed { grid-template-columns: 1fr; gap: 24px; }
   .b-image-text-details > div { grid-template-columns: 1fr; gap: 6px; }
@@ -547,7 +666,9 @@ figcaption { margin-top: 8px; color: var(--text-muted); font-size: .8rem; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .feature-card, .project-card-media img, .gallery-slide a img, .button, .cta-arrow, .frame-window img { transition: none; }
+  .feature-card, .feature-arrow, .project-card-media img, .gallery-slide a img, .button, .cta-arrow, .frame-window img { transition: none; }
+  .card-icon .ci-play { display: none; } /* static resting icons only */
+  .card-icon .ci-rest { opacity: 1 !important; }
   .b-image-text.is-framed:has(.b-image-text-cta:hover, .frame-window a:hover) .frame-window img { transform: none; }
   .layout-slider .gallery-track, .pdf-slider .gallery-track { scroll-behavior: auto; }
 }

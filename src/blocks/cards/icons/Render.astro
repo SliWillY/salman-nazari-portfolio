@@ -1,0 +1,36 @@
+---
+// 3D Renders — "model → render". Rest: the lit cube with a glint.
+// Story: vertices pop in, edges draw into a wireframe, flat faces fill in (solid view), then render buckets
+// sweep across column by column revealing the lit cube, and the glint pops. Timeline: global.css, "card icons".
+const { uid } = Astro.props as { uid: string };
+const top = 'M40 17 61 29 40 41 19 29Z';
+const left = 'M19 29 40 41 40 65 19 53Z';
+const right = 'M40 41 61 29 61 53 40 65Z';
+const outline = 'M40 17 61 29 61 53 40 65 19 53 19 29Z M19 29 40 41 61 29 M40 41V65';
+const glint = 'M47 21.5l1.1 4.4 4.4 1.1-4.4 1.1L47 32.5l-1.1-4.4-4.4-1.1 4.4-1.1Z';
+const vertices = [[40, 17], [19, 29], [61, 29], [40, 41], [19, 53], [61, 53], [40, 65]];
+const edges = [[40, 17, 19, 29], [40, 17, 61, 29], [19, 29, 40, 41], [61, 29, 40, 41], [19, 29, 19, 53], [40, 41, 40, 65], [61, 29, 61, 53], [19, 53, 40, 65], [61, 53, 40, 65]];
+const tiles = [0, 1, 2, 3].map((k) => ({ id: `${uid}-tile${k}`, x: 19 + k * 10.5 }));
+---
+<svg class="card-icon ci-render" viewBox="0 0 80 80" aria-hidden="true" focusable="false">
+  <defs>
+    {tiles.map((tile) => <clipPath id={tile.id}><rect x={tile.x - 0.25} y="14" width="11" height="54" /></clipPath>)}
+  </defs>
+  <g class="ci-rest">
+    <path class="r-face-top" d={top} /><path class="r-face-left" d={left} /><path class="r-face-right" d={right} />
+    <path class="ci-line" d={outline} />
+    <path class="ci-accent" d={glint} />
+  </g>
+  <g class="ci-play">
+    <g class="r-solid"><path class="r-face-flat" d={top} /><path class="r-face-flat" d={left} /><path class="r-face-flat" d={right} /></g>
+    {tiles.map((tile, k) => (
+      <g class="r-tile" clip-path={`url(#${tile.id})`} style={`--k: ${k}`}>
+        <path class="r-face-top" d={top} /><path class="r-face-left" d={left} /><path class="r-face-right" d={right} />
+      </g>
+    ))}
+    {edges.map(([x1, y1, x2, y2], k) => <line class="ci-line r-edge" x1={x1} y1={y1} x2={x2} y2={y2} pathLength="1" style={`--k: ${k}`} />)}
+    {vertices.map(([cx, cy], k) => <circle class="r-dot" cx={cx} cy={cy} r="2" style={`--k: ${k}`} />)}
+    <g class="r-bucket-show"><rect class="r-bucket" x="19" y="14" width="10.5" height="54" /></g>
+    <path class="ci-accent r-glint" d={glint} />
+  </g>
+</svg>

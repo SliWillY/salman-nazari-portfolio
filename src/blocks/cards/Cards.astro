@@ -1,23 +1,77 @@
 ---
 import CloudinaryImage from '../../components/CloudinaryImage.astro';
+import CardIcon from './icons/CardIcon.astro';
 import { t } from '../../lib/i18n';
 import { href } from '../../lib/site';
 const { block, lang } = Astro.props;
 const explore = lang === 'ar' ? 'استكشف' : 'Explore';
 const arrow = lang === 'ar' ? '↖' : '↗';
+const uid = `cards-${Math.random().toString(36).slice(2, 8)}`; // ids for aria-labelledby and the icons' clip paths
 ---
 <div class="b-cards" style={`--columns: ${block.columns}`}>
-  {block.items.map((item: any) => {
+  {block.items.map((item: any, i: number) => {
     const external = /^https?:/.test(item.href);
+    const id = `${uid}-${i}`;
+    // The whole card is one link, named by its title and described by its text. Titles are h3: the section heading above is the h2.
     return (
-      <a class="feature-card" href={href(item.href, lang)} target={external ? '_blank' : undefined} rel={external ? 'noreferrer' : undefined}>
+      <a class="feature-card" href={href(item.href, lang)} target={external ? '_blank' : undefined} rel={external ? 'noreferrer' : undefined} aria-labelledby={`${id}-title`} aria-describedby={item.text ? `${id}-text` : undefined}>
         <div>
           {item.image && <div class="feature-card-media"><CloudinaryImage publicId={item.image} alt="" width={720} sizes="(max-width: 800px) 100vw, 400px" /></div>}
-          <h2>{t(item.title, lang)}</h2>
-          {item.text && <p>{t(item.text, lang)}</p>}
+          {item.icon && <CardIcon name={item.icon} uid={id} />}
+          <h3 id={`${id}-title`}>{t(item.title, lang)}</h3>
+          {item.text && <p id={`${id}-text`}>{t(item.text, lang)}</p>}
         </div>
-        <span class="feature-link">{t(item.cta, lang) || explore} {arrow}</span>
+        <span class="feature-link" aria-hidden="true">{t(item.cta, lang) || explore} <span class="feature-arrow">{arrow}</span></span>
       </a>
     );
   })}
 </div>
+
+<script>
+  // Card icons: a static resting layer (.ci-rest) and a story layer (.ci-play). .is-playing restarts the story;
+  // leaving adds .is-leaving, which fades the story out over the resting icon instead of snapping mid-frame.
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  const canHover = matchMedia('(hover: hover)');
+  const FADE = 220; // ms, matches the .is-leaving fade in global.css
+  const timers = new WeakMap<Element, number>();
+
+  function play(icon: Element) {
+    if (reduced.matches) return;
+    clearTimeout(timers.get(icon));
+    icon.classList.remove('is-playing', 'is-leaving');
+    void icon.getBoundingClientRect(); // restart the CSS animations
+    icon.classList.add('is-playing');
+  }
+  function settle(icon: Element) {
+    if (!icon.classList.contains('is-playing') || icon.classList.contains('is-leaving')) return;
+    icon.classList.add('is-leaving');
+    timers.set(icon, window.setTimeout(() => icon.classList.remove('is-playing', 'is-leaving'), FADE));
+  }
+  const duration = (icon: Element) => {
+    const value = getComputedStyle(icon).getPropertyValue('--icon-duration').trim();
+    return parseFloat(value) * (value.endsWith('ms') ? 1 : 1000);
+  };
+
+  const cards = [...document.querySelectorAll<HTMLElement>('.feature-card')].filter((card) => card.querySelector('.card-icon'));
+  for (const card of cards) {
+    const icon = card.querySelector('.card-icon')!;
+    card.addEventListener('pointerenter', (event) => { if (event.pointerType !== 'touch') play(icon); });
+    card.addEventListener('pointerleave', (event) => { if (event.pointerType !== 'touch' && !card.matches(':focus-visible')) settle(icon); });
+    card.addEventListener('focus', () => { if (card.matches(':focus-visible')) play(icon); });
+    card.addEventListener('blur', () => { if (!card.matches(':hover')) settle(icon); });
+  }
+
+  // Touch screens (no hover): play each story once when its card is half in view, then return to rest.
+  if (!canHover.matches && !reduced.matches && 'IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        observer.unobserve(entry.target);
+        const icon = entry.target.querySelector('.card-icon')!;
+        play(icon);
+        timers.set(icon, window.setTimeout(() => settle(icon), duration(icon) + 800));
+      }
+    }, { threshold: 0.5 });
+    cards.forEach((card) => observer.observe(card));
+  }
+</script>

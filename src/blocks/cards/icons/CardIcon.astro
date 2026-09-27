@@ -1,0 +1,10 @@
+---
+// Animated line icon for a card, picked by the card's `icon` field. Each icon has a static resting layer (.ci-rest)
+// and a story layer (.ci-play) that plays on hover / focus / scroll-into-view (see the script in Cards.astro).
+import Render from './Render.astro';
+import Game from './Game.astro';
+import Ux from './Ux.astro';
+const { name, uid } = Astro.props as { name: 'render' | 'game' | 'ux'; uid: string };
+const Icon = { render: Render, game: Game, ux: Ux }[name];
+---
+{Icon && <Icon uid={uid} />}

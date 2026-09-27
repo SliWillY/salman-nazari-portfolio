@@ -1,7 +1,7 @@
 import { z } from 'astro/zod';
 import { L } from '../../lib/i18n';
 
-export const meta = { label: 'Cards', group: 'Site', description: 'Link cards with optional image, e.g. the home page sections. `href` can be a site page (`games-dev`) or a full URL.' };
+export const meta = { label: 'Cards', group: 'Site', description: 'Link cards with an optional image or animated icon (render | game | ux), e.g. the home page sections. `href` can be a site page (`games-dev`) or a full URL.' };
 
 export const schema = z.object({
   type: z.literal('cards'),
@@ -11,6 +11,7 @@ export const schema = z.object({
     text: L.optional(),
     href: z.string(),
     image: z.string().optional(),
+    icon: z.enum(['render', 'game', 'ux']).optional(),
     cta: L.optional()
   }).strict()).min(1)
 }).strict();
@@ -19,7 +20,7 @@ export const example = {
   type: 'cards',
   columns: 2,
   items: [
-    { title: { en: '3D Renders', ar: 'تصاميم ثلاثية الأبعاد' }, text: { en: 'Light, composition, detail.', ar: 'الضوء والتكوين والتفاصيل.' }, href: '3d-renders' },
-    { title: { en: 'Games Dev', ar: 'تطوير الألعاب' }, text: { en: 'Art, levels and systems.', ar: 'الفن والمراحل والأنظمة.' }, href: 'games-dev' }
+    { title: { en: '3D Renders', ar: 'تصاميم ثلاثية الأبعاد' }, text: { en: 'Light, composition, detail.', ar: 'الضوء والتكوين والتفاصيل.' }, href: '3d-renders', icon: 'render' },
+    { title: { en: 'Games Dev', ar: 'تطوير الألعاب' }, text: { en: 'Art, levels and systems.', ar: 'الفن والمراحل والأنظمة.' }, href: 'games-dev', icon: 'game' }
   ]
 };
