@@ -1,0 +1,21 @@
+title: { en: Alfajr Al Hadith Watch, ar: ساعة الفجر الحديث }
+summary:
+  en: Product renders of the Alfajr Al Hadith watch in five finishes, made in Blender.
+  ar: لقطات منتج لساعة الفجر الحديث بخمسة ألوان، مُنفّذة في Blender.
+cover: GoldenSilver_mkrtma
+role: { en: "Modeling, texturing, lighting, rendering", ar: "النمذجة والإكساء والإضاءة والإخراج" }
+tools: [Blender]
+order: 1
+
+sections:
+  - prefab: showcase-grid
+    props:
+      title: { en: Finishes, ar: الألوان }
+      aspect: "1 / 1"
+      columns: 2
+      images:
+        - { publicId: Golden_qi3ku4, caption: { en: Golden, ar: ذهبي } }
+        - { publicId: GoldenSilver_mkrtma, caption: { en: Golden & Silver, ar: ذهبي وفضي } }
+        - { publicId: Copper_f6eoho, caption: { en: Copper, ar: نحاسي } }
+        - { publicId: CopperSilver_yxqqdr, caption: { en: Copper & Silver, ar: نحاسي وفضي } }
+        - { publicId: Silver_jjpekd, caption: { en: Silver, ar: فضي } }

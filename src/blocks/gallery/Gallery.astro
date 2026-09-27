@@ -14,7 +14,7 @@ const group = `gallery-${Math.random().toString(36).slice(2, 8)}`;
 const sizes = slider ? '(max-width: 1100px) 100vw, 1120px' : `(max-width: 800px) 100vw, ${Math.round(100 / block.columns)}vw`;
 const labels = lang === 'ar' ? { prev: 'السابق', next: 'التالي', of: 'من' } : { prev: 'Previous', next: 'Next', of: 'of' };
 ---
-<div class:list={['b-gallery', `layout-${block.layout}`, `gap-${block.gap}`]} style={`--media-aspect: ${aspect}; --columns: ${block.columns}`} data-gallery={slider ? '' : undefined}>
+<div class:list={['b-gallery', `layout-${block.layout}`, `gap-${block.gap}`, { 'is-transparent': block.transparent }]} style={`--media-aspect: ${aspect}; --columns: ${block.columns}`} data-gallery={slider ? '' : undefined}>
   {title && <h3 class="b-gallery-title">{title}</h3>}
   <div class="gallery-track" tabindex={slider ? 0 : undefined} role={slider ? 'region' : undefined} aria-roledescription={slider ? 'carousel' : undefined} aria-label={title || undefined}>
     {items.map((item, i) => {

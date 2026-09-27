@@ -511,6 +511,10 @@
               "type": "boolean",
               "default": true
             },
+            "transparent": {
+              "type": "boolean",
+              "default": false
+            },
             "items": {
               "type": "array",
               "items": {
@@ -584,7 +588,7 @@
           ],
           "additionalProperties": false,
           "title": "Gallery",
-          "description": "Several images as a `grid`, `masonry` (natural heights) or `slider`. Items are public IDs, or objects with alt/caption."
+          "description": "Several images as a `grid`, `masonry` (natural heights) or `slider`. Items are public IDs, or objects with alt/caption. `transparent` drops the placeholder backdrop for cut-out PNGs."
         },
         {
           "type": "object",

@@ -1,0 +1,37 @@
+title: { en: Turkish Coffee Pot, ar: إبريق القهوة التركية }
+summary:
+  en: Product renders of Turkish coffee, made in Blender.
+  ar: لقطات منتج للقهوة التركية، مُنفّذة في Blender.
+cover: turkish_coffepot_05_2x_wdq5gx
+role: { en: "Modeling, texturing, lighting, rendering", ar: "النمذجة والإكساء والإضاءة والإخراج" }
+tools: [Blender]
+order: 2
+
+sections:
+  - theme: dark
+    width: wide
+    blocks:
+      - type: heading
+        text: { en: Renders, ar: اللقطات }
+
+      # Full row
+      - type: image
+        publicId: turkish_coffepot_07_dqga94
+        alt: { en: Turkish Coffee Pot, ar: إبريق القهوة التركية }
+        lightbox: true
+
+  - prefab: showcase-grid
+    props:
+      theme: paper
+      columns: 3
+      aspect: "1 / 1"
+      title: { en: The Process, ar: المراحل }
+      images:
+        - turkish_coffepot_01_ugc7ud
+        - turkish_coffepot_02_mozpjb
+        - turkish_coffepot_03_l3ysqo
+        - turkish_coffepot_04_ws1v4i
+        - turkish_coffepot_05_2x_wdq5gx
+        - turkish_coffepot_clay_alpgau
+
+

@@ -1,7 +1,7 @@
 import { z } from 'astro/zod';
 import { L } from '../../lib/i18n';
 
-export const meta = { label: 'Gallery', group: 'Media', description: 'Several images as a `grid`, `masonry` (natural heights) or `slider`. Items are public IDs, or objects with alt/caption.' };
+export const meta = { label: 'Gallery', group: 'Media', description: 'Several images as a `grid`, `masonry` (natural heights) or `slider`. Items are public IDs, or objects with alt/caption. `transparent` drops the placeholder backdrop for cut-out PNGs.' };
 
 const item = z.union([
   z.string(),
@@ -12,10 +12,11 @@ export const schema = z.object({
   type: z.literal('gallery'),
   title: L.optional(),
   layout: z.enum(['grid', 'masonry', 'slider']).default('grid'),
-  columns: z.coerce.number().int().min(1).max(4).default(3),
+  columns: z.coerce.number().int().min(1).max(6).default(3),
   aspect: z.string().optional(),
   gap: z.enum(['none', 's', 'm']).default('s'),
   lightbox: z.boolean().default(true),
+  transparent: z.boolean().default(false),
   items: z.array(item).min(1, 'add at least one image to items')
 }).strict();
 

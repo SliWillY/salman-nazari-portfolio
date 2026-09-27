@@ -1,0 +1,69 @@
+title: { en: Perfume, ar: عطور }
+summary:
+  en: Product renders of various perfumes, made in Blender.
+  ar: لقطات منتج لعطور مختلفة في عبوات مختلفة، مُنفّذة في Blender.
+cover: AUDELA_Angaled_03_poan8q
+role: { en: "Modeling, texturing, lighting, rendering", ar: "النمذجة والإكساء والإضاءة والإخراج" }
+tools: [Blender]
+order: 4
+
+sections:
+  - theme: dark
+    width: wide
+    blocks:
+      - type: heading
+        text: { en: AUDELA Perfume, ar: عطور AUDELA }
+
+      # Full row
+      - type: image
+        publicId: AUDELA_Angaled_03_poan8q
+        alt: { en: AUDELA perfume bottles, ar: زجاجات عطور AUDELA }
+        lightbox: true
+
+      # Two in a row
+      - type: gallery
+        columns: 2
+        aspect: "1 / 1"
+        items:
+          - { publicId: AUDELA_Rose_Show_01_ywx3oe, alt: AUDELA Rose }
+          - { publicId: AUDELA_Signature_Show_02_awz8dk, alt: AUDELA Signature }
+
+      # Transparent bottles, all in one row
+      - type: gallery
+        columns: 5
+        aspect: "820 / 1880"
+        transparent: true
+        items:
+          - { publicId: AUDELA_Rose_vds6yx }
+          - { publicId: AUDELA_Highness_c3bx8z }
+          - { publicId: AUDELA_Classic_h05mnz }
+          - { publicId: AUDELA_Signature_sbgghw }
+          - { publicId: AUDELA_Baleine_ambree_fvs9f2 }
+
+  - theme: paper
+    width: wide   
+    blocks:
+    - type: heading
+      text: { en: DE MARRON Perfume, ar: عطور DE MARRON }
+
+    # Full row
+    - type: image
+      publicId: DE_MARRON_poster_pfdh1k
+      alt: { en: DE MARRON perfume bottles, ar: زجاجات عطور DE MARRON }
+      lightbox: true
+
+    # 4 row images
+    - type: gallery
+      layout: masonry
+      columns: 4
+      aspect: "860 / 1920"
+      transparent: true
+      items:
+        - { publicId: DE_MARRON_ROUGE_cnfzqu}
+        - { publicId: DE_MARRON_Iris_mzkygs}
+        - { publicId: DE_MARRON_Royal_Rose_r7823y}
+        - { publicId: DE_MARRON_Ombre_Leather_alqu1m}
+        - { publicId: DE_MARRON_Tobacco_Vanille_gaxuzj}
+        - { publicId: DE_MARRON_Pure_Royal_gkfikw}
+        - { publicId: DE_MARRON_Dark_Vanille_riwqgp}
+        - { publicId: DE_MARRON_Orchidee_Vanille_wrqqy4}

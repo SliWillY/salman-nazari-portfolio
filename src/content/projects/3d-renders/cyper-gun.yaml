@@ -1,0 +1,27 @@
+title: { en: Cyper Gun, ar: بندقية Cyper }
+summary:
+  en: Product renders of the Cyper Gun, made in Blender.
+  ar: لقطات منتج بندقية Cyper، مُنفّذة في Blender.
+cover: CyberGunRight_b8np1z
+role: { en: "Modeling, texturing, lighting, rendering", ar: "النمذجة والإكساء والإضاءة والإخراج" }
+tools: [Blender]
+order: 4
+
+sections:
+  - theme: dark
+    width: wide
+    blocks:
+
+      # Full row
+      - type: image
+        publicId: CyberGun_rpzbfh
+        alt: { en: CYPER GUN, ar: بندقية CYPER }
+        lightbox: true
+
+      # Two in a row
+      - type: gallery
+        columns: 2
+        aspect: "1920 / 1080"
+        items:
+          - CyberGunRight_b8np1z
+          - CyberGunBack_ja1pyk
