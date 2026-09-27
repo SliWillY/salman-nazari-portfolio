@@ -2,7 +2,8 @@
 // Interactive "screen stack" for image-text, a flat 2D cascade (no 3D): the front screenshot rests in its browser
 // frame; bringing the pointer near it (or focus / tap) fans the other screens out behind it, each one stepped up and toward the text column.
 // Each screen's caption is its window title. Hovering a screen lifts it a little; pressing it slides it up until ~80% shows above the screen in front
-// (press again to lower it). Arrow keys browse, Enter / Space raise, Esc lowers then collapses.
+// (press again to lower it). Pressing the front screen, which can't rise, gives it a playful nudge.
+// Arrow keys browse, Enter / Space raise, Esc lowers then collapses.
 // Under 640px it becomes a swipeable strip. States are CSS classes; the script only toggles them.
 import CloudinaryImage from '../../components/CloudinaryImage.astro';
 import FrameBar from '../../components/FrameBar.astro';
@@ -81,6 +82,16 @@ const label = lang === 'ar'
       if (index >= 0) stop = index;
       render();
     }
+
+    // The front screen can't rise, so pressing it plays a short nudge instead (restarts on every press).
+    function sayHere(card: HTMLElement) {
+      card.classList.remove('is-here');
+      void card.offsetWidth; // restart the animation
+      card.classList.add('is-here');
+    }
+    cards[0].addEventListener('animationend', (event) => {
+      if (event.animationName === 'stack-nudge') cards[0].classList.remove('is-here');
+    });
 
     // The front screen is already fully visible, so only the screens behind it can be raised.
     function toggleRaise(index: number) {
@@ -163,7 +174,9 @@ const label = lang === 'ar'
       const card = cardFrom(event.target);
       if (!card || strip.matches) return;
       if (!open) { setOpen(true); return; }
-      toggleRaise(cards.indexOf(card));
+      const index = cards.indexOf(card);
+      if (index === 0) sayHere(card);
+      toggleRaise(index);
     });
     document.addEventListener('pointerdown', (event) => {
       if (open && event.pointerType === 'touch' && !root.contains(event.target as Node)) setOpen(false);

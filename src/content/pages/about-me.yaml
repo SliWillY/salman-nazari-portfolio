@@ -5,22 +5,38 @@ description:
 eyebrow: { en: Profile, ar: الملف الشخصي }
 
 sections:
-  - width: narrow
-    blocks:
-      - type: text
-        size: large
-        text:
-          en: |
-            Salman is a multidisciplinary designer focused on creating engaging experiences, interactive systems, and human-centered products. His background spans game design, 3D art, UX, e-commerce, gamification, and behavioral design, giving him a systems-oriented approach to understanding how people interact with designed environments.
+  # Portrait beside the story: photo in a narrow column, text in a wide one (about the same reading width as before).
+  # On phones the columns stack, photo first.
+  - blocks:
+      - type: columns
+        widths: "1fr 2fr"
+        gap: l
+        columns:
+          - blocks:
+              - type: image
+                publicId: "صورة_سلمان_شماغ_yqlxvv"   # TODO: Cloudinary public ID of your portrait (a vertical photo works best)
+                alt: { en: "Portrait of Salman Nazari", ar: "صورة سلمان ناظري" }
+                aspect: "4 / 5"
+                size: s
+          - blocks:
+              - type: text
+                size: large
+                text:
+                  en: |
+                    Hi, I'm Salman.
 
-            With a foundation in game design and 3D art, Salman creates immersive environments and story worlds through composition, lighting, spatial design, and strong visual direction. He works from blockout to final using modular workflows, props, materials, and real-time optimization across Blender, Unity, and Unreal Engine.
+                    I started with 3D. I opened Blender for the first time in 2016, and it led me to game design, which I later studied at Bahçeşehir University in Istanbul. I love building worlds and working on composition, lighting and space until an environment tells a story on its own. I work from blockout to final, with modular assets, materials and real-time optimization in Blender, Unreal Engine and Unity.
 
-            His interests have expanded from what an experience looks like to how it works: how users move through it, what motivates them, where friction occurs, and how systems can encourage meaningful behavior.
+                    Over time, I started asking a different question: not only how an experience looks, but how it works. Why do people click one thing and ignore another? What keeps them coming back? Where do they get stuck?
 
-            He brings a technical foundation that allows him to move between concept, design, prototyping, and implementation, with experience in C#, Python, SQL, Unity, Unreal Engine, Blender, web technologies, and Adobe Creative Suite.
-          ar: |
-            سلمان مصمم متعدد التخصصات يركز على ابتكار تجارب تفاعلية وأنظمة ومنتجات تتمحور حول الإنسان. يمتد عمله بين تصميم الألعاب والفن ثلاثي الأبعاد وتجربة المستخدم والتجارة الإلكترونية والتلعيب وتصميم السلوك.
+                    Running the online store for Clarios Shoes gave me real answers. I built the store myself, photographed the products, ran the ads and watched the numbers closely. I learned that small things, like a missing size guide or a hidden shipping cost, can stop someone from buying.
 
-            بدأ من تصميم الألعاب والفن ثلاثي الأبعاد، ويصنع البيئات والعوالم القصصية من خلال التكوين والإضاءة والتصميم المكاني والتوجيه البصري. يعمل من التخطيط الأولي حتى النتيجة النهائية باستخدام Blender وUnity وUnreal Engine.
+                    At the same time, I was running the competition program at a Quran school with about 60 students. I started with a spreadsheet of points and streaks. When it got too complicated for the teachers, I built Tanafusi, a web app with levels, teams and rewards. Seeing which features the students cared about, and which ones they ignored, taught me a lot about what really motivates people.
 
-            يهتم بكيفية عمل التجربة، وكيف يتحرك المستخدم خلالها، وما الذي يحفزه، وأين يحدث الاحتكاك، وكيف يمكن للأنظمة أن تشجع سلوكاً ذا معنى.
+                    Today I work between design and building. I can take an idea from a sketch to a working prototype using Python, SQL, Flask, C#, web technologies, Blender, Unreal Engine and Adobe tools, and I'm always learning the next thing.
+                  ar: |
+                    سلمان مصمم متعدد التخصصات يركز على ابتكار تجارب تفاعلية وأنظمة ومنتجات تتمحور حول الإنسان. يمتد عمله بين تصميم الألعاب والفن ثلاثي الأبعاد وتجربة المستخدم والتجارة الإلكترونية والتلعيب وتصميم السلوك.
+
+                    بدأ من تصميم الألعاب والفن ثلاثي الأبعاد، ويصنع البيئات والعوالم القصصية من خلال التكوين والإضاءة والتصميم المكاني والتوجيه البصري. يعمل من التخطيط الأولي حتى النتيجة النهائية باستخدام Blender وUnity وUnreal Engine.
+
+                    يهتم بكيفية عمل التجربة، وكيف يتحرك المستخدم خلالها، وما الذي يحفزه، وأين يحدث الاحتكاك، وكيف يمكن للأنظمة أن تشجع سلوكاً ذا معنى.

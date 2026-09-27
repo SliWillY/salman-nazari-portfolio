@@ -433,6 +433,14 @@ figcaption { margin-top: 8px; color: var(--text-muted); font-size: .8rem; }
 .stack-card .frame-title { transition: color .2s ease; }
 .stack-root.is-open .stack-card:is(.is-hover, .is-raised) .frame-title { color: var(--text); }
 .stack-root.is-open .stack-card:is(.is-hover, .is-raised) .frame-title::before { content: ''; display: inline-block; width: 6px; height: 6px; margin-inline-end: 7px; border-radius: 50%; background: var(--accent); vertical-align: middle; }
+/* Front screen pressed (.is-here): it hops a little, as if to say "I'm here". */
+.stack-card.is-here .stack-screen { animation: stack-nudge .5s var(--ease); }
+@keyframes stack-nudge {
+  0%, 100% { transform: translateY(0); }
+  35% { transform: translateY(-8px); }
+  65% { transform: translateY(0); }
+  82% { transform: translateY(-2px); }
+}
 /* Arabic: more line-height, and no tracking/uppercase (they don't apply to Arabic script). */
 :lang(ar) .b-image-text-body .prose { line-height: 1.9; }
 :lang(ar) .b-image-text-body .b-image-text-title { letter-spacing: 0; line-height: 1.25; }
@@ -529,6 +537,7 @@ figcaption { margin-top: 8px; color: var(--text-muted); font-size: .8rem; }
   .b-image-text.side-end .b-image-text-media { order: 0; }
   .b-image-text, .b-image-text.is-framed { grid-template-columns: 1fr; gap: 24px; }
   .b-image-text-details > div { grid-template-columns: 1fr; gap: 6px; }
+  .b-columns .b-image.size-s { max-width: 240px; } /* e.g. a portrait beside text: don't let it fill the phone screen once stacked */
   .layout-grid:not([style*="--columns: 1"]) .gallery-track { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .layout-masonry .gallery-track { columns: 2; }
   .lightbox figure { padding: 48px 12px; }
@@ -554,4 +563,5 @@ figcaption { margin-top: 8px; color: var(--text-muted); font-size: .8rem; }
 /* Screen stack with reduced motion: same states, no movement animation. */
 @media (prefers-reduced-motion: reduce) {
   .stack-card, .stack-card-inner, .stack-screen::after, .stack-card .frame-title { transition: none !important; }
+  .stack-card.is-here .stack-screen { animation: none; }
 }
