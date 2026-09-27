@@ -14,6 +14,19 @@ const dir = lang === 'ar' ? 'rtl' : 'ltr';
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {import.meta.env.PROD && (
+      <Fragment>
+        <!-- Google tag (gtag.js). Production builds only, so local dev visits aren't counted. -->
+        <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-B5MPLJRW2E"></script>
+        <script is:inline>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'G-B5MPLJRW2E');
+        </script>
+      </Fragment>
+    )}
     <meta name="description" content={description} />
     <link rel="icon" type="image/svg+xml" href={path("favicon.svg")} />
     <meta name="color-scheme" content="light dark" />
