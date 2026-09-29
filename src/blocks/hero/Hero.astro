@@ -1,27 +1,30 @@
 ---
 // Page hero. `size: home` is the headline on the home stage. `size: page` puts a banner at the top of the page
-// (tall with floating toys on a world's own page, a slim strip elsewhere) and, under it, the big title beside its
-// description, with a superscript number: the world's number (UX⁰¹…) or a project's year.
+// (tall with floating toys on a world's own page; medium on About and Certificates and a slim strip on projects,
+// both with confetti only) and, under it, the big title beside its description, with a superscript number: the
+// page's number (About⁰⁰, UX⁰¹…) or a project's year.
 import Banner from '../../components/Banner.astro';
 import { t } from '../../lib/i18n';
-import { categoryHue, worldNumber } from '../../lib/site';
+import { categoryHue, pageNumber } from '../../lib/site';
 const { block, lang, ctx } = Astro.props;
 const eyebrow = t(block.eyebrow ?? ctx.eyebrow, lang);
 const title = t(block.title ?? ctx.title, lang);
 const intro = t(block.intro ?? ctx.description, lang);
 const eyebrowHref = block.eyebrow ? undefined : ctx.eyebrowHref;
 const world = ctx.category ? undefined : categoryHue[ctx.route];
-const number = world ? worldNumber(ctx.route) : ctx.project?.year ? String(ctx.project.year) : '';
+const number = ctx.category ? (ctx.project?.year ? String(ctx.project.year) : '') : pageNumber(ctx.route);
+const bannerSize = world ? 'tall' : ['about-me', 'certificates'].includes(ctx.route) ? 'medium' : 'slim';
 ---
 {block.size === 'home' ? (
   <header class="b-hero size-home">
-    {eyebrow && <span class="eyebrow">{eyebrow}</span>}
+    {/* The greeting, word by word: each word takes one of the site's four colours (whole words, so Arabic stays joined). */}
+    {eyebrow && <span class="eyebrow">{eyebrow.split(' ').map((word, k) => <span class="hi-word" style={`--k: ${k}`}>{word}</span>)}</span>}
     <h1>{title}</h1>
     {intro && <p>{intro}</p>}
   </header>
 ) : (
   <header class="b-hero size-page">
-    <Banner world={world} eyebrow={eyebrow} eyebrowHref={eyebrowHref} />
+    <Banner world={world} size={bannerSize} eyebrow={eyebrow} eyebrowHref={eyebrowHref} />
     <div class="hero-intro">
       <h1>{title}{number && <sup class="hero-num">{number}</sup>}</h1>
       {intro && <p class="hero-lede">{intro}</p>}

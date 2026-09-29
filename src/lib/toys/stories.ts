@@ -3,6 +3,8 @@
 // 1 = the stage's size), so the engine can spring the toys in from wherever they float, loop the story, or jump to
 // the finished pose (`still`) for reduced motion. apply() drives details (the XP fill, clay → render); events()
 // fires the confetti between two times. Motion follows motion-graphics habits: anticipation, overshoot, squash.
+// Stories are written left to right; in Arabic the engine plays them mirrored (positions, turns and the toys
+// themselves), and `rtl` tells a story so its own extras and details can follow.
 import * as THREE from 'three';
 import { setClay, type Kit, type PaintName, type Toy, type ToyKind } from './models';
 
@@ -20,8 +22,6 @@ export interface Hooks { burst(at: V3, count?: number, fixed?: boolean): void; p
 export interface Story {
   parts: Record<string, { kind: ToyKind; paint?: PaintName }>;
   still: number;
-  /** Mirror the story in Arabic (the Games run goes toward the inline end). */
-  mirror: boolean;
   frame(t: number, rtl: boolean): Frame;
   apply?(t: number, toys: Record<string, Toy>, rtl: boolean, kit: Kit): void;
   events?(from: number, to: number, hooks: Hooks, rtl: boolean): void;
@@ -53,7 +53,7 @@ function crossed(from: number, to: number, at: number, start = 0, cycle = Infini
 // ---------- UX & Gamification: "interaction → reward" ----------
 // A screen lands, a button and an XP bar snap onto it; a cursor swoops in and clicks (button squashes), the bar fills
 // with a little elastic stretch, and a star badge pops out with a spin and a burst of confetti. The star scatters and
-// the bar drains at the start of every cycle. The bar fills from the inline start (right in Arabic).
+// the bar drains at the start of every cycle.
 // Sits a little low on its stage, so the screen stays clear of the heading above the first world.
 const UX = { first: 3.2, cycle: 2.9, click: [0.05, -0.12, 0.2] as V3, away: [0.34, -0.34, 0.12] as V3, badge: [0.36, 0.34, 0.14] as V3 };
 function uxBeats(t: number) {
@@ -65,7 +65,6 @@ function uxBeats(t: number) {
 const ux: Story = {
   parts: { panel: { kind: 'panel' }, button: { kind: 'button' }, bar: { kind: 'bar' }, star: { kind: 'star' }, cursor: { kind: 'cursor' } },
   still: 2.5,
-  mirror: false,
   frame(t) {
     const b = uxBeats(t);
     const press = thump(b.c, b.click, 0.16);
@@ -84,13 +83,13 @@ const ux: Story = {
       }
     };
   },
-  apply(t, toys, rtl) {
+  apply(t, toys) {
     const b = uxBeats(t);
     const fill = easeOut(span(b.c, b.fill, 0.55));
     const level = b.first || b.c >= b.fill ? lerp(0.35, 1, fill) + 0.06 * Math.sin(Math.PI * fill) : lerp(1, 0.35, easeInOut(span(b.c, 0, 0.4)));
     const bar = toys.bar.parts.fill;
-    bar.position.x = rtl ? 0.47 : -0.47;
-    bar.scale.x = (rtl ? -1 : 1) * Math.min(level, 1.04);
+    bar.position.x = -0.47; // fills from the left (from the right in Arabic, mirrored)
+    bar.scale.x = Math.min(level, 1.04);
   },
   events(from, to, hooks) {
     const badgeAt = (first: boolean) => (first ? 1.45 + 0.35 + 0.2 : 1.45 + 0.2);
@@ -102,7 +101,7 @@ const ux: Story = {
 // ---------- Games Dev: "build a level, play it" ----------
 // Three platforms snap into a staircase, a coin spins above the last one, the buddy drops in with a squash, hops
 // across and head-butts the coin, which pops into confetti and a "+1". A new coin appears at the far end and the
-// buddy runs back. Mirrored in Arabic.
+// buddy runs back.
 const GAME = {
   platforms: [[-0.3, -0.28], [0, -0.1], [0.3, 0.08]] as [number, number][],
   lift: 0.108, // platform centre → buddy centre
@@ -143,7 +142,6 @@ const game: Story = {
     buddy: { kind: 'buddy' }, coin: { kind: 'coin' }
   },
   still: 1.58, // the buddy at the top of its jump, right under the coin
-  mirror: true,
   frame(t) {
     const r = gameRun(t);
     const { pos, landed, air } = buddy(r);
@@ -261,7 +259,6 @@ function setLook(toy: Toy, fill: number, done: number, clay: THREE.Color) {
 const render: Story = {
   parts: { cube: { kind: 'cube', paint: 'sky' }, cone: { kind: 'cone', paint: 'sun' }, sphere: { kind: 'ball', paint: 'bubblegum' }, torus: { kind: 'torus', paint: 'grape' } },
   still: 2.9,
-  mirror: false,
   frame(t) {
     const parts: Record<string, PartPose> = {};
     Object.entries(renderPoses).forEach(([name, pose], k) => {
@@ -276,8 +273,8 @@ const render: Story = {
     Object.entries(renderPoses).forEach(([name, pose], k) => {
       const toy = toys[name];
       if (!toy.parts.wire) toy.object.add((toy.parts.wire = wireFor(toy.kind, kit)));
-      // Screen x of the part after the turntable turn: the sweep reaches it there.
-      const px = pose.p[0] * Math.cos(yaw) + pose.p[2] * Math.sin(yaw);
+      // Screen x of the part after the turntable turn (mirrored in Arabic): the sweep reaches it there.
+      const px = (rtl ? -1 : 1) * (pose.p[0] * Math.cos(yaw) + pose.p[2] * Math.sin(yaw));
       setLook(toy, easeOut(span(t, RENDER.clay + k * 0.1, 0.3)), rendered(t, px, rtl), clay);
     });
   },
@@ -336,8 +333,8 @@ const render: Story = {
     scan.position.set(sweepX(t, rtl), -0.02, 0.3);
     const g = span(t, RENDER.sparkle, 0.4);
     sparkle.scale.setScalar(0.14 * pop(g) * (g >= 1 ? 1 + 0.1 * Math.sin(t * 3) : 1));
-    sparkle.position.set(0.36, 0.3, 0.3);
-    sparkle.rotation.z = -0.9 * (1 - easeOut(g)) + (g >= 1 ? 0.15 * Math.sin(t * 1.3) : 0);
+    sparkle.position.set(rtl ? -0.36 : 0.36, 0.3, 0.3); // top right (top left in Arabic, where the burst is mirrored too)
+    sparkle.rotation.z = (rtl ? -1 : 1) * (-0.9 * (1 - easeOut(g)) + (g >= 1 ? 0.15 * Math.sin(t * 1.3) : 0));
   },
   events(from, to, hooks) {
     if (crossed(from, to, RENDER.sparkle)) hooks.burst([0.36, 0.3, 0.3], 18, true);

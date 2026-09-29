@@ -1,32 +1,33 @@
 ---
-// Page-top banner (the page hero's picture): a sun gradient in the page's world colours with paper confetti dots,
-// under the floating glass header. On a world's own page it is tall and that world's toys float in it (three.js,
-// loaded after first paint); elsewhere it is a slim strip. The eyebrow sits on it as a frosted-glass pill.
-// Styles: global.css, "stage".
+// Page-top banner (the page hero's picture): a sun gradient in the page's colours under the floating glass header,
+// with 3D paper confetti drifting in it (three.js, loaded after first paint). On a world's own page it is tall and
+// that world's toys float in it too; About and Certificates (medium) and projects (slim) have the confetti only.
+// The eyebrow sits on it as a frosted-glass pill. Styles: global.css, "stage".
 import type { Hue } from '../lib/site';
-const { world, eyebrow, eyebrowHref } = Astro.props as { world?: Hue; eyebrow?: string; eyebrowHref?: string };
+const { world, size = 'slim', eyebrow, eyebrowHref } = Astro.props as { world?: Hue; size?: 'tall' | 'medium' | 'slim'; eyebrow?: string; eyebrowHref?: string };
 ---
-<div class:list={['page-banner', world ? 'is-tall' : 'is-slim']} data-banner={world}>
-  {world && <canvas class="banner-canvas" aria-hidden="true"></canvas>}
+<div class:list={['page-banner', `is-${size}`]} data-banner={world ?? ''}>
+  <canvas class="banner-canvas" aria-hidden="true"></canvas>
   {eyebrow && (eyebrowHref
     ? <a class="eyebrow banner-eyebrow" href={eyebrowHref}>{eyebrow}</a>
     : <span class="eyebrow banner-eyebrow">{eyebrow}</span>)}
 </div>
 
 <script>
-  // Each world's banner floats its own story toys plus three of its own. Fewer on phones.
-  const ICON = { ux: 'ux', games: 'game', '3d': 'render' } as const;
-  const EXTRA = { ux: ['eyeball', 'bubbles', 'pill'], games: ['candycorn', 'worm', 'gem'], '3d': ['donut', 'ridgeball', 'coil'] } as const;
+  // A world's banner floats its own story toys plus three of its own; the others only drift confetti. Fewer on phones.
+  import type { ToyKind } from '../lib/toys/models';
+  const STORY = { ux: 'ux', games: 'game', '3d': 'render' } as const;
+  const EXTRA: Record<keyof typeof STORY, ToyKind[]> = { ux: ['eyeball', 'bubbles', 'pill'], games: ['candycorn', 'worm', 'gem'], '3d': ['donut', 'ridgeball', 'coil'] };
   const banners = [...document.querySelectorAll<HTMLElement>('.page-banner[data-banner]')];
   async function start() {
     const [{ mountToys }, { stories }] = await Promise.all([import('../lib/toys/engine'), import('../lib/toys/stories')]);
     const small = matchMedia('(max-width: 700px)').matches;
     for (const banner of banners) {
-      const world = banner.dataset.banner as keyof typeof ICON;
+      const world = banner.dataset.banner as keyof typeof STORY | '';
       const canvas = banner.querySelector('canvas');
-      if (!canvas || !(world in ICON)) continue;
-      const float = [...Object.values(stories[ICON[world]].parts), ...EXTRA[world].map((kind) => ({ kind }))];
-      mountToys(banner, canvas, { float: small ? float.slice(0, 6) : float, confetti: small ? 8 : 18, seed: 5, size: small ? 0.24 : 0.2, avoid: () => [...banner.querySelectorAll('.banner-eyebrow')] });
+      if (!canvas) continue;
+      const float = world in STORY ? [...Object.values(stories[STORY[world as keyof typeof STORY]].parts), ...EXTRA[world as keyof typeof STORY].map((kind) => ({ kind }))] : [];
+      mountToys(banner, canvas, { float: small ? float.slice(0, 6) : float, confetti: (small ? 8 : 18) + (float.length ? 0 : small ? 4 : 10), seed: 5, size: small ? 0.24 : 0.2, avoid: () => [...banner.querySelectorAll('.banner-eyebrow')] });
     }
   }
   if (banners.length) {

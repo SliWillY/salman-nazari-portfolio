@@ -1,6 +1,6 @@
 ---
 import Wordmark from './Wordmark.astro';
-import { nav, labels, themeLabels, path, categoryHue, worldNumber, type Lang } from '../lib/site';
+import { nav, labels, themeLabels, path, categoryHue, pageNumber, type Lang } from '../lib/site';
 const { lang, currentSlug } = Astro.props as { lang: Lang; currentSlug: string };
 const t = labels[lang];
 const hrefFor = (target: Lang) => path(currentSlug === 'home' ? `/${target}/` : `/${target}/${currentSlug}/`);
@@ -15,9 +15,10 @@ const target = languages.find((l) => l.code !== lang)!;
     <Wordmark lang={lang} />
 
     <nav class="primary-nav" id="primary-nav" aria-label={t.nav} data-nav>
-      <ul>
+      {/* The bar stays left-to-right, but the menu itself reads in the page's direction: in Arabic it starts from the right. */}
+      <ul dir={lang === 'ar' ? 'rtl' : 'ltr'}>
         {nav.map((item) => (
-          <li><a class:list={[categoryHue[item.slug] && `hue-${categoryHue[item.slug]}`]} href={path(`/${lang}/${item.slug}/`)} aria-current={isActive(item.slug) ? 'page' : undefined} lang={lang} dir="auto">{item[lang]}{worldNumber(item.slug) && <sup class="nav-num" aria-hidden="true">{worldNumber(item.slug)}</sup>}</a></li>
+          <li><a class:list={[categoryHue[item.slug] ? `hue-${categoryHue[item.slug]}` : pageNumber(item.slug) && 'hue-brand']} href={path(`/${lang}/${item.slug}/`)} aria-current={isActive(item.slug) ? 'page' : undefined} lang={lang} dir="auto">{item[lang]}{pageNumber(item.slug) && <sup class="nav-num" aria-hidden="true">{pageNumber(item.slug)}</sup>}</a></li>
         ))}
       </ul>
     </nav>

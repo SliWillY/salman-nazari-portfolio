@@ -2,5 +2,12 @@
 import { labels, path, type Lang } from '../lib/site';
 const { lang } = Astro.props as { lang: Lang };
 ---
-<footer class="site-footer"><span>© {new Date().getFullYear()} Salman Nazari</span><a href={path(`/${lang}/about-me/`)}>{labels[lang].contact}</a><a href={path("sitemap-index.xml")}>Sitemap</a></footer>
+<!-- The four colours of the site (orange, purple, green, blue) as candy dots; pointed at, they bounce one after another in reading direction. -->
+<footer class="site-footer"><span class="footer-dots" aria-hidden="true" data-footer-dots><i></i><i></i><i></i><i></i></span><span>© {new Date().getFullYear()} Salman Nazari</span><a href={path(`/${lang}/about-me/`)}>{labels[lang].contact}</a><a href={path("sitemap-index.xml")}>Sitemap</a></footer>
 
+<script>
+  // One bounce per visit of the pointer, always played to the end (the class stays until the last dot lands).
+  const dots = document.querySelector<HTMLElement>('[data-footer-dots]');
+  dots?.addEventListener('pointerenter', () => dots.classList.add('is-bouncing'));
+  dots?.lastElementChild?.addEventListener('animationend', () => dots.classList.remove('is-bouncing'));
+</script>
