@@ -3,6 +3,8 @@
 // 1 = the stage's size), so the engine can spring the toys in from wherever they float, loop the story, or jump to
 // the finished pose (`still`) for reduced motion. apply() drives details (the XP fill, clay → render); events()
 // fires the confetti between two times. Motion follows motion-graphics habits: anticipation, overshoot, squash.
+// Stories are written left to right; in Arabic the engine plays them mirrored (positions, turns and the toys
+// themselves), and `rtl` tells a story so its own extras and details can follow.
 import * as THREE from 'three';
 import { setClay, type Kit, type PaintName, type Toy, type ToyKind } from './models';
 
@@ -20,14 +22,14 @@ export interface Hooks { burst(at: V3, count?: number, fixed?: boolean): void; p
 export interface Story {
   parts: Record<string, { kind: ToyKind; paint?: PaintName }>;
   still: number;
-  /** Mirror the story in Arabic (the Games run goes toward the inline end). */
-  mirror: boolean;
   frame(t: number, rtl: boolean): Frame;
   apply?(t: number, toys: Record<string, Toy>, rtl: boolean, kit: Kit): void;
   events?(from: number, to: number, hooks: Hooks, rtl: boolean): void;
   /** Extra meshes owned by the story (in stage units, not turned with the frame). */
   extras?(kit: Kit): THREE.Object3D[];
   updateExtras?(t: number, extras: THREE.Object3D[], rtl: boolean): void;
+  /** Put the toys back to their own look when the story stops (they float on as themselves). */
+  reset?(toys: Record<string, Toy>, kit: Kit): void;
 }
 
 const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
@@ -51,7 +53,7 @@ function crossed(from: number, to: number, at: number, start = 0, cycle = Infini
 // ---------- UX & Gamification: "interaction → reward" ----------
 // A screen lands, a button and an XP bar snap onto it; a cursor swoops in and clicks (button squashes), the bar fills
 // with a little elastic stretch, and a star badge pops out with a spin and a burst of confetti. The star scatters and
-// the bar drains at the start of every cycle. The bar fills from the inline start (right in Arabic).
+// the bar drains at the start of every cycle.
 // Sits a little low on its stage, so the screen stays clear of the heading above the first world.
 const UX = { first: 3.2, cycle: 2.9, click: [0.05, -0.12, 0.2] as V3, away: [0.34, -0.34, 0.12] as V3, badge: [0.36, 0.34, 0.14] as V3 };
 function uxBeats(t: number) {
@@ -63,7 +65,6 @@ function uxBeats(t: number) {
 const ux: Story = {
   parts: { panel: { kind: 'panel' }, button: { kind: 'button' }, bar: { kind: 'bar' }, star: { kind: 'star' }, cursor: { kind: 'cursor' } },
   still: 2.5,
-  mirror: false,
   frame(t) {
     const b = uxBeats(t);
     const press = thump(b.c, b.click, 0.16);
@@ -82,13 +83,13 @@ const ux: Story = {
       }
     };
   },
-  apply(t, toys, rtl) {
+  apply(t, toys) {
     const b = uxBeats(t);
     const fill = easeOut(span(b.c, b.fill, 0.55));
     const level = b.first || b.c >= b.fill ? lerp(0.35, 1, fill) + 0.06 * Math.sin(Math.PI * fill) : lerp(1, 0.35, easeInOut(span(b.c, 0, 0.4)));
     const bar = toys.bar.parts.fill;
-    bar.position.x = rtl ? 0.47 : -0.47;
-    bar.scale.x = (rtl ? -1 : 1) * Math.min(level, 1.04);
+    bar.position.x = -0.47; // fills from the left (from the right in Arabic, mirrored)
+    bar.scale.x = Math.min(level, 1.04);
   },
   events(from, to, hooks) {
     const badgeAt = (first: boolean) => (first ? 1.45 + 0.35 + 0.2 : 1.45 + 0.2);
@@ -100,7 +101,7 @@ const ux: Story = {
 // ---------- Games Dev: "build a level, play it" ----------
 // Three platforms snap into a staircase, a coin spins above the last one, the buddy drops in with a squash, hops
 // across and head-butts the coin, which pops into confetti and a "+1". A new coin appears at the far end and the
-// buddy runs back. Mirrored in Arabic.
+// buddy runs back.
 const GAME = {
   platforms: [[-0.3, -0.28], [0, -0.1], [0.3, 0.08]] as [number, number][],
   lift: 0.108, // platform centre → buddy centre
@@ -141,7 +142,6 @@ const game: Story = {
     buddy: { kind: 'buddy' }, coin: { kind: 'coin' }
   },
   still: 1.58, // the buddy at the top of its jump, right under the coin
-  mirror: true,
   frame(t) {
     const r = gameRun(t);
     const { pos, landed, air } = buddy(r);
@@ -180,44 +180,130 @@ const game: Story = {
 };
 
 // ---------- 3D Renders: "model → render" ----------
-// The classic primitives (cube, cone, sphere, torus) fly in as untextured viewport clay and stack into a still life.
-// A render region sweeps across in reading direction, leaving them glossy and coloured behind it, a sparkle pops,
-// and the finished piece keeps turning on its turntable.
-const RENDER = { sweepStart: 1.25, sweepLength: 0.85, sparkle: 2.15 };
+// Modelling: the classic primitives arrive as viewport wireframes and settle into a still life on a turntable (a cube
+// with a cone on it, a ball resting in a torus), then fill in as grey clay under their wires. Rendering: a render
+// region's corner marks snap around the scene and a scan line sweeps across in reading direction; behind it the wires
+// go, the clay turns to glossy candy and a soft contact shadow appears. A sparkle pops and the finished piece keeps
+// turning on its turntable.
+const FLOOR = -0.26; // the turntable's top
+const RENDER = { clay: 0.75, sweepStart: 1.5, sweepLength: 0.8, sparkle: 2.4, pitch: 0.26 };
 const renderPoses: Record<string, PartPose> = {
-  cube: { p: [-0.07, -0.2, 0], s: 0.34, r: [0, 0.55, 0] },
-  cone: { p: [-0.07, 0.13, 0], s: 0.3, r: [0, 0.4, 0] },
-  sphere: { p: [0.23, -0.25, 0.08], s: 0.22 },
-  torus: { p: [0.2, 0.09, -0.12], s: 0.36, r: [1.05, 0.35, 0.3] }
+  cube: { p: [-0.13, FLOOR + 0.136, -0.02], s: 0.34, r: [0, 0.5, 0] },
+  cone: { p: [-0.13, FLOOR + 0.272 + 0.126, -0.02], s: 0.3, r: [0, 0.5, 0] },
+  torus: { p: [0.19, FLOOR + 0.042, 0.1], s: 0.3, r: [Math.PI / 2, 0, 0] },
+  sphere: { p: [0.19, FLOOR + 0.042 + 0.099, 0.1], s: 0.2 }
 };
 const turnYaw = (t: number) => -0.35 + 0.32 * Math.max(0, t - 0.4);
-const sweepX = (t: number, rtl: boolean) => { const x = lerp(-0.62, 0.62, span(t, RENDER.sweepStart, RENDER.sweepLength)); return rtl ? -x : x; };
+const sweepX = (t: number, rtl: boolean) => { const x = lerp(-0.52, 0.52, span(t, RENDER.sweepStart, RENDER.sweepLength)); return rtl ? -x : x; };
+/** How far the render has passed a point at screen x (0 → 1). */
+const rendered = (t: number, x: number, rtl: boolean) => {
+  if (t >= RENDER.sweepStart + RENDER.sweepLength + 0.1) return 1;
+  const sweep = sweepX(t, rtl);
+  return t < RENDER.sweepStart ? 0 : rtl ? clamp01((x - sweep) / 0.14) : clamp01((sweep - x) / 0.14);
+};
+/** Viewport wireframes (quads, like a modelling app), matching each toy's unit-size geometry. */
+function wireFor(kind: string, kit: Kit) {
+  const line = new THREE.LineBasicMaterial({ color: kit.palette.ink, transparent: true, opacity: 0.7 });
+  let geometry: THREE.BufferGeometry;
+  if (kind === 'cube') {
+    // A box cage, three quads a side.
+    const points: number[] = [];
+    const h = 0.41;
+    for (let i = 0; i <= 3; i++) {
+      const v = -h + (2 * h * i) / 3;
+      for (const f of [h, -h]) {
+        points.push(v, -h, f, v, h, f, -h, v, f, h, v, f); // front / back
+        points.push(f, v, -h, f, v, h, f, -h, v, f, h, v); // sides
+        points.push(v, f, -h, v, f, h, -h, f, v, h, f, v); // top / bottom
+      }
+    }
+    geometry = new THREE.BufferGeometry().setAttribute('position', new THREE.Float32BufferAttribute(points, 3));
+  } else {
+    const source = kind === 'cone' ? new THREE.ConeGeometry(0.45, 0.88, 12, 3).translate(0, 0.015, 0)
+      : kind === 'torus' ? new THREE.TorusGeometry(0.34, 0.145, 8, 18)
+      : new THREE.SphereGeometry(0.505, 14, 10);
+    geometry = new THREE.EdgesGeometry(source, 1); // quads only: no diagonals
+    source.dispose();
+  }
+  const wire = new THREE.LineSegments(geometry, line);
+  wire.visible = false;
+  return wire;
+}
+/** A soft round shadow, drawn once. */
+function shadowTexture() {
+  const size = 128;
+  const canvas = document.createElement('canvas');
+  canvas.width = canvas.height = size;
+  const g = canvas.getContext('2d')!;
+  const gradient = g.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
+  gradient.addColorStop(0, 'rgba(0,0,0,0.55)');
+  gradient.addColorStop(0.55, 'rgba(0,0,0,0.25)');
+  gradient.addColorStop(1, 'rgba(0,0,0,0)');
+  g.fillStyle = gradient;
+  g.fillRect(0, 0, size, size);
+  return new THREE.CanvasTexture(canvas);
+}
+/** A part's look: 0 wire only, then clay filling in under the wire, then (behind the sweep) the rendered candy. */
+function setLook(toy: Toy, fill: number, done: number, clay: THREE.Color) {
+  const solid = toy.object.children[0] as THREE.Mesh;
+  solid.visible = fill > 0;
+  for (const material of toy.materials) {
+    const fading = fill < 1;
+    if (material.transparent !== fading) { material.transparent = fading; material.needsUpdate = true; }
+    material.opacity = fill;
+  }
+  setClay(toy, 1 - done, clay);
+  const wire = toy.parts.wire as THREE.LineSegments<THREE.BufferGeometry, THREE.LineBasicMaterial> | undefined;
+  if (wire) { wire.visible = done < 1; wire.material.opacity = 0.7 * (1 - done); }
+}
 const render: Story = {
-  parts: { cube: { kind: 'cube' }, cone: { kind: 'cone' }, sphere: { kind: 'ball' }, torus: { kind: 'torus' } },
-  still: 2.7,
-  mirror: false,
+  parts: { cube: { kind: 'cube', paint: 'sky' }, cone: { kind: 'cone', paint: 'sun' }, sphere: { kind: 'ball', paint: 'bubblegum' }, torus: { kind: 'torus', paint: 'grape' } },
+  still: 2.9,
   frame(t) {
     const parts: Record<string, PartPose> = {};
     Object.entries(renderPoses).forEach(([name, pose], k) => {
       const land = thump(t, 0.55 + k * 0.08, 0.2);
       parts[name] = { ...pose, sq: 0.15 * land };
     });
-    return { yaw: turnYaw(t), pitch: 0.2, parts };
+    return { yaw: turnYaw(t), pitch: RENDER.pitch, parts };
   },
   apply(t, toys, rtl, kit) {
-    const clay = kit.palette.cream.clone().lerp(kit.palette.ink, 0.12);
-    const x = sweepX(t, rtl);
+    const clay = kit.palette.cream.clone().lerp(kit.palette.ink, 0.45);
     const yaw = turnYaw(t);
-    for (const [name, pose] of Object.entries(renderPoses)) {
-      // Screen x of the part after the turntable turn: the sweep reaches it there.
-      const px = pose.p[0] * Math.cos(yaw) + pose.p[2] * Math.sin(yaw);
-      const done = rtl ? clamp01((px - x) / 0.14) : clamp01((x - px) / 0.14);
-      setClay(toys[name], 1 - done, clay);
+    Object.entries(renderPoses).forEach(([name, pose], k) => {
+      const toy = toys[name];
+      if (!toy.parts.wire) toy.object.add((toy.parts.wire = wireFor(toy.kind, kit)));
+      // Screen x of the part after the turntable turn (mirrored in Arabic): the sweep reaches it there.
+      const px = (rtl ? -1 : 1) * (pose.p[0] * Math.cos(yaw) + pose.p[2] * Math.sin(yaw));
+      setLook(toy, easeOut(span(t, RENDER.clay + k * 0.1, 0.3)), rendered(t, px, rtl), clay);
+    });
+  },
+  reset(toys) {
+    for (const toy of Object.values(toys)) {
+      setLook(toy, 1, 1, new THREE.Color());
+      if (toy.parts.wire) toy.parts.wire.visible = false;
     }
   },
   extras(kit) {
-    const scan = new THREE.Mesh(new THREE.BoxGeometry(0.012, 1.02, 0.01), new THREE.MeshBasicMaterial({ color: kit.palette.cream, transparent: true, opacity: 0, depthWrite: false }));
-    const band = new THREE.Mesh(new THREE.PlaneGeometry(1, 1.02), new THREE.MeshBasicMaterial({ color: kit.palette.cream, transparent: true, opacity: 0, depthWrite: false }));
+    // The turntable (a disc with a soft shadow on it), turned with the scene's pitch.
+    const floor = new THREE.Group();
+    const disc = new THREE.Mesh(new THREE.CylinderGeometry(0.46, 0.46, 0.05, 64), kit.make(kit.palette.cream, { roughness: 0.45, clearcoat: 0.3 }));
+    disc.position.y = FLOOR - 0.025;
+    const shadow = new THREE.Mesh(new THREE.PlaneGeometry(0.86, 0.62), new THREE.MeshBasicMaterial({ map: shadowTexture(), color: kit.palette.ink, transparent: true, opacity: 0, depthWrite: false }));
+    shadow.rotation.x = -Math.PI / 2;
+    shadow.position.y = FLOOR + 0.002;
+    floor.add(disc, shadow);
+    // The render region: four corner marks and a scan line.
+    const mark = new THREE.MeshBasicMaterial({ color: kit.palette.ink, transparent: true, opacity: 0, depthWrite: false });
+    const region = new THREE.Group();
+    for (const [x, y] of [[-1, 1], [1, 1], [1, -1], [-1, -1]]) {
+      const corner = new THREE.Group();
+      corner.add(new THREE.Mesh(new THREE.PlaneGeometry(0.12, 0.014).translate(-0.06 * x, 0, 0), mark));
+      corner.add(new THREE.Mesh(new THREE.PlaneGeometry(0.014, 0.12).translate(0, -0.06 * y, 0), mark));
+      corner.position.set(0.52 * x, 0.4 * y, 0);
+      region.add(corner);
+    }
+    const scan = new THREE.Mesh(new THREE.PlaneGeometry(0.014, 0.8), new THREE.MeshBasicMaterial({ color: kit.palette.cream, transparent: true, opacity: 0, depthWrite: false }));
     const shape = new THREE.Shape();
     for (let i = 0; i < 8; i++) {
       const r = i % 2 ? 0.09 : 0.5;
@@ -225,28 +311,33 @@ const render: Story = {
       if (i) shape.lineTo(Math.cos(a) * r, Math.sin(a) * r); else shape.moveTo(Math.cos(a) * r, Math.sin(a) * r);
     }
     const sparkle = new THREE.Mesh(new THREE.ExtrudeGeometry(shape, { depth: 0.04, bevelEnabled: true, bevelThickness: 0.03, bevelSize: 0.03, bevelSegments: 3 }).center(), kit.make(kit.palette.sun, { roughness: 0.2 }));
-    return [scan, band, sparkle];
+    return [floor, region, scan, sparkle];
   },
-  updateExtras(t, [scan, band, sparkle], rtl) {
+  updateExtras(t, [floor, region, scan, sparkle], rtl) {
+    // Turntable: pops in first, clay until the sweep passes its middle, then cream with the shadow on it.
+    const done = rendered(t, 0, rtl);
+    floor.rotation.set(RENDER.pitch, 0, 0);
+    floor.scale.setScalar(pop(span(t, 0.1, 0.4)));
+    const [disc, shadow] = floor.children as THREE.Mesh[];
+    const discMaterial = disc.material as THREE.MeshStandardMaterial;
+    const base = discMaterial.userData.base as { color: THREE.Color };
+    discMaterial.color.copy(base.color).lerp(new THREE.Color(base.color).offsetHSL(0, -0.3, -0.18), 1 - done);
+    (shadow.material as THREE.MeshBasicMaterial).opacity = 0.65 * done;
+    // Render region: corners snap in, the scan line runs, both fade once it is done.
     const v = span(t, RENDER.sweepStart, RENDER.sweepLength);
-    const active = v > 0 && v < 1;
-    const x = sweepX(t, rtl);
-    (scan as THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial>).material.opacity = active ? 0.9 : 0;
-    scan.position.set(x, 0, 0.3);
-    // The rendered side gets a faint wash, like the render region in a viewport.
-    const wash = (band as THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial>).material;
-    wash.opacity = active ? 0.12 : 0;
-    const left = rtl ? x : -0.62;
-    const right = rtl ? 0.62 : x;
-    band.scale.x = Math.max(0.001, right - left);
-    band.position.set((left + right) / 2, 0, 0.29);
+    const show = span(t, RENDER.sweepStart - 0.2, 0.2) * (1 - span(t, RENDER.sweepStart + RENDER.sweepLength + 0.1, 0.3));
+    region.scale.setScalar(lerp(1.15, 1, easeOut(span(t, RENDER.sweepStart - 0.2, 0.25))));
+    region.position.set(0, -0.02, 0.3);
+    region.children.forEach((corner) => ((corner.children[0] as THREE.Mesh).material as THREE.MeshBasicMaterial).opacity = 0.75 * show);
+    ((scan as THREE.Mesh).material as THREE.MeshBasicMaterial).opacity = v > 0 && v < 1 ? 0.95 : 0;
+    scan.position.set(sweepX(t, rtl), -0.02, 0.3);
     const g = span(t, RENDER.sparkle, 0.4);
     sparkle.scale.setScalar(0.14 * pop(g) * (g >= 1 ? 1 + 0.1 * Math.sin(t * 3) : 1));
-    sparkle.position.set(0.34, 0.38, 0.3);
-    sparkle.rotation.z = -0.9 * (1 - easeOut(g)) + (g >= 1 ? 0.15 * Math.sin(t * 1.3) : 0);
+    sparkle.position.set(rtl ? -0.36 : 0.36, 0.3, 0.3); // top right (top left in Arabic, where the burst is mirrored too)
+    sparkle.rotation.z = (rtl ? -1 : 1) * (-0.9 * (1 - easeOut(g)) + (g >= 1 ? 0.15 * Math.sin(t * 1.3) : 0));
   },
   events(from, to, hooks) {
-    if (crossed(from, to, RENDER.sparkle)) hooks.burst([0.34, 0.38, 0.3], 16, true);
+    if (crossed(from, to, RENDER.sparkle)) hooks.burst([0.36, 0.3, 0.3], 18, true);
   }
 };
 

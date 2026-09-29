@@ -22,9 +22,9 @@ const arrow = lang === 'ar' ? '↖' : '↗';
       return (
         <li class:list={['space-item', hue && `hue-${hue}`]}>
           <a class="space-link" href={href(item.href, lang)} target={external ? '_blank' : undefined} rel={external ? 'noreferrer' : undefined} data-icon={item.icon} aria-labelledby={`${id}-title`} aria-describedby={item.text ? `${id}-text` : undefined}>
+            {/* The number follows the last word with no space between. */}
             <h3 class="space-title" id={`${id}-title`}>
-              {words.map((word: string, k: number) => <Fragment><span class="space-word" style={`--k: ${k}`}>{word}</span>{k < words.length - 1 && ' '}</Fragment>)}
-              <sup class="space-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</sup>
+              {words.map((word: string, k: number) => <Fragment><span class="space-word" style={`--k: ${k}`}>{word}</span>{k < words.length - 1 && ' '}</Fragment>)}<sup class="space-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</sup>
             </h3>
             {item.text && <p class="space-text" id={`${id}-text`}>{t(item.text, lang)}</p>}
             <span class="space-cta" aria-hidden="true">{t(item.cta, lang) || explore} <span class="feature-arrow">{arrow}</span></span>
@@ -38,7 +38,7 @@ const arrow = lang === 'ar' ? '↖' : '↗';
 
 <script>
   // Toys that only float in the scene (the worlds bring their own). Fewer on phones.
-  const FLOAT_LARGE = ['eyeball', 'worm', 'candycorn', 'striped', 'coil', 'bubbles', 'gem', 'cross', 'ridgeball', 'donut', 'pill'] as const;
+  const FLOAT_LARGE = ['eyeball', 'worm', 'candycorn', 'striped', 'coil', 'bubbles', 'gem', 'cross', 'donut'] as const;
   const FLOAT_SMALL = ['eyeball', 'worm', 'candycorn', 'bubbles', 'coil'] as const;
   const spaces = document.querySelectorAll<HTMLElement>('[data-space]');
   async function start() {
@@ -55,7 +55,7 @@ const arrow = lang === 'ar' ? '↖' : '↗';
         worlds,
         float: (small ? FLOAT_SMALL : FLOAT_LARGE).map((kind) => ({ kind })),
         confetti: small ? 12 : 26,
-        avoid: () => [...section.querySelectorAll('.b-hero h1, .b-hero p, .b-heading, .space-title, .space-text, .space-cta')]
+        avoid: () => [...section.querySelectorAll('.b-hero .eyebrow, .b-hero h1, .b-hero p,.b-heading, .space-title, .space-text, .space-cta')]
       });
     }
   }

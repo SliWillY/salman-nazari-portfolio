@@ -16,9 +16,11 @@ export const nav = [
   { slug: 'certificates', en: 'Certificates', ar: 'الشهادات' }
 ];
 
-// A world's number, shown as a superscript (UX & Gamification⁰¹): its place in the menu among the worlds.
+// A page's number, shown as a superscript (About⁰⁰, UX & Gamification⁰¹…): About is 00 in the site's own orange,
+// the worlds count on from it in menu order.
 const worlds = nav.filter((item) => item.slug in categoryHue).map((item) => item.slug);
 export const worldNumber = (slug: string) => { const i = worlds.indexOf(slug); return i < 0 ? '' : String(i + 1).padStart(2, '0'); };
+export const pageNumber = (slug: string) => (slug === 'about-me' ? '00' : worldNumber(slug));
 
 export const labels = {
   en: { menu: 'Menu', close: 'Close menu', home: 'Home', explore: 'Explore', contact: 'Contact', language: 'Language', back: 'Back to home', skip: 'Skip to content', nav: 'Main', homeLink: 'Salman Nazari — home' },

@@ -1,14 +1,15 @@
 // Toy studio engine (three.js): candy toys floating in a sun gradient, like a Cinema 4D motion-graphics loop.
 // - Layout: every toy gets a resting spot away from the page's text, in a seeded, evenly spread composition that
-//   is recomputed on resize. A world's own toys rest in a small area around its stage (so pointing at the world
-//   brings them a short way, not across the screen); the other toys keep clear of the stages. Toys bob, turn and
-//   breathe around their spot.
+//   is recomputed on resize. Resting toys keep clear of every stage and gather toward the open sides and edges; a
+//   world's own toys rest in its row of the page (so pointing at the world brings them in from that row, not from
+//   across the screen). Toys bob, turn and breathe around their spot.
 // - Play: the pointer nudges toys aside, the eyeball follows it, a click (or tap) makes a toy jump; now and then
 //   a toy hops on its own.
 // - Scene mode (home): hovering / focusing a world springs its toys out of the float onto its stage, where its
-//   story (stories.ts) plays; leaving sends them back. Touch screens: the world nearest the middle plays, taking
-//   turns. Confetti (paper dots) drifts and bursts.
-// - Banner mode (world pages): the world's toys and a few others float; no stories.
+//   story (stories.ts) plays, while every other toy steps out of that stage (keeping its size) so the show reads
+//   clearly; leaving sends them back. Touch screens: the world nearest the middle plays, taking turns.
+//   Confetti (paper dots) drifts and bursts.
+// - Banner mode (page tops): the world's toys and a few others float, or only confetti (no toys); no stories.
 // Colours and lighting come from CSS tokens (--toy-*), so light and dark are the same studio in different light.
 // Reduced motion: no drift, no stories in motion (the finished pose appears), a frame is drawn only on change.
 // The loop runs only while the canvas is on screen and the tab is visible.
@@ -43,6 +44,8 @@ const SIZE: Partial<Record<ToyKind, number>> = {
   ball: 0.85, torus: 1.05, eyeball: 1.15, worm: 1.6, coil: 1.15, candycorn: 0.95, striped: 1.05, bubbles: 1.35, gem: 0.8,
   cross: 0.85, ridgeball: 1, donut: 1.15, pill: 0.95
 };
+/** The camera's field of view (degrees) across the canvas's longer side. */
+const LENS = 18;
 const FLAT = new Set<ToyKind>(['panel', 'bar', 'button', 'star', 'coin', 'cursor', 'platform']);
 const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
 /** Small seeded random numbers, so the composition is the same on every visit. */
@@ -70,7 +73,7 @@ export function mountToys(root: HTMLElement, canvas: HTMLCanvasElement, options:
   const pmrem = new THREE.PMREMGenerator(renderer);
   scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
   pmrem.dispose();
-  const camera = new THREE.PerspectiveCamera(18, 1, 10, 40000);
+  const camera = new THREE.PerspectiveCamera(LENS, 1, 10, 40000);
   const fill = new THREE.HemisphereLight();
   const key = new THREE.DirectionalLight();
   key.position.set(-0.7, 1.1, 1.3);
@@ -181,30 +184,45 @@ export function mountToys(root: HTMLElement, canvas: HTMLCanvasElement, options:
       world.group.scale.setScalar(world.size);
       stages.set(world, r);
     }
-    // Resting spots: the worlds' toys first (around their own stage), then the rest, largest first; each the
-    // best-spread of many seeded candidates clear of the text (and, for the free toys, of every stage).
+    // Each world owns a strip of the canvas: from halfway to the world above to halfway to the one below, and
+    // sideways up to about a third of the width either side of its stage. Its toys rest there, so pointing at it
+    // brings them in from its own row, never from a far corner.
+    const rows = [...stages].sort(([, a], [, b]) => a.top - b.top);
+    const mid = (r: DOMRect) => r.top + r.height / 2;
+    const strips = new Map<WorldState, DOMRect>(rows.map(([world, r], i) => {
+      const top = i ? (mid(rows[i - 1][1]) + mid(r)) / 2 : 0;
+      const bottom = i < rows.length - 1 ? (mid(r) + mid(rows[i + 1][1])) / 2 : h;
+      const reach = Math.max(w * 0.3, r.width * 1.5);
+      const left = Math.max(0, r.left + r.width / 2 - reach), right = Math.min(w, r.left + r.width / 2 + reach);
+      return [world, new DOMRect(left, top, right - left, bottom - top)];
+    }));
+    // Resting spots: the worlds' toys first (in their own strip), then the free toys anywhere, largest first; each
+    // the best-spread of many seeded candidates, clear of the words (with room to read) and of every stage, so the
+    // middle stays open until a show plays and the toys gather toward the open sides and edges.
     const base = clamp(Math.min(w, h) * (options.size ?? (narrow.matches ? 0.11 : 0.078)), 36, 110);
     const pick = random(options.seed ?? 11);
     const placed: { x: number; y: number; r: number }[] = [];
+    const text = exclusions.map((rect) => ({ rect, gap: 36 }));
     const order = [...bodies].sort((a, b) => Number(!a.home) - Number(!b.home) || b.weight - a.weight);
     for (const body of order) {
       body.size = base * body.weight;
       const r = body.size * 0.55;
-      const stage = body.home && stages.get(body.home);
-      const pad = stage ? stage.width * 0.3 : 0;
-      const area = stage ? new DOMRect(stage.left - pad, stage.top - pad, stage.width + 2 * pad, stage.height + 2 * pad) : new DOMRect(0, 0, w, h);
-      const avoid = [...exclusions, ...[...stages].filter(([world]) => world !== body.home).map(([, rect]) => rect)];
+      const area = (body.home && strips.get(body.home)) || new DOMRect(0, 0, w, h);
+      // On phones the words fill the width and the stages are the only open column, so there a world's toys may
+      // rest on their own stage.
+      const avoid = [...text, ...[...stages].filter(([world]) => !(narrow.matches && world === body.home)).map(([, rect]) => ({ rect, gap: 14 }))];
       let best = { x: w / 2, y: h / 2, score: -Infinity };
       for (let i = 0; i < 90; i++) {
-        const x = clamp(area.left + pick() * area.width, r, Math.max(r, w - r));
-        const y = clamp(area.top + pick() * area.height, r, Math.max(r, h - r));
-        const overlap = avoid.reduce((sum, e) => {
+        const edge = r * 1.5; // whole toys, never cut by the stage's edge
+        const x = clamp(area.left + pick() * area.width, edge, Math.max(edge, w - edge));
+        const y = clamp(area.top + pick() * area.height, edge, Math.max(edge, h - edge));
+        const overlap = avoid.reduce((sum, { rect: e, gap }) => {
           const dx = Math.max(e.left - x, 0, x - e.right);
           const dy = Math.max(e.top - y, 0, y - e.bottom);
-          return sum + Math.max(0, r + 14 - Math.hypot(dx, dy));
+          return sum + Math.max(0, r + gap - Math.hypot(dx, dy));
         }, 0);
         const spread = placed.reduce((min, p) => Math.min(min, Math.hypot(p.x - x, p.y - y) - p.r - r), Math.min(w, h));
-        const score = spread - overlap * 30; // never over the words, even in a world's small area
+        const score = spread - overlap * 30; // never over the words, even in a world's strip
         if (score > best.score) best = { x, y, score };
       }
       placed.push({ x: best.x, y: best.y, r });
@@ -218,8 +236,13 @@ export function mountToys(root: HTMLElement, canvas: HTMLCanvasElement, options:
     if (!rect.width || !rect.height) return;
     w = rect.width; h = rect.height;
     renderer.setSize(w, h, false);
+    // A narrow lens across the longer side: on a wide banner a fixed vertical angle would open the lens so wide that
+    // toys near the ends stretch sideways (and look squashed). The camera still sees exactly the canvas, 1 unit = 1px.
+    const long = Math.tan(THREE.MathUtils.degToRad(LENS / 2));
     camera.aspect = w / h;
-    camera.position.set(0, 0, h / 2 / Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)));
+    camera.fov = THREE.MathUtils.radToDeg(2 * Math.atan(w > h ? long * (h / w) : long));
+    camera.position.set(0, 0, Math.max(w, h) / 2 / long);
+    camera.far = camera.position.z * 3;
     camera.updateProjectionMatrix();
     layout();
     wake();
@@ -280,14 +303,14 @@ export function mountToys(root: HTMLElement, canvas: HTMLCanvasElement, options:
       pluses.push({ sprite, life: 1, y: p.y });
     }
   });
-  const flipped = (world: WorldState) => world.story.mirror && rtl;
-  function frameQuat(world: WorldState, frame: Frame) {
-    const yaw = (frame.yaw ?? 0) * (flipped(world) ? -1 : 1);
+  // In Arabic every story plays as in a mirror: positions and turns here, the toys themselves in step().
+  function frameQuat(frame: Frame) {
+    const yaw = (frame.yaw ?? 0) * (rtl ? -1 : 1);
     return new THREE.Quaternion().setFromEuler(new THREE.Euler(frame.pitch ?? 0, yaw, 0, 'XYZ'));
   }
   function storyToWorld(world: WorldState, frame: Frame, [x, y, z]: V3, fixed: boolean) {
-    const v = new THREE.Vector3(flipped(world) ? -x : x, y, z);
-    if (!fixed) v.applyQuaternion(frameQuat(world, frame));
+    const v = new THREE.Vector3(rtl ? -x : x, y, z);
+    if (!fixed) v.applyQuaternion(frameQuat(frame));
     return v.multiplyScalar(world.size).add(new THREE.Vector3(world.center.x, world.center.y, 0));
   }
   function activate(world: WorldState) {
@@ -304,10 +327,11 @@ export function mountToys(root: HTMLElement, canvas: HTMLCanvasElement, options:
   function leave(world: WorldState) {
     for (const body of Object.values(world.parts)) {
       Object.assign(body, { world: null, since: time });
-      // A little toss as the show breaks up; they are resting nearby, so they settle close.
+      // A little toss as the show breaks up, then back to their spots in the world's own row.
       body.vel.add(new THREE.Vector3((Math.random() - 0.5) * 1.2, 0.5 + Math.random() * 0.6, 0).multiplyScalar(world.size));
     }
     world.extras.forEach((extra) => (extra.visible = false));
+    world.story.reset?.(Object.fromEntries(Object.entries(world.parts).map(([n, b]) => [n, b.toy])), kit);
     world.link.classList.remove('is-active');
     if (active === world) active = null;
     wake();
@@ -328,15 +352,14 @@ export function mountToys(root: HTMLElement, canvas: HTMLCanvasElement, options:
       const world = active;
       const t = still ? world.story.still : time - world.t0;
       const frame = world.story.frame(t, rtl);
-      const q = frameQuat(world, frame);
+      const q = frameQuat(frame);
       for (const [name, pose] of Object.entries(frame.parts)) {
         const body = world.parts[name];
         if (!body) continue;
         const [rx, ry, rz] = pose.r ?? [0, 0, 0];
-        const flip = flipped(world);
         targets.set(body, {
           pos: storyToWorld(world, frame, pose.p, false),
-          quat: q.clone().multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(rx, flip ? -ry : ry, flip ? -rz : rz))),
+          quat: q.clone().multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(rx, rtl ? -ry : ry, rtl ? -rz : rz))),
           scale: pose.hide ? 0 : pose.s * world.size,
           squash: pose.sq ?? 0
         });
@@ -379,6 +402,15 @@ export function mountToys(root: HTMLElement, canvas: HTMLCanvasElement, options:
           tmp.x += Math.sin(time * 0.5 + a) * body.size * 0.14;
           tmp.y += Math.sin(time * 0.8 + b) * body.size * 0.2;
           tmp.z += Math.sin(time * 0.45 + c) * body.size * 0.35;
+        }
+        // While a story plays, everyone else steps out of its stage, so the show reads on its own.
+        if (active) {
+          const dx = tmp.x - active.center.x, dy = tmp.y - active.center.y;
+          const d = Math.hypot(dx, dy) || 1;
+          const clear = active.size * 0.72 + body.size * 0.55;
+          if (d < clear) { tmp.x += (dx / d) * (clear - d); tmp.y += (dy / d) * (clear - d); }
+        }
+        if (!still) {
           // Pointer: push away within reach.
           let px = 0, py = 0;
           if (pointer.active) {
@@ -420,7 +452,9 @@ export function mountToys(root: HTMLElement, canvas: HTMLCanvasElement, options:
       const s = body.scale;
       body.toy.object.position.copy(body.pos);
       body.toy.object.quaternion.copy(body.quat);
-      body.toy.object.scale.set(s * (1 + body.squash * 0.5), s * (1 - body.squash), s * (1 + body.squash * 0.5));
+      // A world's toys are mirror images in Arabic (always, so nothing flips visibly when a show starts or ends).
+      const mirror = body.home && rtl ? -1 : 1;
+      body.toy.object.scale.set(mirror * s * (1 + body.squash * 0.5), s * (1 - body.squash), s * (1 + body.squash * 0.5));
       body.toy.object.visible = s > 0.5;
     }
 
