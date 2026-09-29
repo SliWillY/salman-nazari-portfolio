@@ -301,6 +301,13 @@
             "type": {
               "const": "cards"
             },
+            "layout": {
+              "enum": [
+                "grid",
+                "space"
+              ],
+              "default": "grid"
+            },
             "columns": {
               "type": "number",
               "default": 3
@@ -404,7 +411,7 @@
           ],
           "additionalProperties": false,
           "title": "Cards",
-          "description": "Link cards with an optional image or animated icon (render | game | ux), e.g. the home page sections. `href` can be a site page (`games-dev`) or a full URL."
+          "description": "Link cards with an optional image or animated icon (render | game | ux). `href` can be a site page (`games-dev`) or a full URL. `layout: space` is the home scene: the cards scattered down a sun-gradient stage of floating 3D toys; hovering one brings its toys onto the stage to act out its story (keep the hero in the same section so the toys fill it too)."
         },
         {
           "type": "object",

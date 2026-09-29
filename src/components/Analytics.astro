@@ -36,9 +36,9 @@
     const target = event.target as Element;
     const link = target.closest<HTMLAnchorElement>('a[href]');
 
-    // Home page category cards and project cards: which fields and projects people open.
-    const card = target.closest<HTMLAnchorElement>('.feature-card, .project-card');
-    if (card) return send('select_content', { content_type: card.classList.contains('feature-card') ? 'category' : 'project', item_id: lastSegment(card.href) });
+    // Home page worlds (the space scene, or cards) and project cards: which fields and projects people open.
+    const card = target.closest<HTMLAnchorElement>('.space-link, .feature-card, .project-card');
+    if (card) return send('select_content', { content_type: card.classList.contains('project-card') ? 'project' : 'category', item_id: lastSegment(card.href) });
 
     // Images, certificates and document pages opened in the lightbox.
     const zoom = target.closest<HTMLAnchorElement>('a[data-lightbox]');

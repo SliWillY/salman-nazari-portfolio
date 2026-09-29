@@ -6,7 +6,7 @@ import { section as sectionSchema } from '../../../lib/content-schemas';
 import { langs, t, type Lang } from '../../../lib/i18n';
 import { resolveSections } from '../../../lib/prefabs';
 import { getProjects } from '../../../lib/projects';
-import { nav, path } from '../../../lib/site';
+import { categoryHue, nav, path } from '../../../lib/site';
 
 export async function getStaticPaths() {
   const projects = await getProjects();
@@ -35,12 +35,12 @@ const ctx: BlockContext = {
 };
 const sections = await resolveSections(data, `src/content/projects/${project.id}.yaml`);
 if (data.header === 'auto') {
-  sections.unshift({ ...sectionSchema.parse({ spacing: 's' }), blocks: [{ type: 'hero', size: 'page' }, { type: 'project-meta' }] });
+  sections.unshift({ ...sectionSchema.parse({ spacing: 'none', width: 'full' }), blocks: [{ type: 'hero', size: 'page' }, { type: 'project-meta' }] }); // the hero's banner runs edge to edge
 }
 const label = categoryItem?.[lang] ?? category;
 const arrows = lang === 'ar' ? { prev: '→', next: '←', back: `العودة إلى ${label}` } : { prev: '←', next: '→', back: `Back to ${label}` };
 ---
-<BaseLayout lang={lang} title={t(data.title, lang)} description={t(data.summary, lang)} currentSlug={`${category}/${route}`}>
+<BaseLayout lang={lang} title={t(data.title, lang)} description={t(data.summary, lang)} currentSlug={`${category}/${route}`} hue={categoryHue[category]}>
   {sections.map((section) => <Section section={section} lang={lang} ctx={ctx} />)}
   <nav class="project-nav" aria-label={arrows.back}>
     {prev ? <a href={path(`/${lang}/${category}/${prev.route}/`)}>{arrows.prev} {t(prev.data.title, lang)}</a> : <span />}

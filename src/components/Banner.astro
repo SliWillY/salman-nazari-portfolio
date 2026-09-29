@@ -1,0 +1,36 @@
+---
+// Page-top banner (the page hero's picture): a sun gradient in the page's world colours with paper confetti dots,
+// under the floating glass header. On a world's own page it is tall and that world's toys float in it (three.js,
+// loaded after first paint); elsewhere it is a slim strip. The eyebrow sits on it as a frosted-glass pill.
+// Styles: global.css, "stage".
+import type { Hue } from '../lib/site';
+const { world, eyebrow, eyebrowHref } = Astro.props as { world?: Hue; eyebrow?: string; eyebrowHref?: string };
+---
+<div class:list={['page-banner', world ? 'is-tall' : 'is-slim']} data-banner={world}>
+  {world && <canvas class="banner-canvas" aria-hidden="true"></canvas>}
+  {eyebrow && (eyebrowHref
+    ? <a class="eyebrow banner-eyebrow" href={eyebrowHref}>{eyebrow}</a>
+    : <span class="eyebrow banner-eyebrow">{eyebrow}</span>)}
+</div>
+
+<script>
+  // Each world's banner floats its own story toys plus three of its own. Fewer on phones.
+  const ICON = { ux: 'ux', games: 'game', '3d': 'render' } as const;
+  const EXTRA = { ux: ['eyeball', 'bubbles', 'pill'], games: ['candycorn', 'worm', 'gem'], '3d': ['donut', 'ridgeball', 'coil'] } as const;
+  const banners = [...document.querySelectorAll<HTMLElement>('.page-banner[data-banner]')];
+  async function start() {
+    const [{ mountToys }, { stories }] = await Promise.all([import('../lib/toys/engine'), import('../lib/toys/stories')]);
+    const small = matchMedia('(max-width: 700px)').matches;
+    for (const banner of banners) {
+      const world = banner.dataset.banner as keyof typeof ICON;
+      const canvas = banner.querySelector('canvas');
+      if (!canvas || !(world in ICON)) continue;
+      const float = [...Object.values(stories[ICON[world]].parts), ...EXTRA[world].map((kind) => ({ kind }))];
+      mountToys(banner, canvas, { float: small ? float.slice(0, 6) : float, confetti: small ? 8 : 18, seed: 5, size: small ? 0.24 : 0.2, avoid: () => [...banner.querySelectorAll('.banner-eyebrow')] });
+    }
+  }
+  if (banners.length) {
+    if ('requestIdleCallback' in window) requestIdleCallback(() => start(), { timeout: 700 });
+    else setTimeout(start, 250);
+  }
+</script>

@@ -5,29 +5,30 @@ description:
 header: none
 
 sections:
-  - width: full
-    spacing: none
+  # The home scene: headline, then the three worlds scattered down a sun-gradient stage full of floating toys
+  # (cards layout: space). Pointing at a world brings its toys onto the stage beside it to act out its story; on
+  # phones the world nearest the middle of the screen plays. One section, so the toys fill the whole stage.
+  - spacing: none
     blocks:
       - type: hero
         size: home
-
-  # Section heading, then the three category cards.
-  - blocks:
+        eyebrow: { en: "Hi, I'm Salman", ar: "أهلاً، أنا سلمان" }
       - type: heading
+        size: s
         eyebrow: { en: Explore, ar: استكشف }
         text: { en: Pick a world, ar: اختر عالماً }
       - type: cards
-        columns: 3
+        layout: space
         items:
-          - title: { en: 3D Renders, ar: تصاميم ثلاثية الأبعاد }
-            text: { en: "Visual worlds built through composition, light, and detail.", ar: "عوالم بصرية مبنية على التكوين والضوء والتفاصيل." }
-            href: 3d-renders
-            icon: render
-          - title: { en: Games Dev, ar: تطوير الألعاب }
-            text: { en: "Game art, level design, and interactive systems in one place.", ar: "فن الألعاب وتصميم المراحل والأنظمة التفاعلية." }
-            href: games-dev
-            icon: game
           - title: { en: UX & Gamification, ar: تجربة المستخدم والتلعيب }
             text: { en: "Human-centered journeys, prototypes, and behavioral experiments.", ar: "رحلات وتجارب ونماذج أولية تتمحور حول الإنسان." }
             href: ux-and-gamification
             icon: ux
+          - title: { en: Games Dev, ar: تطوير الألعاب }
+            text: { en: "Game art, level design, and interactive systems in one place.", ar: "فن الألعاب وتصميم المراحل والأنظمة التفاعلية." }
+            href: games-dev
+            icon: game
+          - title: { en: 3D Renders, ar: تصاميم ثلاثية الأبعاد }
+            text: { en: "Visual worlds built through composition, light, and detail.", ar: "عوالم بصرية مبنية على التكوين والضوء والتفاصيل." }
+            href: 3d-renders
+            icon: render

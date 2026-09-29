@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <!-- "s." from the salman.nazari wordmark (DM Sans Bold outlines). Dark tile on light browser chrome,
-       light tile on dark chrome; colours are the site's theme tokens. -->
-  <style>.tile{fill:#1a1917}.s{fill:#ece9e1}.dot{fill:#e38a6d}@media (prefers-color-scheme:dark){.tile{fill:#f4f2ed}.s{fill:#20201e}.dot{fill:#c95738}}</style>
+  <!-- "s." from the salman.nazari wordmark (DM Sans Bold outlines). Ink tile on light browser chrome,
+       paper tile on dark chrome; the dot is a tangerine candy (the site's theme tokens). -->
+  <style>.tile{fill:#19141f}.s{fill:#fffaf3}.dot{fill:#ff7a2e}@media (prefers-color-scheme:dark){.tile{fill:#fffaf3}.s{fill:#19141f}.dot{fill:#ff7a2e}}</style>
   <rect class="tile" width="32" height="32" rx="7"/>
   <g transform="translate(2.628 24.868) scale(0.03519 -0.03519)">
     <path class="s" d="M272 -12Q203 -12 152 10Q101 32 72 71Q43 110 39 159H173Q178 140 190 124.5Q202 109 222 100Q242 91 270 91Q297 91 314 98.5Q331 106 339.5 119Q348 132 348 146Q348 167 336 178.5Q324 190 301 197Q278 204 245 211Q209 218 174.5 228.5Q140 239 113 255Q86 271 70 296Q54 321 54 358Q54 403 78 438.5Q102 474 148 495Q194 516 259 516Q350 516 403 475Q456 434 466 362H339Q333 385 312.5 398.5Q292 412 258 412Q222 412 203 399Q184 386 184 365Q184 351 196.5 340Q209 329 232 321.5Q255 314 288 307Q346 295 390 279.5Q434 264 459 235.5Q484 207 484 153Q484 105 458 67.5Q432 30 384.5 9Q337 -12 272 -12Z"/>

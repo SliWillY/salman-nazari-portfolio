@@ -2,9 +2,10 @@
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import Analytics from '../components/Analytics.astro';
-import { path, themeColor } from '../lib/site';
+import { path, themeColor, type Hue, type Lang } from '../lib/site';
 import '../styles/global.css';
-const { lang, title, description, currentSlug, home = false } = Astro.props;
+// hue: the world this page belongs to (category pages and their projects): its colour leads the page.
+const { lang, title, description, currentSlug, home = false, hue } = Astro.props as { lang: Lang; title: string; description: string; currentSlug: string; home?: boolean; hue?: Hue };
 const dir = lang === 'ar' ? 'rtl' : 'ltr';
 ---
 <!doctype html>
@@ -37,7 +38,7 @@ const dir = lang === 'ar' ? 'rtl' : 'ltr';
     <title>{title} · Salman Nazari</title>
   </head>
   <body class:list={{ 'home-page': home }}>
-    <div class="page" dir={dir} data-page>
+    <div class:list={['page', hue && `hue-${hue}`]} dir={dir} data-page>
       <Header lang={lang} currentSlug={currentSlug} />
       <main id="main" tabindex="-1"><slot /></main>
       <Footer lang={lang} />

@@ -1,0 +1,67 @@
+---
+// Cards `layout: space`: the home scene. The worlds are scattered down a sun-gradient stage full of floating
+// Cinema 4D-style toys (src/lib/toys/). Hover / focus a world and its own toys spring onto the stage beside it and
+// act out its story; on touch screens the world nearest the middle of the screen plays. Each world takes its colour
+// from its icon (.hue-*). The toys paint over the whole section, so keep the hero in the same section.
+// three.js loads after the page has painted, so the words are there first. Styles: global.css, "home scene".
+import { t } from '../../../lib/i18n';
+import { href, iconHue, type Lang } from '../../../lib/site';
+const { items, lang, uid } = Astro.props as { items: any[]; lang: Lang; uid: string };
+const explore = lang === 'ar' ? 'استكشف' : 'Explore';
+const arrow = lang === 'ar' ? '↖' : '↗';
+---
+<div class="b-space" data-space>
+  <canvas class="space-canvas" aria-hidden="true"></canvas>
+  <ul class="space-list" role="list">
+    {items.map((item, i) => {
+      const external = /^https?:/.test(item.href);
+      const id = `${uid}-${i}`;
+      const hue = item.icon && iconHue[item.icon as keyof typeof iconHue];
+      // Words wave one after another on hover (word by word, so Arabic letters stay joined).
+      const words = t(item.title, lang).split(' ');
+      return (
+        <li class:list={['space-item', hue && `hue-${hue}`]}>
+          <a class="space-link" href={href(item.href, lang)} target={external ? '_blank' : undefined} rel={external ? 'noreferrer' : undefined} data-icon={item.icon} aria-labelledby={`${id}-title`} aria-describedby={item.text ? `${id}-text` : undefined}>
+            <h3 class="space-title" id={`${id}-title`}>
+              {words.map((word: string, k: number) => <Fragment><span class="space-word" style={`--k: ${k}`}>{word}</span>{k < words.length - 1 && ' '}</Fragment>)}
+              <sup class="space-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</sup>
+            </h3>
+            {item.text && <p class="space-text" id={`${id}-text`}>{t(item.text, lang)}</p>}
+            <span class="space-cta" aria-hidden="true">{t(item.cta, lang) || explore} <span class="feature-arrow">{arrow}</span></span>
+            {item.icon && <span class="space-stage" aria-hidden="true"></span>}
+          </a>
+        </li>
+      );
+    })}
+  </ul>
+</div>
+
+<script>
+  // Toys that only float in the scene (the worlds bring their own). Fewer on phones.
+  const FLOAT_LARGE = ['eyeball', 'worm', 'candycorn', 'striped', 'coil', 'bubbles', 'gem', 'cross', 'ridgeball', 'donut', 'pill'] as const;
+  const FLOAT_SMALL = ['eyeball', 'worm', 'candycorn', 'bubbles', 'coil'] as const;
+  const spaces = document.querySelectorAll<HTMLElement>('[data-space]');
+  async function start() {
+    const [{ mountToys }, { stories }] = await Promise.all([import('../../../lib/toys/engine'), import('../../../lib/toys/stories')]);
+    const small = matchMedia('(max-width: 700px)').matches;
+    for (const space of spaces) {
+      const section = space.closest<HTMLElement>('.section') ?? space;
+      const worlds = [...space.querySelectorAll<HTMLAnchorElement>('.space-link[data-icon]')].flatMap((link) => {
+        const story = stories[link.dataset.icon ?? ''];
+        const stage = link.querySelector<HTMLElement>('.space-stage');
+        return story && stage ? [{ link, stage, story }] : [];
+      });
+      mountToys(section, space.querySelector('canvas')!, {
+        worlds,
+        float: (small ? FLOAT_SMALL : FLOAT_LARGE).map((kind) => ({ kind })),
+        confetti: small ? 12 : 26,
+        avoid: () => [...section.querySelectorAll('.b-hero h1, .b-hero p, .b-heading, .space-title, .space-text, .space-cta')]
+      });
+    }
+  }
+  // After first paint: the toys never hold up the words.
+  if (spaces.length) {
+    if ('requestIdleCallback' in window) requestIdleCallback(() => start(), { timeout: 700 });
+    else setTimeout(start, 250);
+  }
+</script>

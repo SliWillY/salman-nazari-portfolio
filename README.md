@@ -60,6 +60,26 @@ sections:
 
 The menu is defined in `src/lib/site.ts`.
 
+**Section themes:** `paper` is the page ground (warm paper), `light` is a lifted band, `dark` is a dusk band (artwork glows on it, in both site themes), `accent` is a sun-gradient field in the page's world colours with confetti.
+
+## Look
+
+A sunny creative studio full of toys. Page tops are soft sun gradients (a pale sky corner, a warm glowing core, a vivid edge) with fine grain, paper confetti dots and Cinema 4D-style 3D candy toys floating in them; content sits calm on warm paper. A little frosted glass: the floating header and a few pills. The dark theme is the same studio at dusk: deep indigo with warm glows, the same toys lit by a warm lamp and a violet rim. Fonts: DM Sans, Readex Pro for Arabic.
+
+Each world has its own candy colour, carried by its category page and project pages (accent, banner gradient, chips, the superscript number):
+
+| World | Colour | Toys |
+|---|---|---|
+| UX & Gamification⁰¹ | grape | a screen, a button, an XP bar, a star badge, a cursor |
+| Games Dev⁰² | mint | three platforms, the googly-eyed buddy, a coin |
+| 3D Renders⁰³ | sky | cube, cone, sphere, torus |
+
+The mapping lives in `src/lib/site.ts` (`categoryHue`, `iconHue`); the colours are the `.hue-*` and `--toy-*` tokens in `src/styles/global.css`. Other pages are sun and tangerine.
+
+**Home scene:** the home page's `cards` block uses `layout: space`: the worlds are scattered down a sun-gradient stage full of floating toys. Hovering (or keyboard-focusing) a world springs its toys onto the stage beside it, where they act out its story (the UX screen gets clicked and levels up, the Games buddy hops and pops a coin, the 3D primitives are rendered from clay to colour). On touch screens the world nearest the middle of the screen plays, taking turns while several are in view; tapping opens it. Clicking a floating toy makes it jump; the eyeball follows the pointer. With reduced motion nothing drifts and the finished pose appears without the story. World pages float their own toys in the banner.
+
+The toys are built in code with three.js (`src/lib/toys/`: `models.ts` the toys, `stories.ts` the three stories, `engine.ts` layout, motion and rendering). three.js loads after the page has painted, only on pages with toys, and the animation pauses when off screen or in a hidden tab.
+
 ## Projects
 
 Each project is one file: `src/content/projects/<category>/<route>.yaml`, where category is `3d-renders`, `games-dev` or `ux-and-gamification`. It gets its own page at `/<lang>/<category>/<route>/`, and a card on the category page wherever that page has a `type: projects` block.
@@ -85,7 +105,7 @@ See every field and a live preview in the catalog (`/dev/blocks/`). In VS Code, 
 2. Add `schema.ts` exporting `meta` (label, group, description), `schema` (zod, with `type: z.literal('<type>')`) and `example`.
 3. Add one `.astro` component in the same folder; it receives `block` (validated fields), `lang` and `ctx`. Use `t(value, lang)` from `src/lib/i18n.ts` for text.
 
-That's it: blocks are discovered automatically; there is no registry to edit. Copy an existing block (e.g. `quote/`) as a starting point. Styles go in `src/styles/global.css`, and use only the colour tokens defined at its top (`--bg`, `--surface`, `--text`, `--text-muted`, `--border`, `--accent`, …), never raw colours: that is what makes the block work in dark mode and on every section theme.
+That's it: blocks are discovered automatically; there is no registry to edit. Copy an existing block (e.g. `quote/`) as a starting point. Styles go in `src/styles/global.css`, and use only the colour tokens defined at its top (`--bg`, `--surface`, `--text`, `--text-muted`, `--border`, `--accent`, …), never raw colours: that is what makes the block work in dark mode, on every section theme and in every world's colour.
 
 ## Prefabs
 

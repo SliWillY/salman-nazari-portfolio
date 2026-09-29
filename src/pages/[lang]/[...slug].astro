@@ -6,6 +6,7 @@ import type { BlockContext } from '../../blocks/types';
 import { section as sectionSchema } from '../../lib/content-schemas';
 import { langs, t, type Lang } from '../../lib/i18n';
 import { resolveSections } from '../../lib/prefabs';
+import { categoryHue } from '../../lib/site';
 
 export async function getStaticPaths() {
   const pages = await getCollection('pages');
@@ -20,8 +21,8 @@ const lang = Astro.params.lang as Lang;
 const { data } = page;
 const ctx: BlockContext = { lang, route: page.id, title: data.title, description: data.description, eyebrow: data.eyebrow };
 const sections = await resolveSections(data, `src/content/pages/${page.id}.yaml`);
-if (data.header === 'auto') sections.unshift({ ...sectionSchema.parse({ spacing: 's' }), blocks: [{ type: 'hero', size: 'page' }] });
+if (data.header === 'auto') sections.unshift({ ...sectionSchema.parse({ spacing: 'none', width: 'full' }), blocks: [{ type: 'hero', size: 'page' }] }); // the hero's banner runs edge to edge
 ---
-<BaseLayout lang={lang} title={t(data.title, lang)} description={t(data.description, lang)} currentSlug={page.id} home={page.id === 'home'}>
+<BaseLayout lang={lang} title={t(data.title, lang)} description={t(data.description, lang)} currentSlug={page.id} home={page.id === 'home'} hue={categoryHue[page.id]}>
   {sections.map((section) => <Section section={section} lang={lang} ctx={ctx} />)}
 </BaseLayout>

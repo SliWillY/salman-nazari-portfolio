@@ -1,13 +1,24 @@
 export type { Lang } from './i18n';
 import type { Lang } from './i18n';
 
+// Each world has its own candy colour (global.css, .hue-*): UX grape, Games mint, 3D sky; the site is sun and tangerine.
+// Category pages and their projects take it from the category; home cards from their icon.
+export type Hue = 'ux' | 'games' | '3d';
+export const categoryHue: Record<string, Hue> = { 'ux-and-gamification': 'ux', 'games-dev': 'games', '3d-renders': '3d' };
+export const iconHue: Record<'ux' | 'game' | 'render', Hue> = { ux: 'ux', game: 'games', render: '3d' };
+
+// Worlds in the same order as on the home page.
 export const nav = [
   { slug: 'about-me', en: 'About', ar: 'نبذة' },
-  { slug: '3d-renders', en: '3D Renders', ar: 'تصاميم ثلاثية الأبعاد' },
-  { slug: 'games-dev', en: 'Games Dev', ar: 'تطوير الألعاب' },
   { slug: 'ux-and-gamification', en: 'UX & Gamification', ar: 'تجربة المستخدم والتلعيب' },
+  { slug: 'games-dev', en: 'Games Dev', ar: 'تطوير الألعاب' },
+  { slug: '3d-renders', en: '3D Renders', ar: 'تصاميم ثلاثية الأبعاد' },
   { slug: 'certificates', en: 'Certificates', ar: 'الشهادات' }
 ];
+
+// A world's number, shown as a superscript (UX & Gamification⁰¹): its place in the menu among the worlds.
+const worlds = nav.filter((item) => item.slug in categoryHue).map((item) => item.slug);
+export const worldNumber = (slug: string) => { const i = worlds.indexOf(slug); return i < 0 ? '' : String(i + 1).padStart(2, '0'); };
 
 export const labels = {
   en: { menu: 'Menu', close: 'Close menu', home: 'Home', explore: 'Explore', contact: 'Contact', language: 'Language', back: 'Back to home', skip: 'Skip to content', nav: 'Main', homeLink: 'Salman Nazari — home' },
@@ -20,8 +31,8 @@ export const themeLabels = {
   ar: { name: 'المظهر', template: 'المظهر: {current}. التبديل إلى {next}.', light: 'فاتح', dark: 'داكن', system: 'تلقائي (حسب النظام)' }
 } as const;
 
-// Browser UI colour per theme (<meta name="theme-color">); keep equal to --bg in global.css.
-export const themeColor = { light: '#f4f2ed', dark: '#1a1917' } as const;
+// Browser UI colour per theme (<meta name="theme-color">); keep equal to --paper / --dusk in global.css.
+export const themeColor = { light: '#fffaf3', dark: '#17142b' } as const;
 
 export const path = (value: string) => `${import.meta.env.BASE_URL.replace(/\/$/, '')}/${value.replace(/^\//, '')}`;
 

@@ -1,13 +1,30 @@
 ---
+// Page hero. `size: home` is the headline on the home stage. `size: page` puts a banner at the top of the page
+// (tall with floating toys on a world's own page, a slim strip elsewhere) and, under it, the big title beside its
+// description, with a superscript number: the world's number (UX⁰¹…) or a project's year.
+import Banner from '../../components/Banner.astro';
 import { t } from '../../lib/i18n';
+import { categoryHue, worldNumber } from '../../lib/site';
 const { block, lang, ctx } = Astro.props;
 const eyebrow = t(block.eyebrow ?? ctx.eyebrow, lang);
 const title = t(block.title ?? ctx.title, lang);
 const intro = t(block.intro ?? ctx.description, lang);
 const eyebrowHref = block.eyebrow ? undefined : ctx.eyebrowHref;
+const world = ctx.category ? undefined : categoryHue[ctx.route];
+const number = world ? worldNumber(ctx.route) : ctx.project?.year ? String(ctx.project.year) : '';
 ---
-<header class:list={['b-hero', `size-${block.size}`]}>
-  {eyebrow && (eyebrowHref ? <a class="eyebrow" href={eyebrowHref}>{eyebrow}</a> : <span class="eyebrow">{eyebrow}</span>)}
-  <h1>{title}</h1>
-  {intro && <p>{intro}</p>}
-</header>
+{block.size === 'home' ? (
+  <header class="b-hero size-home">
+    {eyebrow && <span class="eyebrow">{eyebrow}</span>}
+    <h1>{title}</h1>
+    {intro && <p>{intro}</p>}
+  </header>
+) : (
+  <header class="b-hero size-page">
+    <Banner world={world} eyebrow={eyebrow} eyebrowHref={eyebrowHref} />
+    <div class="hero-intro">
+      <h1>{title}{number && <sup class="hero-num">{number}</sup>}</h1>
+      {intro && <p class="hero-lede">{intro}</p>}
+    </div>
+  </header>
+)}
