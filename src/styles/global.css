@@ -27,6 +27,9 @@
   /* Ground switches: --glow-mix 0% = hues as ink (light grounds), 100% = as glow (dark grounds);
      --dusk-mix picks the dusk gradient colours; --stage-mix is how strongly they tint the stage's base. */
   --glow-mix: 0%; --dusk-mix: 0%; --stage-mix: 100%; --stage-base: var(--pale-sky);
+  /* The home stage's gradient (--home-paint): by day the orange edge is softer and sits low, so the top stays pale sky
+     and soft sun; at dusk it is the same as every other stage. */
+  --home-edge-mix: 48%; --home-edge-size: 120% 42%; --home-edge-at: 60% 104%; --home-angle: 172deg; --home-core-at: 34% 40%; --home-stop-1: 12%; --home-stop-2: 58%; --home-stop-3: 88%;
 
   --bg: var(--paper); --text: var(--ink); --text-muted: #5f586b; --border: #eee5d9;
   --accent-contrast: #fff;
@@ -89,6 +92,11 @@
     radial-gradient(52% 70% at 36% 48%, var(--stage-b) 0%, color-mix(in oklab, var(--stage-b) 55%, transparent) 42%, transparent 74%),
     radial-gradient(70% 90% at 100% 100%, var(--stage-c) 0%, color-mix(in oklab, var(--stage-c) 50%, transparent) 42%, transparent 80%),
     linear-gradient(135deg, var(--stage-base) 6%, color-mix(in oklab, var(--stage-base) 40%, var(--stage-b)) 40%, color-mix(in oklab, var(--stage-b) 45%, var(--stage-c)) 72%, var(--stage-c) 100%);
+  --home-c: color-mix(in oklab, var(--stage-c) var(--home-edge-mix), var(--stage-b));
+  --home-paint:
+    radial-gradient(52% 70% at var(--home-core-at), var(--stage-b) 0%, color-mix(in oklab, var(--stage-b) 55%, transparent) 42%, transparent 74%),
+    radial-gradient(var(--home-edge-size) at var(--home-edge-at), var(--home-c) 0%, color-mix(in oklab, var(--home-c) 50%, transparent) 42%, transparent 80%),
+    linear-gradient(var(--home-angle), var(--stage-base) var(--home-stop-1), color-mix(in oklab, var(--stage-base) 40%, var(--stage-b)) var(--home-stop-2), color-mix(in oklab, var(--stage-b) 45%, var(--home-c)) var(--home-stop-3), var(--home-c) 100%);
 }
 /* Section bands (Jimdo-style), light site. "paper" is the page ground, "light" lifted paper, "dark" a dusk band
    (artwork glows on it, in both themes), "accent" a sun-gradient field with confetti. */
@@ -104,6 +112,7 @@
   :root:not([data-theme="light"]) {
     color-scheme: dark;
     --glow-mix: 100%; --dusk-mix: 100%; --stage-mix: 38%; --stage-base: var(--dusk-sky);
+    --home-edge-mix: 100%; --home-edge-size: 70% 90%; --home-edge-at: 100% 100%; --home-angle: 135deg; --home-core-at: 36% 48%; --home-stop-1: 6%; --home-stop-2: 40%; --home-stop-3: 72%;
     --bg: var(--dusk); --text: var(--moonlight); --text-muted: #c2b8d6; --border: #2e2850;
     --accent-contrast: var(--dusk-deep);
     --hover: #221d3f; --placeholder: #221c3e;
@@ -127,6 +136,7 @@
 :root[data-theme="dark"] {
   color-scheme: dark;
   --glow-mix: 100%; --dusk-mix: 100%; --stage-mix: 38%; --stage-base: var(--dusk-sky);
+  --home-edge-mix: 100%; --home-edge-size: 70% 90%; --home-edge-at: 100% 100%; --home-angle: 135deg; --home-core-at: 36% 48%; --home-stop-1: 6%; --home-stop-2: 40%; --home-stop-3: 72%;
   --bg: var(--dusk); --text: var(--moonlight); --text-muted: #c2b8d6; --border: #2e2850;
   --accent-contrast: var(--dusk-deep);
   --hover: #221d3f; --placeholder: #221c3e;
@@ -288,7 +298,7 @@ main > .section:first-child .block-hero:first-child .page-banner { margin-top: c
 .banner-canvas { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; pointer-events: none; }
 .banner-eyebrow { position: absolute; z-index: 2; inset-inline-start: clamp(16px, 3vw, 32px); bottom: clamp(16px, 3vw, 28px); }
 /* Glass pills (a few, on pictures): frosted, with a bright edge. */
-.banner-eyebrow, .space-cta, .section:has(.b-space) .b-heading .eyebrow {
+.banner-eyebrow, .space-cta {
   background: var(--glass); border: 1px solid var(--glass-edge); color: var(--text);
   box-shadow: inset 0 1px 0 color-mix(in srgb, var(--highlight) 50%, transparent), 0 8px 20px -12px color-mix(in srgb, var(--ink) 30%, transparent);
   backdrop-filter: blur(14px) saturate(1.6); -webkit-backdrop-filter: blur(14px) saturate(1.6);
@@ -604,6 +614,10 @@ figcaption { margin-top: 8px; color: var(--text-muted); font-size: .8rem; }
 /* Home hero: headline at the reading start, intro beside it, on the stage. */
 .b-hero.size-home { max-width: none; display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); align-items: end; gap: 20px 56px; padding: clamp(32px, 7vh, 88px) 0 0; }
 .b-hero.size-home .eyebrow { grid-column: 1 / -1; }
+/* On the home stage the labels ("Hi, I'm Salman", "Explore") are plain words, not pills. */
+.b-hero.size-home .eyebrow, .section:has(.b-space) .b-heading .eyebrow { padding: 0; border-radius: 0; background: none; font-size: 1rem; font-weight: 600; }
+.b-hero.size-home .eyebrow::before, .section:has(.b-space) .b-heading .eyebrow::before { content: none; }
+.section:has(.b-space) .b-heading .eyebrow { color: var(--text-muted); font-weight: 500; }
 .b-hero.size-home h1 { font-size: clamp(2.8rem, 5.6vw, 4.8rem); line-height: .97; letter-spacing: -.05em; margin: 0; }
 .b-hero.size-home p { font-size: 1.08rem; max-width: 40ch; margin: 0 0 .4rem; color: var(--text-muted); }
 /* Arabic headlines: Arabic letterforms are taller, so more line-height and no tracking. */
@@ -734,7 +748,7 @@ figcaption { margin-top: 8px; color: var(--text-muted); font-size: .8rem; }
    floating header. The toys' canvas covers it (the section is its containing block) with grain over the toys and
    every block above both. The worlds zig-zag down with room to breathe; each has an invisible stage beside it,
    toward the open side, where its toys perform. The stage is part of the link, so pointing at the show keeps it. */
-.section:has(.b-space) { margin: calc(var(--frame) - var(--header-h)) var(--frame) 0; border-radius: var(--radius-l); overflow: hidden; isolation: isolate; background: var(--stage-paint); }
+.section:has(.b-space) { margin: calc(var(--frame) - var(--header-h)) var(--frame) 0; border-radius: var(--radius-l); overflow: hidden; isolation: isolate; background: var(--home-paint); }
 .section:has(.b-space) > .section-inner { position: static; display: flex; flex-direction: column; min-height: calc(100svh - 2 * var(--frame)); padding-top: var(--header-h); }
 .section:has(.b-space) .block:not(.block-cards) { position: relative; z-index: 2; }
 .section-inner > .block-cards:has(.b-space) { flex: 1; display: flex; flex-direction: column; }
@@ -763,9 +777,15 @@ figcaption { margin-top: 8px; color: var(--text-muted); font-size: .8rem; }
 /* Stage: the engine reads its box. Centred on the title; after the first world, before the next two. */
 .space-stage { position: absolute; top: calc(var(--title-size) / 2); inset-inline-start: calc(100% + var(--reach)); width: var(--stage); aspect-ratio: 1; translate: 0 -50%; }
 .space-item:is(:nth-child(3n + 2), :nth-child(3n + 3)) .space-stage { inset-inline: auto calc(100% + var(--reach)); }
+/* The first world sits right under the heading: its stage hangs lower (mostly below its title's middle), with
+   extra room before the next world, so its toys never reach the heading. */
+@media (min-width: 701px) {
+  .space-item:first-child .space-stage { translate: 0 -22%; }
+  .space-item:first-child { margin-bottom: calc(var(--stage) * .25); }
+}
 :lang(ar) .b-space { --title-size: clamp(1.9rem, 3.8vw, 3.1rem); }
 :lang(ar) .space-title { letter-spacing: 0; line-height: 1.3; }
-/* The heading above the worlds reads as a label: a glass pill, the title, then a line to the far edge. */
+/* The heading above the worlds reads as a label: a plain word, the title, then a line to the far edge. */
 .section:has(.b-space) .b-heading { flex-direction: row; align-items: center; flex-wrap: wrap; gap: 8px 14px; }
 .section:has(.b-space) .b-heading .eyebrow { margin: 0; }
 .section:has(.b-space) .b-heading::after { content: ''; flex: 1; min-width: 40px; height: 1px; background: linear-gradient(to right, color-mix(in srgb, var(--text) 26%, transparent), transparent); }

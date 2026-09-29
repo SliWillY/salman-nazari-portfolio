@@ -52,7 +52,8 @@ function crossed(from: number, to: number, at: number, start = 0, cycle = Infini
 // A screen lands, a button and an XP bar snap onto it; a cursor swoops in and clicks (button squashes), the bar fills
 // with a little elastic stretch, and a star badge pops out with a spin and a burst of confetti. The star scatters and
 // the bar drains at the start of every cycle. The bar fills from the inline start (right in Arabic).
-const UX = { first: 3.2, cycle: 2.9, click: [0.05, -0.06, 0.2] as V3, away: [0.34, -0.34, 0.12] as V3 };
+// Sits a little low on its stage, so the screen stays clear of the heading above the first world.
+const UX = { first: 3.2, cycle: 2.9, click: [0.05, -0.12, 0.2] as V3, away: [0.34, -0.34, 0.12] as V3, badge: [0.36, 0.34, 0.14] as V3 };
 function uxBeats(t: number) {
   const first = t < UX.first;
   const c = first ? t : (t - UX.first) % UX.cycle;
@@ -73,10 +74,10 @@ const ux: Story = {
       yaw: -0.32 + 0.05 * Math.sin(t * 0.8),
       pitch: 0.14,
       parts: {
-        panel: { p: [0, 0.1, 0], s: 0.84, sq: -0.04 * press },
-        button: { p: [0, -0.02, 0.07 - 0.02 * press], s: 0.34, sq: 0.22 * press },
-        bar: { p: [0, -0.37, 0.03], s: 0.78 },
-        star: { p: [0.36, 0.44, 0.14], s: 0.3 * pop(grow), r: [0, t * 1.4, -1.4 * (1 - easeOut(grow))], hide: b.c < b.badge },
+        panel: { p: [0, 0.04, 0], s: 0.84, sq: -0.04 * press },
+        button: { p: [0, -0.08, 0.07 - 0.02 * press], s: 0.34, sq: 0.22 * press },
+        bar: { p: [0, -0.43, 0.03], s: 0.78 },
+        star: { p: UX.badge, s: 0.3 * pop(grow), r: [0, t * 1.4, -1.4 * (1 - easeOut(grow))], hide: b.c < b.badge },
         cursor: { p: [UX.click[0] + UX.away[0] * away, UX.click[1] + UX.away[1] * away, UX.click[2] + UX.away[2] * away - 0.03 * press], s: 0.15, r: [0.2, -0.25, 0.28] }
       }
     };
@@ -91,8 +92,8 @@ const ux: Story = {
   },
   events(from, to, hooks) {
     const badgeAt = (first: boolean) => (first ? 1.45 + 0.35 + 0.2 : 1.45 + 0.2);
-    if (crossed(from, to, badgeAt(true))) hooks.burst([0.36, 0.44, 0.14], 26);
-    if (crossed(from, to, badgeAt(false), UX.first, UX.cycle)) hooks.burst([0.36, 0.44, 0.14], 26);
+    if (crossed(from, to, badgeAt(true))) hooks.burst(UX.badge, 26);
+    if (crossed(from, to, badgeAt(false), UX.first, UX.cycle)) hooks.burst(UX.badge, 26);
   }
 };
 
