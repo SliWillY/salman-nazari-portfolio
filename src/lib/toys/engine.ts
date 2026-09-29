@@ -1,6 +1,8 @@
 // Toy studio engine (three.js): candy toys floating in a sun gradient, like a Cinema 4D motion-graphics loop.
-// - Layout: every toy gets a resting spot away from the page's text (and the worlds' stages), in a seeded,
-//   evenly spread composition that is recomputed on resize. Toys bob, turn and breathe around their spot.
+// - Layout: every toy gets a resting spot away from the page's text, in a seeded, evenly spread composition that
+//   is recomputed on resize. A world's own toys rest in a small area around its stage (so pointing at the world
+//   brings them a short way, not across the screen); the other toys keep clear of the stages. Toys bob, turn and
+//   breathe around their spot.
 // - Play: the pointer nudges toys aside, the eyeball follows it, a click (or tap) makes a toy jump; now and then
 //   a toy hops on its own.
 // - Scene mode (home): hovering / focusing a world springs its toys out of the float onto its stage, where its
@@ -31,7 +33,7 @@ type Body = {
   anchor: THREE.Vector3; phase: [number, number, number]; spin: THREE.Vector3; spinSpeed: number; rest: THREE.Quaternion;
   pos: THREE.Vector3; vel: THREE.Vector3; quat: THREE.Quaternion; scale: number; scaleVel: number; squash: number;
   push: THREE.Vector3; pushVel: THREE.Vector3;
-  world: WorldState | null; part: string; since: number; hop: number; eye: boolean;
+  world: WorldState | null; home: WorldState | null; part: string; since: number; hop: number; eye: boolean;
 };
 type WorldState = World & { parts: Record<string, Body>; center: THREE.Vector2; size: number; group: THREE.Group; extras: THREE.Object3D[]; t0: number; told: number };
 
@@ -111,7 +113,7 @@ export function mountToys(root: HTMLElement, canvas: HTMLCanvasElement, options:
       rest: new THREE.Quaternion().setFromEuler(new THREE.Euler((rand() - 0.5) * tilt, (rand() - 0.5) * tilt, (rand() - 0.5) * 1.2)),
       pos: new THREE.Vector3(), vel: new THREE.Vector3(), quat: new THREE.Quaternion(), scale: 0, scaleVel: 0, squash: 0,
       push: new THREE.Vector3(), pushVel: new THREE.Vector3(),
-      world: null, part: '', since: -10, hop: -10, eye: kind === 'eyeball'
+      world: null, home: null, part: '', since: -10, hop: -10, eye: kind === 'eyeball'
     };
     body.quat.copy(body.rest);
     bodies.push(body);
@@ -124,7 +126,9 @@ export function mountToys(root: HTMLElement, canvas: HTMLCanvasElement, options:
     const extras = world.story.extras?.(kit) ?? [];
     extras.forEach((extra) => { extra.visible = false; group.add(extra); }); // shown only while the story plays
     scene.add(group);
-    return { ...world, parts, center: new THREE.Vector2(), size: 0, group, extras, t0: 0, told: 0 };
+    const state: WorldState = { ...world, parts, center: new THREE.Vector2(), size: 0, group, extras, t0: 0, told: 0 };
+    for (const body of Object.values(parts)) body.home = state;
+    return state;
   });
   for (const { kind, paint } of options.float) makeBody(kind, paint);
 
@@ -168,33 +172,39 @@ export function mountToys(root: HTMLElement, canvas: HTMLCanvasElement, options:
     rtl = style().direction === 'rtl';
     const local = (r: DOMRect) => new DOMRect(r.left - frame.left, r.top - frame.top, r.width, r.height);
     exclusions = options.avoid().map((el) => local(el.getBoundingClientRect())).filter((r) => r.width && r.height);
+    const stages = new Map<WorldState, DOMRect>();
     for (const world of worlds) {
       const r = local(world.stage.getBoundingClientRect());
       world.size = Math.min(r.width, r.height);
       world.center.copy(toWorld(r.left + r.width / 2, r.top + r.height / 2));
       world.group.position.set(world.center.x, world.center.y, 0);
       world.group.scale.setScalar(world.size);
-      exclusions.push(r);
+      stages.set(world, r);
     }
-    // Resting spots: largest toys first, each the best-spread of many seeded candidates clear of the text.
+    // Resting spots: the worlds' toys first (around their own stage), then the rest, largest first; each the
+    // best-spread of many seeded candidates clear of the text (and, for the free toys, of every stage).
     const base = clamp(Math.min(w, h) * (options.size ?? (narrow.matches ? 0.11 : 0.078)), 36, 110);
     const pick = random(options.seed ?? 11);
     const placed: { x: number; y: number; r: number }[] = [];
-    const order = [...bodies].sort((a, b) => b.weight - a.weight);
+    const order = [...bodies].sort((a, b) => Number(!a.home) - Number(!b.home) || b.weight - a.weight);
     for (const body of order) {
       body.size = base * body.weight;
       const r = body.size * 0.55;
+      const stage = body.home && stages.get(body.home);
+      const pad = stage ? stage.width * 0.3 : 0;
+      const area = stage ? new DOMRect(stage.left - pad, stage.top - pad, stage.width + 2 * pad, stage.height + 2 * pad) : new DOMRect(0, 0, w, h);
+      const avoid = [...exclusions, ...[...stages].filter(([world]) => world !== body.home).map(([, rect]) => rect)];
       let best = { x: w / 2, y: h / 2, score: -Infinity };
       for (let i = 0; i < 90; i++) {
-        const x = r + pick() * Math.max(1, w - 2 * r);
-        const y = r + pick() * Math.max(1, h - 2 * r);
-        const overlap = exclusions.reduce((sum, e) => {
+        const x = clamp(area.left + pick() * area.width, r, Math.max(r, w - r));
+        const y = clamp(area.top + pick() * area.height, r, Math.max(r, h - r));
+        const overlap = avoid.reduce((sum, e) => {
           const dx = Math.max(e.left - x, 0, x - e.right);
           const dy = Math.max(e.top - y, 0, y - e.bottom);
           return sum + Math.max(0, r + 14 - Math.hypot(dx, dy));
         }, 0);
         const spread = placed.reduce((min, p) => Math.min(min, Math.hypot(p.x - x, p.y - y) - p.r - r), Math.min(w, h));
-        const score = spread - overlap * 6;
+        const score = spread - overlap * 30; // never over the words, even in a world's small area
         if (score > best.score) best = { x, y, score };
       }
       placed.push({ x: best.x, y: best.y, r });
@@ -294,7 +304,8 @@ export function mountToys(root: HTMLElement, canvas: HTMLCanvasElement, options:
   function leave(world: WorldState) {
     for (const body of Object.values(world.parts)) {
       Object.assign(body, { world: null, since: time });
-      body.vel.add(new THREE.Vector3((Math.random() - 0.5) * 300, 200 + Math.random() * 200, 0));
+      // A little toss as the show breaks up; they are resting nearby, so they settle close.
+      body.vel.add(new THREE.Vector3((Math.random() - 0.5) * 1.2, 0.5 + Math.random() * 0.6, 0).multiplyScalar(world.size));
     }
     world.extras.forEach((extra) => (extra.visible = false));
     world.link.classList.remove('is-active');
