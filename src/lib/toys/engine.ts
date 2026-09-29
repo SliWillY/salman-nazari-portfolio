@@ -196,8 +196,9 @@ export function mountToys(root: HTMLElement, canvas: HTMLCanvasElement, options:
       const avoid = [...exclusions, ...[...stages].filter(([world]) => world !== body.home).map(([, rect]) => rect)];
       let best = { x: w / 2, y: h / 2, score: -Infinity };
       for (let i = 0; i < 90; i++) {
-        const x = clamp(area.left + pick() * area.width, r, Math.max(r, w - r));
-        const y = clamp(area.top + pick() * area.height, r, Math.max(r, h - r));
+        const edge = r * 1.5; // whole toys, never cut by the stage's edge
+        const x = clamp(area.left + pick() * area.width, edge, Math.max(edge, w - edge));
+        const y = clamp(area.top + pick() * area.height, edge, Math.max(edge, h - edge));
         const overlap = avoid.reduce((sum, e) => {
           const dx = Math.max(e.left - x, 0, x - e.right);
           const dy = Math.max(e.top - y, 0, y - e.bottom);
@@ -308,6 +309,7 @@ export function mountToys(root: HTMLElement, canvas: HTMLCanvasElement, options:
       body.vel.add(new THREE.Vector3((Math.random() - 0.5) * 1.2, 0.5 + Math.random() * 0.6, 0).multiplyScalar(world.size));
     }
     world.extras.forEach((extra) => (extra.visible = false));
+    world.story.reset?.(Object.fromEntries(Object.entries(world.parts).map(([n, b]) => [n, b.toy])), kit);
     world.link.classList.remove('is-active');
     if (active === world) active = null;
     wake();
