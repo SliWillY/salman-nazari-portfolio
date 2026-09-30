@@ -1,0 +1,27 @@
+---
+// Open Graph and X tags, so a shared link shows a preview card: the page's title and description and the card
+// for its language (public/og/, made by `pnpm og`). Link previews don't run JavaScript, so the redirect pages
+// (Redirect.astro) carry these too. url: the page's own address, made absolute here like the image.
+import { createHash } from 'node:crypto';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { ogImage, path, siteName, type Lang } from '../lib/site';
+const { lang, title, description, url } = Astro.props as { lang: Lang; title: string; description: string; url: string };
+const image = ogImage[lang];
+// The card's hash goes in its URL, so apps that cache previews by image address fetch a re-rendered card.
+const version = createHash('sha1').update(readFileSync(join(process.cwd(), 'public', image.file))).digest('hex').slice(0, 8);
+---
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content={siteName[lang]} />
+<meta property="og:locale" content={lang === 'ar' ? 'ar_AR' : 'en_US'} />
+<meta property="og:locale:alternate" content={lang === 'ar' ? 'en_US' : 'ar_AR'} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={new URL(url, Astro.site).href} />
+<meta property="og:image" content={new URL(`${path(image.file)}?v=${version}`, Astro.site).href} />
+<meta property="og:image:type" content="image/jpeg" />
+<meta property="og:image:width" content={String(ogImage.width)} />
+<meta property="og:image:height" content={String(ogImage.height)} />
+<meta property="og:image:alt" content={image.alt} />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image:alt" content={image.alt} />

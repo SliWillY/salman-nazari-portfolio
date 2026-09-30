@@ -2,11 +2,13 @@
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import Analytics from '../components/Analytics.astro';
+import SocialMeta from '../components/SocialMeta.astro';
 import { path, themeColor, type Hue, type Lang } from '../lib/site';
 import '../styles/global.css';
 // hue: the world this page belongs to (category pages and their projects): its colour leads the page.
 const { lang, title, description, currentSlug, home = false, hue } = Astro.props as { lang: Lang; title: string; description: string; currentSlug: string; home?: boolean; hue?: Hue };
 const dir = lang === 'ar' ? 'rtl' : 'ltr';
+const fullTitle = `${title} · Salman Nazari`;
 ---
 <!doctype html>
 <!-- Text direction lives on the .page wrapper, not <html>/<body>: browsers take the page
@@ -18,6 +20,7 @@ const dir = lang === 'ar' ? 'rtl' : 'ltr';
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <Analytics />
     <meta name="description" content={description} />
+    <SocialMeta lang={lang} title={fullTitle} description={description} url={Astro.url.pathname} />
     <link rel="icon" type="image/svg+xml" href={path("favicon.svg")} />
     <meta name="color-scheme" content="light dark" />
     <meta name="theme-color" media="(prefers-color-scheme: light)" content={themeColor.light} data-scheme="light" data-light={themeColor.light} data-dark={themeColor.dark} />
@@ -35,7 +38,7 @@ const dir = lang === 'ar' ? 'rtl' : 'ltr';
         }
       })();
     </script>
-    <title>{title} · Salman Nazari</title>
+    <title>{fullTitle}</title>
   </head>
   <body class:list={{ 'home-page': home }}>
     <div class:list={['page', hue && `hue-${hue}`]} dir={dir} data-page>

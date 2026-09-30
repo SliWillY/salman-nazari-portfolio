@@ -36,6 +36,15 @@ export const themeLabels = {
 // Browser UI colour per theme (<meta name="theme-color">); keep equal to --paper / --dusk in global.css.
 export const themeColor = { light: '#fffaf3', dark: '#17142b' } as const;
 
+// Link previews (Open Graph, src/components/SocialMeta.astro). The cards in public/og/ are made by `pnpm og` from
+// scripts/og/card.html; keep the alt text in step with the card's words.
+export const siteName = { en: 'Salman Nazari', ar: 'سلمان نظري' } as const;
+export const ogImage = {
+  width: 1200, height: 630,
+  en: { file: 'og/en.jpg', alt: 'Salman Nazari, designer of UX, games & 3D worlds, among colourful candy shapes and paper confetti' },
+  ar: { file: 'og/ar.jpg', alt: 'سلمان نظري، مصمم تجارب وألعاب وعوالم ثلاثية الأبعاد، بين أشكال ملونة وقصاصات ورق' }
+} as const;
+
 export const path = (value: string) => `${import.meta.env.BASE_URL.replace(/\/$/, '')}/${value.replace(/^\//, '')}`;
 
 // Link targets in content: full URLs pass through; "games-dev" or "games-dev/my-game" become /<lang>/games-dev/…/

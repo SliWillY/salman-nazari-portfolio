@@ -1,0 +1,159 @@
+<!doctype html>
+<!-- The social preview card (Open Graph image), 1200×630, in the site's light theme: warm paper, the sun gradient,
+     paper confetti and the candy shapes of the worlds (dot, triangle, d-pad, tile), with the name and one line.
+     render.mjs screenshots it to public/og/en.jpg and public/og/ar.jpg (pnpm og); open this file in a browser
+     with ?lang=ar to preview the Arabic card. The Arabic card is laid out right to left, so the whole composition
+     mirrors: toys sit with inset-inline-*, their turns follow --read, and the gradient's corners swap.
+     Colours mirror the tokens at the top of src/styles/global.css (brand hue, light theme); keep them in sync.
+     The words sit on the start side (left in English, right in Arabic), the toys play on the other. -->
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,600;9..40,800&family=Readex+Pro:wght@500;700&display=block" />
+<style>
+  :root {
+    --toy-sun: #ffc43d; --toy-tangerine: #ff7a2e; --toy-grape: #9b7bff; --toy-mint: #33d17a;
+    --toy-sky: #4c9bff; --toy-bubblegum: #ff7eb9; --toy-cherry: #ff4b4b; --toy-cream: #fff4e4; --toy-ink: #2a2233;
+    --paper: #fffaf3; --paper-hi: #fffdf9; --ink: #19141f; --pale-sky: #bfd3df;
+    --core: #ffc845; --edge: #ff7a1f; /* the site's own sun gradient (.hue-brand) */
+    --read: 1;
+    --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 0 0 0 0 1'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  }
+  [dir='rtl'] { --read: -1; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; width: 1200px; height: 630px; overflow: hidden; background: var(--paper); }
+  body { font-family: 'DM Sans', sans-serif; font-optical-sizing: auto; color: var(--ink); }
+  body:lang(ar) { font-family: 'Readex Pro', sans-serif; }
+
+  /* The stage: inset from the edge with big round corners, like the site's banners. */
+  .stage {
+    --corner: 100%; --sweep: 135deg;
+    position: absolute; inset: 16px; overflow: hidden; isolation: isolate; border-radius: 40px;
+    background:
+      radial-gradient(46% 62% at 50% 46%, var(--core) 0%, color-mix(in oklab, var(--core) 55%, transparent) 42%, transparent 74%),
+      radial-gradient(62% 92% at var(--corner) 100%, var(--edge) 0%, color-mix(in oklab, var(--edge) 50%, transparent) 42%, transparent 80%),
+      linear-gradient(var(--sweep), var(--pale-sky) 6%, color-mix(in oklab, var(--pale-sky) 40%, var(--core)) 40%, color-mix(in oklab, var(--core) 45%, var(--edge)) 72%, var(--edge) 100%);
+  }
+  [dir='rtl'] .stage { --corner: 0%; --sweep: 225deg; }
+  .stage::after { content: ''; position: absolute; inset: 0; z-index: 3; background: var(--grain); opacity: .07; pointer-events: none; }
+
+  /* Paper confetti: flat pieces, some turned edge-on. */
+  .confetti { position: absolute; inset: 0; z-index: 0; }
+  .confetti i { position: absolute; display: block; border-radius: 3px; transform: rotate(calc(var(--read) * var(--r))); }
+  .confetti i.round { border-radius: 50%; }
+
+  /* Candy toys: the worlds' shapes, soft and glossy, with a warm shadow. */
+  .toy { position: absolute; z-index: 1; width: var(--s); height: var(--s); transform: rotate(calc(var(--read) * var(--r, 0deg)));
+    filter: drop-shadow(0 calc(var(--s) * .1) calc(var(--s) * .09) color-mix(in srgb, #a3410a 26%, transparent)); }
+  .toy svg { display: block; width: 100%; height: 100%; overflow: visible; }
+
+  /* The words, on the start side, untracked. */
+  .words { position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; text-align: start; padding-inline-start: 84px; padding-bottom: 6px; }
+  .name { margin: 0; font-size: 146px; font-weight: 800; line-height: .94; letter-spacing: 0; }
+  .name > span { display: block; }
+  .name .dot { display: inline-block; width: .19em; height: .19em; margin-inline-start: .04em; border-radius: 50%; vertical-align: baseline;
+    background: radial-gradient(circle at 34% 28%, #fff 0 8%, color-mix(in srgb, #fff 45%, var(--toy-tangerine)) 20%, var(--toy-tangerine) 52%, color-mix(in oklab, var(--toy-tangerine) 70%, #7a2300) 100%); }
+  .line { margin: 58px 0 0; padding: 14px 32px 16px; border-radius: 999px; font-size: 38px; font-weight: 600; letter-spacing: 0; line-height: 1.2;
+    background: color-mix(in srgb, var(--paper-hi) 62%, transparent); border: 2px solid color-mix(in srgb, #fff 85%, transparent);
+    box-shadow: inset 0 1px 0 #fff, 0 12px 26px -14px color-mix(in srgb, #7a2d00 45%, transparent);
+    backdrop-filter: blur(14px) saturate(1.5); }
+
+  /* Arabic: Readex Pro, never tracked, a taller line for the letters' rise and fall. */
+  :lang(ar) .name { font-size: 124px; font-weight: 700; line-height: 1.04; letter-spacing: 0; }
+  :lang(ar) .name > span { display: inline; } /* the Arabic name reads as one line; the space between is in the markup */
+  :lang(ar) .name .dot { width: .17em; height: .17em; margin-inline-start: .06em; }
+  :lang(ar) .line { margin-top: 80px; padding: 12px 34px 18px; font-size: 38px; font-weight: 500; letter-spacing: 0; line-height: 1.4; }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="confetti" id="confetti"></div>
+  <div id="toys"></div>
+  <div class="words">
+    <h1 class="name"><span id="first"></span> <span><span id="last"></span><i class="dot"></i></span></h1>
+    <p class="line" id="line"></p>
+  </div>
+</div>
+<script>
+  // The card's words. Change them here, then run `pnpm og` (and update ogImage alt in src/lib/site.ts to match).
+  const copy = {
+    en: { first: 'Salman', last: 'Nazari', line: 'Designer of UX, games & 3D worlds' },
+    ar: { first: 'سلمان', last: 'نظري', line: 'مصمم تجارب وألعاب وعوالم ثلاثية الأبعاد' }
+  };
+  const lang = new URLSearchParams(location.search).get('lang') === 'ar' ? 'ar' : 'en';
+  document.documentElement.lang = lang;
+  document.body.dir = lang === 'ar' ? 'rtl' : 'ltr';
+  for (const key of ['first', 'last', 'line']) document.getElementById(key).textContent = copy[lang][key];
+
+  // The worlds' shapes, as in global.css (--shape-*), on a 24×24 grid.
+  const shapes = {
+    dot: "<circle cx='12' cy='12' r='12'/>",
+    tile: "<rect width='24' height='24' rx='7'/>",
+    dpad: "<path d='M7 3.5A3.5 3.5 0 0 1 10.5 0h3A3.5 3.5 0 0 1 17 3.5V5a2 2 0 0 0 2 2h1.5A3.5 3.5 0 0 1 24 10.5v3a3.5 3.5 0 0 1-3.5 3.5H19a2 2 0 0 0-2 2v1.5a3.5 3.5 0 0 1-3.5 3.5h-3A3.5 3.5 0 0 1 7 20.5V19a2 2 0 0 0-2-2H3.5A3.5 3.5 0 0 1 0 13.5v-3A3.5 3.5 0 0 1 3.5 7H5a2 2 0 0 0 2-2Z'/>",
+    triangle: "<path d='M12 4 20 20H4Z' stroke='white' stroke-width='8' stroke-linejoin='round'/>"
+  };
+  // Toys, placed from the start (left in English, right in Arabic) or the end edge. s: size, r: turn.
+  // ar: changes for the Arabic card, whose one-line name is wider.
+  const toys = [
+    { shape: 'triangle', color: '--toy-grape', s: 168, end: 236, top: 40, r: '-12deg', ar: { end: 176, top: 16 } },
+    { shape: 'tile', color: '--toy-sky', s: 138, end: 52, top: 132, r: '16deg' },
+    { shape: 'dpad', color: '--toy-mint', s: 136, end: 322, top: 262, r: '14deg', ar: { end: 196, top: 410 } },
+    { shape: 'dot', color: '--toy-sun', s: 58, end: 200, top: 276 },
+    { shape: 'dot', color: '--toy-tangerine', s: 196, end: -26, top: 372 },
+    { shape: 'dot', color: '--toy-bubblegum', s: 62, end: 256, top: 474, ar: { end: 372, top: 506 } },
+    { shape: 'triangle', color: '--toy-cherry', s: 48, end: 52, top: 26, r: '22deg' }
+  ];
+  let n = 0;
+  document.getElementById('toys').innerHTML = toys.map(({ ar, ...base }) => {
+    const toy = lang === 'ar' ? { ...base, ...ar } : base;
+    const id = `t${n++}`;
+    const place = toy.start != null ? `inset-inline-start:${toy.start}px` : `inset-inline-end:${toy.end}px`;
+    const c = `var(${toy.color})`;
+    const round = toy.shape === 'dot';
+    return `<div class="toy" style="--s:${toy.s}px;--r:${toy.r ?? '0deg'};top:${toy.top}px;${place}">
+      <svg viewBox="0 0 24 24">
+        <defs>
+          <mask id="${id}m" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24"><g fill="white">${shapes[toy.shape]}</g></mask>
+          <radialGradient id="${id}g" cx="${round ? .36 : .3}" cy="${round ? .3 : .24}" r="${round ? .78 : .95}">
+            <stop offset="0" style="stop-color:#fff;stop-opacity:.7"/>
+            <stop offset=".22" style="stop-color:color-mix(in srgb, #fff 40%, ${c});stop-opacity:.45"/>
+            <stop offset=".5" style="stop-color:${c};stop-opacity:0"/>
+            <stop offset="1" style="stop-color:color-mix(in oklab, ${c} 55%, var(--toy-ink));stop-opacity:.6"/>
+          </radialGradient>
+        </defs>
+        <g mask="url(#${id}m)">
+          <rect width="24" height="24" style="fill:${c}"/>
+          <rect width="24" height="24" fill="url(#${id}g)"/>
+          <ellipse cx="${round ? 8 : 7.5}" cy="${round ? 6.6 : 7}" rx="2.6" ry="1.5" fill="#fff" opacity=".75" transform="rotate(-32 8 7)"/>
+        </g>
+      </svg>
+    </div>`;
+  }).join('');
+
+  // Confetti from a fixed seed, so every render is the same; kept off the words (x from the start side).
+  let seed = 7;
+  const rand = () => ((seed = (seed * 16807) % 2147483647) - 1) / 2147483646;
+  const colors = ['--toy-sun', '--toy-grape', '--toy-bubblegum', '--toy-mint', '--toy-sky', '--toy-tangerine', '--toy-cherry', '--toy-cream'];
+  const pieces = [];
+  for (let tries = 0; pieces.length < 46 && tries < 2000; tries++) {
+    const x = rand() * 1168, y = rand() * 598;
+    if (x > 40 && x < (lang === 'ar' ? 840 : 780) && y > 70 && y < 540) continue; // the words
+    if (pieces.some((p) => Math.hypot(p.x - x, p.y - y) < 54)) continue; // spread out
+    const round = rand() < .35, w = round ? 10 + rand() * 8 : 16 + rand() * 12;
+    const h = round ? w * (rand() < .5 ? 1 : .5) : 6 + rand() * 4;
+    pieces.push({ x, y, w, h, round, r: Math.round(rand() * 180), color: colors[Math.floor(rand() * colors.length)] });
+  }
+  document.getElementById('confetti').innerHTML = pieces.map((p) =>
+    `<i class="${p.round ? 'round' : ''}" style="inset-inline-start:${p.x.toFixed(0)}px;top:${p.y.toFixed(0)}px;width:${p.w.toFixed(0)}px;height:${p.h.toFixed(0)}px;--r:${p.r}deg;background:var(${p.color})"></i>`).join('');
+
+  // render.mjs waits for this: the fonts must really load, or the card would fall back to a system font.
+  const face = lang === 'ar' ? ['700 124px "Readex Pro"', '500 38px "Readex Pro"'] : ['800 156px "DM Sans"', '600 38px "DM Sans"'];
+  Promise.all(face.map((f) => document.fonts.load(f, copy[lang].line))).then(async (loaded) => {
+    await document.fonts.ready;
+    window.cardReady = { ok: loaded.every((faces) => faces.length > 0) };
+  }, () => { window.cardReady = { ok: false }; });
+</script>
+</body>
+</html>

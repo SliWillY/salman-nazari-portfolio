@@ -11,4 +11,4 @@ export function getStaticPaths() {
 const { name } = Astro.params;
 const { link } = Astro.props as { link: ShareLink };
 ---
-<Redirect to={path(`${link.lang ?? 'en'}/`)} params={{ utm_source: name!, utm_medium: link.medium, utm_campaign: 'share_link' }} />
+<Redirect to={path(`${link.lang ?? 'en'}/`)} lang={link.lang} params={{ utm_source: name!, utm_medium: link.medium, utm_campaign: 'share_link' }} />

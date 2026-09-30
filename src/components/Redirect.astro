@@ -2,11 +2,16 @@
 // Instant redirect page (static hosting has no server redirects). Keeps the visitor's query string and #hash,
 // adds any `params` (e.g. UTM tags for share links), and hands the original external referrer to the next page,
 // where Analytics.astro reports it, so Google Analytics still credits the site the visitor came from.
-const { to, params = {} } = Astro.props as { to: string; params?: Record<string, string> };
+// It also carries the target home page's preview tags (SocialMeta), since link previews don't follow the script.
+import { getEntry } from 'astro:content';
+import SocialMeta from './SocialMeta.astro';
+import { t, type Lang } from '../lib/i18n';
+const { to, params = {}, lang = 'en' } = Astro.props as { to: string; params?: Record<string, string>; lang?: Lang };
+const home = (await getEntry('pages', 'home'))!.data;
 const target = `${to}${Object.keys(params).length ? `?${new URLSearchParams(params)}` : ''}`;
 ---
 <!doctype html>
-<html lang="en">
+<html lang={lang}>
   <head>
     <meta charset="utf-8" />
     <meta name="robots" content="noindex" />
@@ -22,6 +27,7 @@ const target = `${to}${Object.keys(params).length ? `?${new URLSearchParams(para
     </script>
     <meta http-equiv="refresh" content={`0; url=${target}`} />
     <link rel="canonical" href={new URL(to, Astro.site)} />
+    <SocialMeta lang={lang} title={`${t(home.title, lang)} · Salman Nazari`} description={t(home.description, lang)} url={to} />
   </head>
   <body><a href={target}>Salman Nazari</a></body>
 </html>
