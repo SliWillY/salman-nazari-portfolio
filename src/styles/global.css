@@ -259,7 +259,6 @@ main:focus { outline: none; }
 .menu-icon span:last-child { top: 8px; }
 [data-menu-open] .menu-icon span:first-child { top: 4px; transform: rotate(45deg); }
 [data-menu-open] .menu-icon span:last-child { top: 4px; transform: rotate(-45deg); }
-html.menu-locked { overflow: hidden; }
 /* Theme toggle: one button cycling the saved preference; the icon shows the current one (set before first paint). */
 .theme-toggle { display: grid; place-items: center; width: 40px; height: 40px; padding: 0; border: 1px solid var(--border); border-radius: 999px; background: transparent; color: var(--text); cursor: pointer; transition: border-color .2s ease, background .2s ease; }
 .theme-toggle:hover { border-color: var(--hover-ink); background: var(--hover); color: var(--hover-ink); }
@@ -272,8 +271,8 @@ html.menu-locked { overflow: hidden; }
   .theme-toggle { width: 44px; height: 44px; }
   .lang-switch { padding: 2px; }
   .lang-option { height: 38px; min-width: 44px; }
-  /* The menu opens as a sheet under the bar. */
-  .primary-nav { position: fixed; inset: calc(var(--header-h) + 4px) var(--frame) auto; z-index: 49; max-height: calc(100dvh - var(--header-h) - 16px); padding: 8px 20px 16px; border-radius: var(--radius); background: var(--bg); box-shadow: var(--shadow-lift); overflow-y: auto; visibility: hidden; opacity: 0; transform: translateY(-8px) scale(.98); transform-origin: top; transition: opacity .2s ease, transform .25s cubic-bezier(.3,1.4,.5,1), visibility 0s linear .2s; }
+  /* The menu opens as a sheet under the bar, exactly as wide as it (anchored to .site-header-inner). */
+  .primary-nav { position: absolute; top: calc(100% + 4px); inset-inline: 0; z-index: 49; max-height: calc(100dvh - var(--header-h) - 16px); padding: 8px 20px 16px; border-radius: var(--radius); background: var(--bg); box-shadow: var(--shadow-lift); overflow-y: auto; overscroll-behavior: contain; visibility: hidden; opacity: 0; transform: translateY(-8px) scale(.98); transform-origin: top; transition: opacity .2s ease, transform .25s cubic-bezier(.3,1.4,.5,1), visibility 0s linear .2s; }
   [data-menu-open] .primary-nav { visibility: visible; opacity: 1; transform: none; transition: opacity .2s ease, transform .3s cubic-bezier(.3,1.4,.5,1); }
   .primary-nav ul { flex-direction: column; align-items: stretch; gap: 0; }
   .primary-nav li + li { border-top: 1px solid var(--border); }
@@ -883,6 +882,10 @@ figcaption { margin-top: 8px; color: var(--text-muted); font-size: .8rem; }
 .project-nav > :first-child { justify-self: start; text-align: start; }
 .project-nav > :last-child { justify-self: end; text-align: end; }
 .project-nav a:hover { color: var(--hover-ink); }
+.nav-glue { white-space: nowrap; }
+.nav-icon { display: inline-block; width: 1.15em; height: 1.15em; margin-inline-start: .4em; vertical-align: -.2em; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.nav-icon.is-before { margin-inline: 0 .4em; }
+.nav-icon:dir(rtl) { transform: scaleX(-1); } /* in Arabic the arrows point the other way */
 
 /* ---------- lightbox ---------- */
 .lightbox { width: 100vw; height: 100vh; max-width: 100vw; max-height: 100vh; margin: 0; padding: 0; border: 0; background: var(--overlay-bg); color: var(--overlay-text); }
@@ -930,8 +933,8 @@ figcaption { margin-top: 8px; color: var(--text-muted); font-size: .8rem; }
   .layout-grid:is([style*="--columns: 5"], [style*="--columns: 6"]) .gallery-track { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .layout-masonry .gallery-track { columns: 2; }
   .lightbox figure { padding: 48px 12px; }
-  .project-nav { grid-template-columns: 1fr; }
-  .project-nav > :is(:first-child, :last-child) { justify-self: center; text-align: center; }
+  /* Still one row on phones: three equal thirds, long titles wrap inside their own column. */
+  .project-nav { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; font-size: .82rem; line-height: 1.35; }
   /* Phones: one tidy row (the small print at the start, the links at the end), wrapping only on the narrowest
      screens, with finger-sized link targets that don't add height. */
   .site-footer { margin-top: 48px; padding: 30px 0 calc(24px + env(safe-area-inset-bottom)); flex-wrap: wrap; align-items: center; gap: 2px 18px; }

@@ -38,13 +38,20 @@ if (data.header === 'auto') {
   sections.unshift({ ...sectionSchema.parse({ spacing: 'none', width: 'full' }), blocks: [{ type: 'hero', size: 'page' }, { type: 'project-meta' }] }); // the hero's banner runs edge to edge
 }
 const label = categoryItem?.[lang] ?? category;
-const arrows = lang === 'ar' ? { prev: '→', next: '←', back: `العودة إلى ${label}` } : { prev: '←', next: '→', back: `Back to ${label}` };
+const back = lang === 'ar' ? `العودة إلى ${label}` : `Back to ${label}`;
+const prevTitle = prev ? t(prev.data.title, lang) : '';
+const nextTitle = next ? t(next.data.title, lang) : '';
+// The icon is glued to the neighbouring word, so a wrapped label never leaves it alone on a line or floating off to the side.
+const firstWord = (text: string) => { const i = text.indexOf(' '); return i < 0 ? [text, ''] : [text.slice(0, i), text.slice(i)]; };
+const lastWord = (text: string) => { const i = text.lastIndexOf(' '); return i < 0 ? ['', text] : [text.slice(0, i + 1), text.slice(i + 1)]; };
+// SVG icons (not text arrows or emoji) so they look the same on every device; CSS mirrors them in Arabic.
+const icons = { prev: ['M19 12H5', 'm11 18-6-6 6-6'], next: ['M5 12h14', 'm13 6 6 6-6 6'], back: ['M9 14 4 9l5-5', 'M4 9h10.5a5.5 5.5 0 0 1 0 11H11'] };
 ---
 <BaseLayout lang={lang} title={t(data.title, lang)} description={t(data.summary, lang)} currentSlug={`${category}/${route}`} hue={categoryHue[category]}>
   {sections.map((section) => <Section section={section} lang={lang} ctx={ctx} />)}
-  <nav class="project-nav" aria-label={arrows.back}>
-    {prev ? <a href={path(`/${lang}/${category}/${prev.route}/`)}>{arrows.prev} {t(prev.data.title, lang)}</a> : <span />}
-    <a href={categoryHref}>{arrows.back}</a>
-    {next ? <a href={path(`/${lang}/${category}/${next.route}/`)}>{t(next.data.title, lang)} {arrows.next}</a> : <span />}
+  <nav class="project-nav" aria-label={back}>
+    {prev ? <a href={path(`/${lang}/${category}/${prev.route}/`)}><span class="nav-glue"><svg class="nav-icon is-before" viewBox="0 0 24 24" aria-hidden="true" focusable="false">{icons.prev.map((d) => <path d={d} />)}</svg>{firstWord(prevTitle)[0]}</span>{firstWord(prevTitle)[1]}</a> : <span />}
+    <a href={categoryHref}><span class="nav-glue"><svg class="nav-icon is-before" viewBox="0 0 24 24" aria-hidden="true" focusable="false">{icons.back.map((d) => <path d={d} />)}</svg>{firstWord(back)[0]}</span>{firstWord(back)[1]}</a>
+    {next ? <a href={path(`/${lang}/${category}/${next.route}/`)}>{lastWord(nextTitle)[0]}<span class="nav-glue">{lastWord(nextTitle)[1]}<svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">{icons.next.map((d) => <path d={d} />)}</svg></span></a> : <span />}
   </nav>
 </BaseLayout>

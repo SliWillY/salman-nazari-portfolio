@@ -46,13 +46,9 @@ const target = languages.find((l) => l.code !== lang)!;
   const header = document.querySelector<HTMLElement>('[data-header]')!;
   const toggle = header.querySelector<HTMLButtonElement>('[data-menu-toggle]')!;
   const nav = header.querySelector<HTMLElement>('[data-nav]')!;
-  const outside = () => [document.querySelector('main'), document.querySelector('.site-footer'), document.querySelector('.skip-link')].filter(Boolean) as HTMLElement[];
-
-  // Open mobile menu behaves like a modal: page behind is inert, focus moves into the menu.
+  // Open mobile menu: the page can still scroll behind it, focus moves into the menu, a tap outside closes it.
   const setOpen = (open: boolean) => {
     header.toggleAttribute('data-menu-open', open);
-    document.documentElement.classList.toggle('menu-locked', open);
-    outside().forEach((el) => (el.inert = open));
     toggle.setAttribute('aria-expanded', String(open));
     toggle.setAttribute('aria-label', (open ? toggle.dataset.closeLabel : toggle.dataset.openLabel) ?? '');
     if (open) nav.querySelector<HTMLAnchorElement>('a')?.focus();
@@ -61,6 +57,13 @@ const target = languages.find((l) => l.code !== lang)!;
 
   toggle.addEventListener('click', () => setOpen(!isOpen()));
   nav.addEventListener('click', (event) => { if ((event.target as HTMLElement).closest('a')) setOpen(false); });
+  // A tap outside the bar and menu only closes the menu (it doesn't also follow a link underneath); scrolling never fires a click.
+  document.addEventListener('click', (event) => {
+    if (!isOpen() || header.contains(event.target as Node)) return;
+    event.preventDefault();
+    event.stopPropagation();
+    setOpen(false);
+  }, true);
   document.addEventListener('keydown', (event) => {
     if (!isOpen()) return;
     if (event.key === 'Escape') { setOpen(false); toggle.focus(); return; }
