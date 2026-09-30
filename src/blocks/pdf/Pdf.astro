@@ -1,6 +1,7 @@
 ---
 import Lightbox from '../../components/Lightbox.astro';
 import Slider from '../../components/Slider.astro';
+import SliderArrow from '../../components/SliderArrow.astro';
 import { cloudinaryPdfPreview, cloudinaryPdfUrl } from '../../lib/cloudinary';
 import { t } from '../../lib/i18n';
 const { block, lang } = Astro.props;
@@ -47,8 +48,8 @@ const labels = lang === 'ar' ? { prev: 'الصفحة السابقة', next: 'ا�
           </div>
         ))}
       </div>
-      {slider && <button type="button" class="gallery-btn" data-dir="-1" aria-label={labels.prev}>←</button>}
-      {slider && <button type="button" class="gallery-btn" data-dir="1" aria-label={labels.next}>→</button>}
+      {slider && <SliderArrow dir={-1} label={labels.prev} />}
+      {slider && <SliderArrow dir={1} label={labels.next} />}
     </div>
     {!slider && (
       <figcaption>

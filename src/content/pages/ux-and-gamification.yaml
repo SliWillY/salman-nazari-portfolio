@@ -3,10 +3,14 @@ description:
   en: Human-centered journeys, working prototypes, and experiments designed around motivation.
   ar: رحلات تتمحور حول الإنسان ونماذج أولية وتجارب مصممة حول الدافع.
 eyebrow: { en: Systems and behavior, ar: الأنظمة والسلوك }
+blocks: 
+  - type: divider
+    style: line
 
 sections:
   # Tanafusi: featured case study — summary, key signals, one framed screenshot; the button opens the full study.
-  - blocks:
+  - theme: paper
+    blocks:
       - type: image-text
         image: "03-student-analytics_aeokka"
         alt: { en: "Tanafusi student analytics screen", ar: "شاشة تحليلات الطالب في تنافسي" }
@@ -59,16 +63,18 @@ sections:
     spacing: l
     align: center
     blocks:
-      - type: heading
-        level: 2
-        eyebrow: { en: Research, ar: الأبحاث }
-        text: { en: Studies & research, ar: الدراسات والأبحاث }
-      - type: text
-        text:
-          en: Research projects examine the relationship between user journeys, feedback, incentives, and meaningful participation.
-          ar: تبحث هذه المشاريع في العلاقة بين رحلات المستخدم والتغذية الراجعة والحوافز والمشاركة ذات المعنى.
-      - type: divider
-        style: ornament
+      # - type: heading
+      #   level: 2
+      #   eyebrow: { en: Research, ar: الأبحاث }
+      #   text: { en: Studies & research, ar: الدراسات والأبحاث }
+      # - type: text
+      #   text:
+      #     en: Research projects examine the relationship between user journeys, feedback, incentives, and meaningful participation.
+      #     ar: تبحث هذه المشاريع في العلاقة بين رحلات المستخدم والتغذية الراجعة والحوافز والمشاركة ذات المعنى.
+      # - type: divider
+      #   style: short
+      #   above: m
+      #   below: m
 
       - prefab: pdf-slider
         props:
@@ -83,6 +89,9 @@ sections:
             - { en: Pain points, ar: نقاط الألم }
             - { en: Sketches, ar: الرسومات الأولية }
             - { en: Wireframes, ar: النماذج الهيكلية }
+
+      - type: divider
+        below: l
 
       - prefab: pdf-slider
         props:

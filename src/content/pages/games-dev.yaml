@@ -6,9 +6,12 @@ eyebrow: { en: Interactive work, ar: أعمال تفاعلية }
 
 sections:
   - blocks:
-      - type: text
-        size: large
-        text:
-          en: "My game development practice moves between visual direction and systems thinking: environment design, lighting, game design documents, level design documents, and playable prototypes."
-          ar: "يتنقل عملي في تطوير الألعاب بين التوجيه البصري والتفكير في الأنظمة: تصميم البيئات والإضاءة ووثائق تصميم الألعاب والمراحل والنماذج القابلة للعب."
+      #- type: text
+        #size: large
+        #text:
+          #en: "My game development practice moves between visual direction and systems thinking: environment design, lighting, game design documents, level design documents, and playable prototypes."
+          #ar: "يتنقل عملي في تطوير الألعاب بين التوجيه البصري والتفكير في الأنظمة: تصميم البيئات والإضاءة ووثائق تصميم الألعاب والمراحل والنماذج القابلة للعب."
+      - type: divider
+        style: line
+        below: l
       - type: projects

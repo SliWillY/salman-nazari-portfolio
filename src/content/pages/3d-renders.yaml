@@ -6,9 +6,12 @@ eyebrow: { en: Selected work, ar: أعمال مختارة }
 
 sections:
   - blocks:
-      - type: text
-        size: large
-        text:
-          en: From early blockouts to final frames, these studies explore atmosphere, spatial storytelling, and the small details that make a world feel lived in.
-          ar: من التخطيط الأولي إلى اللقطة النهائية، تستكشف هذه الأعمال الجو العام والسرد المكاني والتفاصيل الصغيرة التي تجعل العالم يبدو حقيقياً.
+      #- type: text
+        #size: large
+        #text:
+          #en: From early blockouts to final frames, these studies explore atmosphere, spatial storytelling, and the small details that make a world feel lived in.
+          #ar: من التخطيط الأولي إلى اللقطة النهائية، تستكشف هذه الأعمال الجو العام والسرد المكاني والتفاصيل الصغيرة التي تجعل العالم يبدو حقيقياً.
+      - type: divider
+        style: line
+        below: l
       - type: projects

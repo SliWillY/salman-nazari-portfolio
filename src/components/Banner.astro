@@ -22,12 +22,16 @@ const { world, size = 'slim', eyebrow, eyebrowHref } = Astro.props as { world?: 
   async function start() {
     const [{ mountToys }, { stories }] = await Promise.all([import('../lib/toys/engine'), import('../lib/toys/stories')]);
     const small = matchMedia('(max-width: 700px)').matches;
+    // Toys are sized from the banner's height. On desktop a world's banner is as low as About's (global.css), so its
+    // toys take a bigger share to stay the size they were in the taller banner.
+    const desktop = matchMedia('(min-width: 801px)').matches;
     for (const banner of banners) {
       const world = banner.dataset.banner as keyof typeof STORY | '';
       const canvas = banner.querySelector('canvas');
       if (!canvas) continue;
       const float = world in STORY ? [...Object.values(stories[STORY[world as keyof typeof STORY]].parts), ...EXTRA[world as keyof typeof STORY].map((kind) => ({ kind }))] : [];
-      mountToys(banner, canvas, { float: small ? float.slice(0, 6) : float, confetti: (small ? 8 : 18) + (float.length ? 0 : small ? 4 : 10), seed: 5, size: small ? 0.24 : 0.2, avoid: () => [...banner.querySelectorAll('.banner-eyebrow')] });
+      const size = small ? 0.24 : float.length && desktop ? 0.28 : 0.2;
+      mountToys(banner, canvas, { float: small ? float.slice(0, 6) : float, confetti: (small ? 8 : 18) + (float.length ? 0 : small ? 4 : 10), seed: 5, size, avoid: () => [...banner.querySelectorAll('.banner-eyebrow')] });
     }
   }
   if (banners.length) {

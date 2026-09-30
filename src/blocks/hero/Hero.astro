@@ -14,7 +14,7 @@ const eyebrowHref = block.eyebrow ? undefined : ctx.eyebrowHref;
 const world = ctx.category ? undefined : categoryHue[ctx.route];
 const number = ctx.category ? (ctx.project?.year ? String(ctx.project.year) : '') : pageNumber(ctx.route);
 const bannerSize = world ? 'tall' : ['about-me', 'certificates'].includes(ctx.route) ? 'medium' : 'slim';
-// On a world's own page (and About, in the site's orange dot) the title is led by its shape, glued to the first
+// On a world's own page (and About, in the site's orange star) the title is led by its shape, glued to the first
 // word so it never wraps alone.
 const shape = !!world || ctx.route === 'about-me';
 const space = title.indexOf(' ');

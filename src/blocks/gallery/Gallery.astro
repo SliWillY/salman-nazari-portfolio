@@ -2,6 +2,7 @@
 import CloudinaryImage from '../../components/CloudinaryImage.astro';
 import Lightbox from '../../components/Lightbox.astro';
 import Slider from '../../components/Slider.astro';
+import SliderArrow from '../../components/SliderArrow.astro';
 import { cloudinaryUrl } from '../../lib/cloudinary';
 import { t } from '../../lib/i18n';
 const { block, lang } = Astro.props;
@@ -31,9 +32,9 @@ const labels = lang === 'ar' ? { prev: 'السابق', next: 'التالي', of:
   </div>
   {slider && items.length > 1 && (
     <div class="gallery-controls">
-      <button type="button" class="gallery-btn" data-dir="-1" aria-label={labels.prev}>←</button>
+      <SliderArrow dir={-1} label={labels.prev} />
       <span class="gallery-count" aria-live="polite"><span data-current>1</span> / {items.length}</span>
-      <button type="button" class="gallery-btn" data-dir="1" aria-label={labels.next}>→</button>
+      <SliderArrow dir={1} label={labels.next} />
     </div>
   )}
 </div>

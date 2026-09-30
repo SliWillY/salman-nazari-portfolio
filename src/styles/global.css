@@ -23,16 +23,17 @@
   /* The scope's world: fill (its candy colour, for surfaces and as text, the same bright colour by day and at dusk),
      and the two colours of its sun gradient, by day (core, edge) and at dusk. These are the site's own; .hue-* override. */
   --hue-fill: var(--toy-tangerine);
-  /* Each world's candy shape (a mask; the colour comes from --hue-fill): the site/me a round dot, like the one in
-     salman.nazari; UX a triangle, like a pointer or a level-up arrow; Games a d-pad; 3D a soft tile, the face of a
-     cube (it turns over like one). All soft-cornered, left-right symmetric (so nothing looks wrong in Arabic) and filling the same square
-     edge to edge, so they stand equally tall on one baseline. Only the candy-piece rule below reads them. */
-  --shape-dot: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><circle cx='12' cy='12' r='12'/></svg>");
+  /* Each world's candy shape (a mask; the colour comes from --hue-fill): the site/me a soft five-point star (round
+     arcs at every tip and valley); UX a triangle, like a pointer or a level-up arrow; Games a d-pad; 3D a soft tile, the face of
+     a cube (it turns over like one). All soft-cornered, left-right symmetric (so nothing looks wrong in Arabic) and
+     filling the same square edge to edge, so they stand equally tall on one baseline. Only the candy-piece rule
+     below reads them. */
+  --shape-star: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M15.15 2.53L16.86 5.19A2.19 2.19 0 0 0 18.15 6.12L21.21 6.93A3.75 3.75 0 0 1 23.15 12.92L21.15 15.37A2.19 2.19 0 0 0 20.66 16.88L20.84 20.04A3.75 3.75 0 0 1 15.74 23.75L12.79 22.60A2.19 2.19 0 0 0 11.21 22.60L8.26 23.75A3.75 3.75 0 0 1 3.16 20.04L3.34 16.88A2.19 2.19 0 0 0 2.85 15.37L0.85 12.92A3.75 3.75 0 0 1 2.79 6.93L5.85 6.12A2.19 2.19 0 0 0 7.14 5.19L8.85 2.53A3.75 3.75 0 0 1 15.15 2.53Z'/></svg>");
   --shape-tile: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect width='24' height='24' rx='7'/></svg>");
   --shape-dpad: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M7 3.5A3.5 3.5 0 0 1 10.5 0h3A3.5 3.5 0 0 1 17 3.5V5a2 2 0 0 0 2 2h1.5A3.5 3.5 0 0 1 24 10.5v3a3.5 3.5 0 0 1-3.5 3.5H19a2 2 0 0 0-2 2v1.5a3.5 3.5 0 0 1-3.5 3.5h-3A3.5 3.5 0 0 1 7 20.5V19a2 2 0 0 0-2-2H3.5A3.5 3.5 0 0 1 0 13.5v-3A3.5 3.5 0 0 1 3.5 7H5a2 2 0 0 0 2-2Z'/></svg>");
   --shape-triangle: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 4 20 20H4Z' stroke='black' stroke-width='8' stroke-linejoin='round'/></svg>");
-  --hue-shape: var(--shape-dot); --hue-turn: var(--turn-dot); /* the shape's second pose, held while pointed at */
-  /* Second poses, all in place and in the flat of the page (never edge-on): the dot is pressed into a soft pill,
+  --hue-shape: var(--shape-star); --hue-turn: var(--turn-star); /* the shape's second pose, held while pointed at */
+  /* Second poses, all in place and in the flat of the page (never edge-on): the star twirls a fifth of a turn (point to point),
      the tile is turned over a quarter like a cube, the d-pad turns into an X, the triangle flips upside down.
      Turns go with reading direction (--read), so they are set again on every [dir] (see below the :root block). */
   --read: 1; /* reading direction as a sign, for motion that turns: 1 left to right, -1 in Arabic */
@@ -92,13 +93,13 @@
 }
 :root[data-theme="light"] { color-scheme: light; }
 /* The worlds (and the site's own orange, for About wherever it appears) */
-.hue-brand { --hue-fill: var(--toy-tangerine); --hue-shape: var(--shape-dot); --hue-turn: var(--turn-dot); --hue-core: #ffc845; --hue-edge: #ff7a1f; --hue-core-dusk: #ff6fb0; --hue-edge-dusk: var(--toy-grape); }
+.hue-brand { --hue-fill: var(--toy-tangerine); --hue-shape: var(--shape-star); --hue-turn: var(--turn-star); --hue-core: #ffc845; --hue-edge: #ff7a1f; --hue-core-dusk: #ff6fb0; --hue-edge-dusk: var(--toy-grape); }
 .hue-ux { --hue-fill: var(--toy-grape); --hue-shape: var(--shape-triangle); --hue-turn: var(--turn-triangle); --hue-core: #c2b2ff; --hue-edge: #ff96c8; --hue-core-dusk: var(--toy-grape); --hue-edge-dusk: #ff6fb0; }
 .hue-games { --hue-fill: var(--toy-mint); --hue-shape: var(--shape-dpad); --hue-turn: var(--turn-dpad); --hue-core: #9bebc0; --hue-edge: #ffd24a; --hue-core-dusk: var(--toy-mint); --hue-edge-dusk: var(--toy-sky); }
 .hue-3d { --hue-fill: var(--toy-sky); --hue-shape: var(--shape-tile); --hue-turn: var(--turn-tile); --hue-core: #9cc8ff; --hue-edge: #ff9a5a; --hue-core-dusk: var(--toy-sky); --hue-edge-dusk: #ff6fb0; }
 /* The second poses (see --hue-turn), set on the root and again on every element with a dir, so the turns read
    --read where the direction is known and go the other way in Arabic. */
-:root, [dir] { --turn-dot: scale(1.24, .76); --turn-tile: rotate(calc(var(--read) * 90deg)); --turn-dpad: rotate(calc(var(--read) * 45deg)); --turn-triangle: rotate(calc(var(--read) * 180deg)); }
+:root, [dir] { --turn-star: rotate(calc(var(--read) * 72deg)); --turn-tile: rotate(calc(var(--read) * 90deg)); --turn-dpad: rotate(calc(var(--read) * 45deg)); --turn-triangle: rotate(calc(var(--read) * 180deg)); }
 /* Derived tokens are re-declared on the page, every section and every world, so they follow that scope's own
    world and ground. --accent is the world colour as text: its bright candy colour, the same by day and at dusk.
    --stage-paint is the sun gradient: a pale corner, a big soft core, a vivid edge (dusk: indigo with warm glows). */
@@ -392,7 +393,7 @@ main { min-height: 70vh; }
    spins towards the viewer. */
 .footer-dots { position: absolute; top: -12px; inset-inline-start: -8px; display: flex; gap: 6px; padding: 12px 8px; }
 .footer-dots i { width: 10px; height: 10px; background: var(--fill); }
-.footer-dots i:nth-child(1) { --fill: var(--toy-tangerine); --candy-shape: var(--shape-dot); --turn: var(--turn-dot); }
+.footer-dots i:nth-child(1) { --fill: var(--toy-tangerine); --candy-shape: var(--shape-star); --turn: var(--turn-star); }
 .footer-dots i:nth-child(2) { --fill: var(--toy-grape); --candy-shape: var(--shape-triangle); --turn: var(--turn-triangle); --k: 1; }
 .footer-dots i:nth-child(3) { --fill: var(--toy-mint); --candy-shape: var(--shape-dpad); --turn: var(--turn-dpad); --k: 2; }
 .footer-dots i:nth-child(4) { --fill: var(--toy-sky); --candy-shape: var(--shape-tile); --turn: var(--turn-tile); --k: 3; }
@@ -408,8 +409,8 @@ main { min-height: 70vh; }
 .page-banner { position: relative; isolation: isolate; overflow: hidden; margin: 0 var(--frame); border-radius: var(--radius-l); background: var(--stage-paint); }
 .page-banner::after, .section:has(.b-space)::after, .section.theme-accent:not(.has-background)::before { content: ''; position: absolute; inset: 0; z-index: 1; background: var(--grain); opacity: var(--grain-opacity); pointer-events: none; border-radius: inherit; }
 .page-banner.is-slim { height: clamp(180px, 26vh, 240px); }
-.page-banner.is-tall { height: clamp(320px, 56vh, 540px); }
-.page-banner.is-medium { height: clamp(260px, 40vh, 400px); }
+/* On desktop a world's banner (tall) is as high as About's (medium); on phones and small tablets it stays taller (see responsive). */
+.page-banner:is(.is-tall, .is-medium) { height: clamp(260px, 40vh, 400px); }
 /* The first thing on the page runs up behind the floating header. */
 main > .section:first-child .block-hero:first-child .page-banner { margin-top: calc(var(--frame) - var(--header-h)); }
 .banner-canvas { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; pointer-events: none; }
@@ -449,7 +450,7 @@ main > .section:first-child .block-hero:first-child .page-banner { margin-top: c
 .section.align-center .b-image, .section.align-center .b-hero { margin-inline: auto; }
 
 /* ---------- text blocks ---------- */
-/* Eyebrow: a small candy pill with a dot in the world's colour. */
+/* Eyebrow: a small candy pill led by the world's shape in its colour. */
 .eyebrow { display: inline-flex; align-items: center; gap: .5em; width: fit-content; padding: .38em .9em .38em .65em; border-radius: 999px; background: color-mix(in srgb, var(--hue-fill) 18%, transparent); color: var(--text); font-size: .8rem; font-weight: 600; line-height: 1.3; }
 .eyebrow::before { content: ''; flex: none; width: .72em; height: .72em; background: var(--hue-fill); }
 a.eyebrow { transition: transform .35s cubic-bezier(.34, 1.56, .64, 1), color .2s ease; }
@@ -519,10 +520,15 @@ figcaption { margin-top: 8px; color: var(--text-muted); font-size: .8rem; }
 .gallery-slide a:hover img { transform: scale(1.03); }
 .gallery-controls { display: flex; align-items: center; justify-content: flex-end; gap: 12px; margin-top: 12px; font-size: .82rem; color: var(--text-muted); font-variant-numeric: tabular-nums; }
 .gallery-count { direction: ltr; unicode-bidi: isolate; }
-.gallery-btn { width: 40px; height: 40px; border: 1px solid var(--border); border-radius: 999px; background: transparent; color: var(--text); font: inherit; font-size: 1rem; cursor: pointer; transition: transform .35s cubic-bezier(.34, 1.56, .64, 1), background .2s ease; }
-.gallery-btn:hover:not(:disabled) { transform: scale(1.08); }
-.gallery-btn:hover { background: var(--hover); border-color: var(--hover-ink); color: var(--hover-ink); }
-[dir="rtl"] .gallery-btn { transform: scaleX(-1); }
+/* Slider arrows (SliderArrow.astro): just the arrow, in a finger-sized (invisible) button. Pointed at, it grows with
+   a spring and takes the world's colour; pressed, it dips. Grow and press use the scale property, so they never
+   fight a position set with translate or transform. The arrow itself is mirrored in Arabic, not the button. */
+.gallery-btn { display: grid; place-items: center; width: 40px; height: 40px; padding: 0; border: 0; border-radius: 999px; background: none; color: var(--text); cursor: pointer; transition: scale .35s cubic-bezier(.34, 1.56, .64, 1), color .2s ease, opacity .2s ease; }
+.gallery-btn svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2.25; stroke-linecap: round; stroke-linejoin: round; }
+.gallery-btn svg:dir(rtl) { transform: scaleX(-1); }
+.gallery-btn:hover:not(:disabled) { scale: 1.15; color: var(--hue-fill); }
+.gallery-btn:active:not(:disabled) { scale: .94; }
+.gallery-btn:disabled { opacity: .35; cursor: default; }
 .b-video video, .b-video iframe, .b-embed iframe { display: block; width: 100%; aspect-ratio: var(--media-aspect); border: 0; background: var(--placeholder); }
 .b-embed.fixed-height iframe { aspect-ratio: auto; }
 .document-card { display: flex; min-height: 150px; padding: 24px; border: 1px solid var(--border); border-radius: var(--radius); align-items: center; gap: 20px; background: var(--surface-raised); transition: background .2s ease, transform .35s cubic-bezier(.34, 1.56, .64, 1); }
@@ -561,18 +567,19 @@ figcaption { margin-top: 8px; color: var(--text-muted); font-size: .8rem; }
 .pdf-slider .gallery-track::-webkit-scrollbar { display: none; }
 .pdf-slider .gallery-slide { flex: 0 0 100%; scroll-snap-align: start; }
 .pdf-slider .gallery-slide img { width: auto; max-width: 100%; max-height: 80vh; margin-inline: auto; }
-/* Arrows sit beside the page, vertically centred; on narrow screens they overlay its edges.
-   An arrow that can't move is faded, so on page 1 the only live arrow shows the reading direction in LTR and RTL. */
+/* Arrows sit beside the page, vertically centred (with translate, so the hover grow can't knock them down); on
+   tablets and phones they float over its edges, white with a soft shadow so they read on light and dark pages alike,
+   and take no room of their own. An arrow that can't move is faded beside the page (so on page 1 the only live
+   arrow shows the reading direction in LTR and RTL) and hidden when it would sit on the page. */
 .pdf-stage { position: relative; }
-.pdf-stage .gallery-btn { position: absolute; top: 50%; z-index: 1; width: 44px; height: 44px; background: var(--surface-raised); transform: translateY(-50%); transition: opacity .2s ease, background .2s ease; }
-.pdf-stage .gallery-btn:hover:not(:disabled) { background: var(--hover); }
-.pdf-stage .gallery-btn:disabled { opacity: .3; cursor: default; }
+.pdf-stage .gallery-btn { position: absolute; top: 50%; z-index: 1; width: 44px; height: 44px; translate: 0 -50%; }
 .pdf-stage .gallery-btn[data-dir="-1"] { inset-inline-start: -60px; }
 .pdf-stage .gallery-btn[data-dir="1"] { inset-inline-end: -60px; }
-[dir="rtl"] .pdf-stage .gallery-btn { transform: translateY(-50%) scaleX(-1); }
 @media (max-width: 1080px) {
-  .pdf-stage .gallery-btn[data-dir="-1"] { inset-inline-start: 8px; }
-  .pdf-stage .gallery-btn[data-dir="1"] { inset-inline-end: 8px; }
+  .pdf-stage .gallery-btn { color: #fff; filter: drop-shadow(0 1px 3px rgb(0 0 0 / .55)); opacity: .7; } /* see-through, so the page shows */
+  .pdf-stage .gallery-btn:is(:hover, :active, :focus-visible):not(:disabled) { opacity: 1; }
+  .pdf-stage .gallery-btn[data-dir="-1"] { inset-inline-start: 4px; }
+  .pdf-stage .gallery-btn[data-dir="1"] { inset-inline-end: 4px; }
   .pdf-stage .gallery-btn:disabled { opacity: 0; pointer-events: none; }
 }
 
@@ -704,7 +711,8 @@ figcaption { margin-top: 8px; color: var(--text-muted); font-size: .8rem; }
 .b-divider { border: 0; border-top: 1px solid var(--border); margin: 0; }
 .b-divider.style-short { width: 64px; height: 6px; border: 0; border-radius: 3px; background: linear-gradient(90deg, var(--hue-fill), var(--hue-core)); }
 [dir="rtl"] .b-divider.style-short { background: linear-gradient(-90deg, var(--hue-fill), var(--hue-core)); }
-.align-center .b-divider.style-short { margin-inline: auto; }
+.b-divider.style-short-line { width: 64px; }
+.align-center .b-divider.style-short, .align-center .b-divider.style-short-line { margin-inline: auto; }
 /* ornament: lines fade out from the page's world shape (the class stays .diamond) flanked by two dots; always centred, with room above and below. */
 .b-divider.style-ornament { display: flex; align-items: center; gap: 12px; max-width: 440px; margin-inline: auto; border: 0; }
 .b-divider.style-ornament::before, .b-divider.style-ornament::after { content: ''; flex: 1; height: 1px; }
@@ -716,8 +724,19 @@ figcaption { margin-top: 8px; color: var(--text-muted); font-size: .8rem; }
 .b-divider.style-ornament .diamond { width: 14px; height: 14px; background: var(--hue-fill); }
 .b-divider.style-ornament .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--toy-sun); }
 .b-divider.style-ornament .dot:last-child { background: var(--toy-bubblegum); }
-.section-inner > .block-divider:has(.style-ornament), .b-column > .block-divider:has(.style-ornament) { margin-top: clamp(40px, 5vw, 56px); }
-.section-inner > .block-divider:has(.style-ornament) + .block, .b-column > .block-divider:has(.style-ornament) + .block { margin-top: clamp(48px, 6vw, 72px); }
+.section-inner > .block-divider:has(.style-ornament:not([class*="above-"], [class*="below-"])), .b-column > .block-divider:has(.style-ornament:not([class*="above-"], [class*="below-"])) { margin-top: clamp(40px, 5vw, 56px); }
+.section-inner > .block-divider:has(.style-ornament:not([class*="above-"], [class*="below-"])) + .block, .b-column > .block-divider:has(.style-ornament:not([class*="above-"], [class*="below-"])) + .block { margin-top: clamp(48px, 6vw, 72px); }
+/* Explicit spacing (above / below): margins on the divider itself. */
+.b-divider.above-none { margin-top: 0; }
+.b-divider.above-s { margin-top: 24px; }
+.b-divider.above-m { margin-top: 56px; }
+.b-divider.above-l { margin-top: 104px; }
+.b-divider.above-xl { margin-top: 168px; }
+.b-divider.below-none { margin-bottom: 0; }
+.b-divider.below-s { margin-bottom: 24px; }
+.b-divider.below-m { margin-bottom: 56px; }
+.b-divider.below-l { margin-bottom: 104px; }
+.b-divider.below-xl { margin-bottom: 168px; }
 
 /* ---------- site blocks ---------- */
 /* Page hero: the banner on top, then, like a brand book's cover, the big title (with its superscript number)

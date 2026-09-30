@@ -1,8 +1,9 @@
 ---
 const { block } = Astro.props;
+const space = [block.above && `above-${block.above}`, block.below && `below-${block.below}`];
 ---
 {block.style === 'ornament' ? (
-  <div class="b-divider style-ornament" role="separator"><span class="dot"></span><span class="diamond"></span><span class="dot"></span></div>
+  <div class:list={['b-divider', 'style-ornament', space]} role="separator"><span class="dot"></span><span class="diamond"></span><span class="dot"></span></div>
 ) : (
-  <hr class:list={['b-divider', `style-${block.style}`]} />
+  <hr class:list={['b-divider', `style-${block.style}`, space]} />
 )}

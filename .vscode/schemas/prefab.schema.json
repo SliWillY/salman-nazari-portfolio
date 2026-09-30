@@ -323,9 +323,28 @@
               "enum": [
                 "line",
                 "short",
+                "short-line",
                 "ornament"
               ],
               "default": "line"
+            },
+            "above": {
+              "enum": [
+                "none",
+                "s",
+                "m",
+                "l",
+                "xl"
+              ]
+            },
+            "below": {
+              "enum": [
+                "none",
+                "s",
+                "m",
+                "l",
+                "xl"
+              ]
             }
           },
           "required": [
@@ -333,7 +352,7 @@
           ],
           "additionalProperties": false,
           "title": "Divider",
-          "description": "A horizontal line: full width, a short accent mark, or an `ornament` (fading lines around the page’s world shape: dot, triangle, d-pad or tile) with generous space, to open a new group of content."
+          "description": "A horizontal line: full width, a short accent mark, a short thin line (`short-line`), or an `ornament` (fading lines around the page’s world shape: star, triangle, d-pad or tile) with generous space, to open a new group of content. `above` / `below` (none, s, m, l, xl) set the space before and after it; when either is set it replaces the default spacing."
         },
         {
           "type": "object",
