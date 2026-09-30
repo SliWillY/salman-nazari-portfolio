@@ -62,11 +62,10 @@ const arrow = lang === 'ar' ? '↖' : '↗';
       });
     }
   }
-  // The 3D cube tumbles and the Games d-pad plays the Konami code while pointed at, in loops (global.css:
-  // cube-tumble, dpad-konami). Leaving mid-loop would snap the shape back, so .is-looping is on from the moment it's
-  // pointed at and only comes off once a loop has ended after the pointer (or focus) has left: the end of each loop
-  // is the shape's resting pose.
-  for (const shape of document.querySelectorAll<HTMLElement>('.space-item:is(.hue-3d, .hue-games) .world-shape')) {
+  // The 3D cube tumbles while pointed at, in loops (global.css, cube-tumble). Leaving mid-tumble would snap it back,
+  // so .is-looping is on from the moment it's pointed at and only comes off once a loop has ended after the pointer
+  // (or focus) has left: the end of each loop is the cube's resting pose.
+  for (const shape of document.querySelectorAll<HTMLElement>('.space-item.hue-3d .world-shape')) {
     const link = shape.closest<HTMLElement>('.space-link')!;
     let leaving = false;
     const start = () => { leaving = false; link.classList.add('is-looping'); };
@@ -76,6 +75,67 @@ const arrow = lang === 'ar' ? '↖' : '↗';
     link.addEventListener('pointerleave', finish);
     link.addEventListener('focusout', finish);
     shape.addEventListener('animationiteration', () => { if (leaving) link.classList.remove('is-looping'); });
+  }
+
+  // The Games d-pad turns into an X while pointed at (CSS), and then takes a hit every second at a random spot: the
+  // outline swells out from that spot like a fish-eye lens and springs back with a little rubbery wobble. A mask
+  // can't bend, so the shape is redrawn as a live outline of points (from the same --hue-shape path), each pushed
+  // away from the hit, most near it and fading with distance. On leaving, the last hit settles and the crisp
+  // original path comes back. Still with reduced motion.
+  const POINTS = 240; // outline samples
+  const REACH = 7; // how far a hit spreads (in the shape's 24-unit box)
+  const HIT_EVERY = 1000, FIRST_HIT = 600; // ms; the first waits for the turn into an X
+  const swell = (t: number) => (t < 0.06 ? Math.sin((t / 0.06) * Math.PI / 2) : Math.exp(-(t - 0.06) / 0.16) * Math.cos(((t - 0.06) * 2 * Math.PI) / 0.5)); // quick hit, damped wobble
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    for (const shape of document.querySelectorAll<HTMLElement>('.space-item.hue-games .world-shape')) {
+      const d = getComputedStyle(shape).getPropertyValue('--hue-shape').match(/d='([^']+)'/)?.[1];
+      const link = shape.closest<HTMLElement>('.space-link');
+      if (!d || !link) continue;
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      svg.setAttribute('viewBox', '0 0 24 24');
+      path.setAttribute('d', d);
+      svg.append(path);
+      shape.append(svg);
+      shape.classList.add('is-drawn');
+      const length = path.getTotalLength();
+      const outline = Array.from({ length: POINTS }, (_, i) => path.getPointAtLength((length * i) / POINTS)).map((p) => [p.x, p.y]);
+      let hits: { x: number; y: number; at: number; power: number }[] = [];
+      let running = false;
+      let nextHit = 0;
+      const on = () => link.matches(':hover, :focus-visible, .is-active');
+      const frame = (now: number) => {
+        if (on() && now >= nextHit) {
+          // A random spot on the pad: a point of the outline, pulled part way in towards the middle.
+          const [ox, oy] = outline[Math.floor(Math.random() * POINTS)];
+          const inward = 0.15 + Math.random() * 0.3;
+          hits.push({ x: ox + (12 - ox) * inward, y: oy + (12 - oy) * inward, at: now, power: 0.9 + Math.random() * 0.45 });
+          nextHit = now + HIT_EVERY;
+        }
+        hits = hits.filter((hit) => now - hit.at < 1400);
+        if (!hits.length && !on()) { path.setAttribute('d', d); running = false; return; }
+        const bent = outline.map(([x, y]) => {
+          let dx = 0, dy = 0;
+          for (const hit of hits) {
+            const vx = x - hit.x, vy = y - hit.y;
+            const push = hit.power * swell((now - hit.at) / 1000) * Math.exp(-(vx * vx + vy * vy) / (REACH * REACH));
+            dx += vx * push; dy += vy * push;
+          }
+          return `${(x + dx).toFixed(2)} ${(y + dy).toFixed(2)}`;
+        });
+        path.setAttribute('d', `M${bent.join('L')}Z`);
+        requestAnimationFrame(frame);
+      };
+      const start = () => {
+        if (running || !on()) return;
+        running = true;
+        nextHit = performance.now() + FIRST_HIT;
+        requestAnimationFrame(frame);
+      };
+      link.addEventListener('pointerenter', () => requestAnimationFrame(start));
+      link.addEventListener('focusin', () => requestAnimationFrame(start));
+      new MutationObserver(start).observe(link, { attributes: true, attributeFilter: ['class'] }); // .is-active on phones
+    }
   }
 
   // After first paint: the toys never hold up the words.
