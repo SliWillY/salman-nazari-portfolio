@@ -42,6 +42,7 @@ export function cloudinaryVideoUrl(publicId: string) {
 // Three paper confetti dots above the text, in the site's style. Colours mirror the --placeholder / --text-muted
 // tokens and the --toy-* candy colours; an <img> can't read CSS variables,
 // but it does follow the page's color-scheme through prefers-color-scheme.
+// Confetti dots mirror global.css; keep in sync: .a #ffc43d = --toy-sun, .b #9b7bff = --toy-grape, .c #ff7eb9 = --toy-bubblegum.
 export function placeholderImage(label = '') {
   const text = label.replace(/[<>&"]/g, '');
   const style = '<style>rect{fill:#f3eadd}.t{fill:#5f586b}.id{fill:#c2500a}.a{fill:#ffc43d}.b{fill:#9b7bff}.c{fill:#ff7eb9}@media (prefers-color-scheme:dark){rect{fill:#221c3e}.t{fill:#c2b8d6}.id{fill:#ffa15c}}</style>';

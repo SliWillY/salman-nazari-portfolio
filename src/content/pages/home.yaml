@@ -12,7 +12,7 @@ sections:
     blocks:
       - type: hero
         size: home
-        eyebrow: { en: "Hi, I'm Salman", ar: "أهلاً، أنا سلمان" }
+        eyebrow: { en: "Hi, I'm Salman", ar: "مرحباً، أنا سلمان" }
         intro: "" # no sentence beside the headline; the page description stays for search results
       - type: heading
         size: s

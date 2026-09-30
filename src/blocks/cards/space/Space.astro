@@ -22,9 +22,12 @@ const arrow = lang === 'ar' ? '↖' : '↗';
       return (
         <li class:list={['space-item', hue && `hue-${hue}`]}>
           <a class="space-link" href={href(item.href, lang)} target={external ? '_blank' : undefined} rel={external ? 'noreferrer' : undefined} data-icon={item.icon} aria-labelledby={`${id}-title`} aria-describedby={item.text ? `${id}-text` : undefined}>
-            {/* The number follows the last word with no space between. */}
+            {/* The world's shape leads, glued to the first word; the number follows the last word with no space between. */}
             <h3 class="space-title" id={`${id}-title`}>
-              {words.map((word: string, k: number) => <Fragment><span class="space-word" style={`--k: ${k}`}>{word}</span>{k < words.length - 1 && ' '}</Fragment>)}<sup class="space-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</sup>
+              {words.map((word: string, k: number) => {
+                const w = <span class="space-word" style={`--k: ${k}`}>{word}</span>;
+                return <Fragment>{k === 0 ? <span class="title-lead"><span class="world-shape" aria-hidden="true"></span>{w}</span> : w}{k < words.length - 1 && ' '}</Fragment>;
+              })}<sup class="space-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</sup>
             </h3>
             {item.text && <p class="space-text" id={`${id}-text`}>{t(item.text, lang)}</p>}
             <span class="space-cta" aria-hidden="true">{t(item.cta, lang) || explore} <span class="feature-arrow">{arrow}</span></span>
@@ -59,6 +62,22 @@ const arrow = lang === 'ar' ? '↖' : '↗';
       });
     }
   }
+  // The 3D cube tumbles and the Games d-pad plays the Konami code while pointed at, in loops (global.css:
+  // cube-tumble, dpad-konami). Leaving mid-loop would snap the shape back, so .is-looping is on from the moment it's
+  // pointed at and only comes off once a loop has ended after the pointer (or focus) has left: the end of each loop
+  // is the shape's resting pose.
+  for (const shape of document.querySelectorAll<HTMLElement>('.space-item:is(.hue-3d, .hue-games) .world-shape')) {
+    const link = shape.closest<HTMLElement>('.space-link')!;
+    let leaving = false;
+    const start = () => { leaving = false; link.classList.add('is-looping'); };
+    const finish = () => { leaving = true; };
+    link.addEventListener('pointerenter', start);
+    link.addEventListener('focusin', start);
+    link.addEventListener('pointerleave', finish);
+    link.addEventListener('focusout', finish);
+    shape.addEventListener('animationiteration', () => { if (leaving) link.classList.remove('is-looping'); });
+  }
+
   // After first paint: the toys never hold up the words.
   if (spaces.length) {
     if ('requestIdleCallback' in window) requestIdleCallback(() => start(), { timeout: 700 });

@@ -1,6 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
   <!-- "s." from the salman.nazari wordmark (DM Sans Bold outlines). Ink tile on light browser chrome,
-       paper tile on dark chrome; the dot is a tangerine candy (the site's theme tokens). -->
+       paper tile on dark chrome; the dot is a tangerine candy (the site's theme tokens).
+       A favicon can't read CSS variables: #ff7a2e mirrors --toy-tangerine in src/styles/global.css; keep in sync. -->
   <style>.tile{fill:#19141f}.s{fill:#fffaf3}.dot{fill:#ff7a2e}@media (prefers-color-scheme:dark){.tile{fill:#fffaf3}.s{fill:#19141f}.dot{fill:#ff7a2e}}</style>
   <rect class="tile" width="32" height="32" rx="7"/>
   <g transform="translate(2.628 24.868) scale(0.03519 -0.03519)">

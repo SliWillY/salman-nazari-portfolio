@@ -333,7 +333,7 @@
           ],
           "additionalProperties": false,
           "title": "Divider",
-          "description": "A horizontal line: full width, a short accent mark, or an `ornament` (fading lines around a small accent diamond) with generous space, to open a new group of content."
+          "description": "A horizontal line: full width, a short accent mark, or an `ornament` (fading lines around the page’s world shape: dot, triangle, d-pad or tile) with generous space, to open a new group of content."
         },
         {
           "type": "object",

@@ -14,10 +14,15 @@ const eyebrowHref = block.eyebrow ? undefined : ctx.eyebrowHref;
 const world = ctx.category ? undefined : categoryHue[ctx.route];
 const number = ctx.category ? (ctx.project?.year ? String(ctx.project.year) : '') : pageNumber(ctx.route);
 const bannerSize = world ? 'tall' : ['about-me', 'certificates'].includes(ctx.route) ? 'medium' : 'slim';
+// On a world's own page (and About, in the site's orange dot) the title is led by its shape, glued to the first
+// word so it never wraps alone.
+const shape = !!world || ctx.route === 'about-me';
+const space = title.indexOf(' ');
+const [lead, rest] = space < 0 ? [title, ''] : [title.slice(0, space), title.slice(space)];
 ---
 {block.size === 'home' ? (
   <header class="b-hero size-home">
-    {/* The greeting, word by word: each word takes one of the site's four colours (whole words, so Arabic stays joined). */}
+    {/* The greeting, word by word, so each word can hop in on its own (whole words, so Arabic stays joined). */}
     {eyebrow && <span class="eyebrow">{eyebrow.split(' ').map((word, k) => <span class="hi-word" style={`--k: ${k}`}>{word}</span>)}</span>}
     <h1>{title}</h1>
     {intro && <p>{intro}</p>}
@@ -26,7 +31,7 @@ const bannerSize = world ? 'tall' : ['about-me', 'certificates'].includes(ctx.ro
   <header class="b-hero size-page">
     <Banner world={world} size={bannerSize} eyebrow={eyebrow} eyebrowHref={eyebrowHref} />
     <div class="hero-intro">
-      <h1>{title}{number && <sup class="hero-num">{number}</sup>}</h1>
+      <h1>{shape ? <Fragment><span class="title-lead"><span class="world-shape" aria-hidden="true"></span>{lead}</span>{rest}</Fragment> : title}{number && <sup class="hero-num">{number}</sup>}</h1>
       {intro && <p class="hero-lede">{intro}</p>}
     </div>
   </header>

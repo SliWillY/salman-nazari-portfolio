@@ -23,10 +23,22 @@
   /* The scope's world: fill (its candy colour, for surfaces and as text, the same bright colour by day and at dusk),
      and the two colours of its sun gradient, by day (core, edge) and at dusk. These are the site's own; .hue-* override. */
   --hue-fill: var(--toy-tangerine);
-  --hue-core: #ffc845; --hue-edge: #ff7a1f; --hue-core-dusk: #ff6fb0; --hue-edge-dusk: #9b7bff; /* dusk: pink and violet, no orange */
-  /* The site's four colours as text (orange, purple, green, blue): the candy colours themselves, in both themes, as
-     on the footer dots and the toys. Used for the home greeting and "Explore". */
-  --say-orange: var(--toy-tangerine); --say-purple: var(--toy-grape); --say-green: var(--toy-mint); --say-blue: var(--toy-sky);
+  /* Each world's candy shape (a mask; the colour comes from --hue-fill): the site/me a round dot, like the one in
+     salman.nazari; UX a triangle, like a pointer or a level-up arrow; Games a d-pad; 3D a soft tile, the face of a
+     cube (it turns over like one). All soft-cornered, left-right symmetric (so nothing looks wrong in Arabic) and filling the same square
+     edge to edge, so they stand equally tall on one baseline. Only the candy-piece rule below reads them. */
+  --shape-dot: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><circle cx='12' cy='12' r='12'/></svg>");
+  --shape-tile: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect width='24' height='24' rx='7'/></svg>");
+  --shape-dpad: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M7 3.5A3.5 3.5 0 0 1 10.5 0h3A3.5 3.5 0 0 1 17 3.5V5a2 2 0 0 0 2 2h1.5A3.5 3.5 0 0 1 24 10.5v3a3.5 3.5 0 0 1-3.5 3.5H19a2 2 0 0 0-2 2v1.5a3.5 3.5 0 0 1-3.5 3.5h-3A3.5 3.5 0 0 1 7 20.5V19a2 2 0 0 0-2-2H3.5A3.5 3.5 0 0 1 0 13.5v-3A3.5 3.5 0 0 1 3.5 7H5a2 2 0 0 0 2-2Z'/></svg>");
+  --shape-triangle: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 4 20 20H4Z' stroke='black' stroke-width='8' stroke-linejoin='round'/></svg>");
+  --hue-shape: var(--shape-dot); --hue-turn: var(--turn-dot); /* the shape's second pose, held while pointed at */
+  /* Second poses, all in place and in the flat of the page (never edge-on): the dot is pressed into a soft pill,
+     the tile is turned over a quarter like a cube, the d-pad turns into an X, the triangle flips upside down.
+     Turns go with reading direction (--read), so they are set again on every [dir] (see below the :root block). */
+  --read: 1; /* reading direction as a sign, for motion that turns: 1 left to right, -1 in Arabic */
+  --hue-core: #ffc845; --hue-edge: #ff7a1f; --hue-core-dusk: #ff6fb0; --hue-edge-dusk: var(--toy-grape); /* dusk: pink and violet, no orange */
+  /* A candy colour as text, the same in both themes: blue for "Explore" on the home page. */
+  --say-blue: var(--toy-sky);
   /* Hover colour, the same everywhere on the site: blue by day, orange at dusk. */
   --hover-ink: var(--toy-sky);
   /* Ground switches: --dusk-mix picks the dusk gradient colours; --stage-mix is how strongly they tint the stage's base. */
@@ -80,10 +92,13 @@
 }
 :root[data-theme="light"] { color-scheme: light; }
 /* The worlds (and the site's own orange, for About wherever it appears) */
-.hue-brand { --hue-fill: var(--toy-tangerine); --hue-core: #ffc845; --hue-edge: #ff7a1f; --hue-core-dusk: #ff6fb0; --hue-edge-dusk: #9b7bff; }
-.hue-ux { --hue-fill: var(--toy-grape); --hue-core: #c2b2ff; --hue-edge: #ff96c8; --hue-core-dusk: #9b7bff; --hue-edge-dusk: #ff6fb0; }
-.hue-games { --hue-fill: var(--toy-mint); --hue-core: #9bebc0; --hue-edge: #ffd24a; --hue-core-dusk: #33d17a; --hue-edge-dusk: #4c9bff; }
-.hue-3d { --hue-fill: var(--toy-sky); --hue-core: #9cc8ff; --hue-edge: #ff9a5a; --hue-core-dusk: #4c9bff; --hue-edge-dusk: #ff6fb0; }
+.hue-brand { --hue-fill: var(--toy-tangerine); --hue-shape: var(--shape-dot); --hue-turn: var(--turn-dot); --hue-core: #ffc845; --hue-edge: #ff7a1f; --hue-core-dusk: #ff6fb0; --hue-edge-dusk: var(--toy-grape); }
+.hue-ux { --hue-fill: var(--toy-grape); --hue-shape: var(--shape-triangle); --hue-turn: var(--turn-triangle); --hue-core: #c2b2ff; --hue-edge: #ff96c8; --hue-core-dusk: var(--toy-grape); --hue-edge-dusk: #ff6fb0; }
+.hue-games { --hue-fill: var(--toy-mint); --hue-shape: var(--shape-dpad); --hue-turn: var(--turn-dpad); --hue-core: #9bebc0; --hue-edge: #ffd24a; --hue-core-dusk: var(--toy-mint); --hue-edge-dusk: var(--toy-sky); }
+.hue-3d { --hue-fill: var(--toy-sky); --hue-shape: var(--shape-tile); --hue-turn: var(--turn-tile); --hue-core: #9cc8ff; --hue-edge: #ff9a5a; --hue-core-dusk: var(--toy-sky); --hue-edge-dusk: #ff6fb0; }
+/* The second poses (see --hue-turn), set on the root and again on every element with a dir, so the turns read
+   --read where the direction is known and go the other way in Arabic. */
+:root, [dir] { --turn-dot: scale(1.24, .76); --turn-tile: rotate(calc(var(--read) * 90deg)); --turn-dpad: rotate(calc(var(--read) * 45deg)); --turn-triangle: rotate(calc(var(--read) * 180deg)); }
 /* Derived tokens are re-declared on the page, every section and every world, so they follow that scope's own
    world and ground. --accent is the world colour as text: its bright candy colour, the same by day and at dusk.
    --stage-paint is the sun gradient: a pale corner, a big soft core, a vivid edge (dusk: indigo with warm glows). */
@@ -289,32 +304,137 @@ main:focus { outline: none; }
   .primary-nav, .menu-icon span, .skip-link, .theme-toggle { transition: none; }
 }
 main { min-height: 70vh; }
-/* Footer: a hairline led by four candy dots (the site's four colours: orange, purple, green, blue), then the small print. */
+/* Candy pieces: a world's shape in its flat colour. Used by the footer, the eyebrow
+   pill, the ornament divider and the world titles; each takes --candy-shape if set, else the page's world shape. */
+.footer-dots i, .eyebrow::before, .b-divider.style-ornament .diamond, .world-shape {
+  -webkit-mask: var(--candy-shape, var(--hue-shape)) center / contain no-repeat;
+  mask: var(--candy-shape, var(--hue-shape)) center / contain no-repeat;
+}
+/* A world's title (home list, its own page, About) is led by its shape: standing on the baseline, as tall as the capitals,
+   glued to the first word. On the home list it takes its second pose (--hue-turn) while the world is pointed at. */
+.title-lead { white-space: nowrap; }
+.world-shape { display: inline-block; width: .66em; height: .66em; margin-inline-end: .26em; vertical-align: baseline; background: var(--hue-fill); }
+/* Wide screens have room beside the content, so a page title's shape hangs out in the margin before it and the
+   words line up with everything below (a negative start margin; the other side in Arabic). */
+@media (min-width: 1300px) {
+  .hero-intro .world-shape { margin-inline-start: -.92em; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .space-link .world-shape { transition: transform .55s cubic-bezier(.34, 1.6, .5, 1), translate .55s cubic-bezier(.34, 1.6, .5, 1); }
+  .space-link:is(:hover, :focus-visible, .is-active) .world-shape { transform: var(--hue-turn); }
+  /* UX on the home list: like someone jumping onto a tightrope, the triangle crouches, hops up flipping over, lands
+     on its tip (the rope dips and springs back), then keeps trying to balance there, tipping one way, catching
+     itself, over-correcting the other way, for as long as it is pointed at. The sway pivots on the tip, not the
+     middle: the flip is in transform (about the centre), the sway is the separate rotate property, and translate
+     moves its pivot down to the bottom (translate 50% and transform's translateY(-50%) cancel out). The entry is
+     one animation, so the transition is off on the way in (a running transition would override it); leaving
+     flips back with the usual transition. */
+  .space-item.hue-ux .space-link:is(:hover, :focus-visible, .is-active) .world-shape {
+    translate: 0 50%; transform: translateY(-50%) var(--hue-turn); transition: none;
+    animation: tip-jump .75s both, tip-balance 4.2s .75s infinite;
+  }
+}
+/* 3D on the home list: the cube keeps tumbling over and over on the spot, like a cube rolling on a treadmill. Each
+   tumble tips it a quarter turn over its bottom corner on the reading side (the floor, so it never dips below the
+   baseline) while sliding back by the same amount, so its centre stays put and only rises and falls. Like a real
+   cube it starts slow, speeds up as it goes over the edge, lands with a small knock and rests a beat before the next one.
+   A square looks the same after a quarter turn, so the loop restarts unseen. The transition is off (it would
+   override the animation); on leaving, Space.astro keeps .is-looping until the current tumble has landed. */
+@media (prefers-reduced-motion: no-preference) {
+  .space-item.hue-3d .space-link:is(:hover, :focus-visible, .is-active, .is-looping) .world-shape {
+    transform: none; transition: none; transform-origin: calc(50% + var(--read) * 50%) 100%;
+    animation: cube-tumble .5s infinite; /* two tumbles a second */
+  }
+}
+@keyframes cube-tumble {
+  0% { transform: translateX(0%) rotate(0deg); animation-timing-function: cubic-bezier(.45, 0, .8, .6); }
+  52% { transform: translateX(calc(var(--read) * -100%)) rotate(calc(var(--read) * 90deg)); animation-timing-function: ease-out; }
+  66% { transform: translateX(calc(var(--read) * -95.6%)) rotate(calc(var(--read) * 86deg)); animation-timing-function: ease-in-out; }
+  80%, 100% { transform: translateX(calc(var(--read) * -100%)) rotate(calc(var(--read) * 90deg)); }
+}
+
+/* Games on the home list: the d-pad plays the Konami code, up up down down left right left right, as if an unseen
+   thumb were on it. Each press tips the pad in its socket towards that arm (a small real tilt: the pressed arm dips
+   away, never far enough to go edge-on), then it springs back; the presses come in pairs, like the code is typed.
+   It ends with a quick "cheat unlocked" pop and flash, rests, and plays again. Left and right swap in Arabic.
+   Like the cube, the transition is off while it plays, and Space.astro lets the current loop finish on leaving. */
+@media (prefers-reduced-motion: no-preference) {
+  .space-item.hue-games .space-link:is(:hover, :focus-visible, .is-active, .is-looping) .world-shape {
+    transform: none; transition: none; animation: dpad-konami 3.2s infinite;
+  }
+}
+@keyframes dpad-konami {
+  0% { transform: perspective(2em) rotateX(0deg) rotateY(calc(var(--read) * 0deg)) scale(1); }
+  2% { transform: perspective(2em) rotateX(0deg) rotateY(calc(var(--read) * 0deg)) scale(1); animation-timing-function: cubic-bezier(.3, 0, .2, 1); } /* up */
+  4%, 5% { transform: perspective(2em) rotateX(20deg) rotateY(calc(var(--read) * 0deg)) scale(1); animation-timing-function: cubic-bezier(.3, .6, .4, 1.4); }
+  8% { transform: perspective(2em) rotateX(0deg) rotateY(calc(var(--read) * 0deg)) scale(1); }
+  8% { transform: perspective(2em) rotateX(0deg) rotateY(calc(var(--read) * 0deg)) scale(1); animation-timing-function: cubic-bezier(.3, 0, .2, 1); } /* up */
+  10%, 11% { transform: perspective(2em) rotateX(20deg) rotateY(calc(var(--read) * 0deg)) scale(1); animation-timing-function: cubic-bezier(.3, .6, .4, 1.4); }
+  14% { transform: perspective(2em) rotateX(0deg) rotateY(calc(var(--read) * 0deg)) scale(1); }
+  16% { transform: perspective(2em) rotateX(0deg) rotateY(calc(var(--read) * 0deg)) scale(1); animation-timing-function: cubic-bezier(.3, 0, .2, 1); } /* down */
+  18%, 19% { transform: perspective(2em) rotateX(-20deg) rotateY(calc(var(--read) * 0deg)) scale(1); animation-timing-function: cubic-bezier(.3, .6, .4, 1.4); }
+  22% { transform: perspective(2em) rotateX(0deg) rotateY(calc(var(--read) * 0deg)) scale(1); }
+  22% { transform: perspective(2em) rotateX(0deg) rotateY(calc(var(--read) * 0deg)) scale(1); animation-timing-function: cubic-bezier(.3, 0, .2, 1); } /* down */
+  24%, 25% { transform: perspective(2em) rotateX(-20deg) rotateY(calc(var(--read) * 0deg)) scale(1); animation-timing-function: cubic-bezier(.3, .6, .4, 1.4); }
+  28% { transform: perspective(2em) rotateX(0deg) rotateY(calc(var(--read) * 0deg)) scale(1); }
+  30% { transform: perspective(2em) rotateX(0deg) rotateY(calc(var(--read) * 0deg)) scale(1); animation-timing-function: cubic-bezier(.3, 0, .2, 1); } /* left */
+  32%, 33% { transform: perspective(2em) rotateX(0deg) rotateY(calc(var(--read) * -20deg)) scale(1); animation-timing-function: cubic-bezier(.3, .6, .4, 1.4); }
+  36% { transform: perspective(2em) rotateX(0deg) rotateY(calc(var(--read) * 0deg)) scale(1); }
+  36% { transform: perspective(2em) rotateX(0deg) rotateY(calc(var(--read) * 0deg)) scale(1); animation-timing-function: cubic-bezier(.3, 0, .2, 1); } /* right */
+  38%, 39% { transform: perspective(2em) rotateX(0deg) rotateY(calc(var(--read) * 20deg)) scale(1); animation-timing-function: cubic-bezier(.3, .6, .4, 1.4); }
+  42% { transform: perspective(2em) rotateX(0deg) rotateY(calc(var(--read) * 0deg)) scale(1); }
+  44% { transform: perspective(2em) rotateX(0deg) rotateY(calc(var(--read) * 0deg)) scale(1); animation-timing-function: cubic-bezier(.3, 0, .2, 1); } /* left */
+  46%, 47% { transform: perspective(2em) rotateX(0deg) rotateY(calc(var(--read) * -20deg)) scale(1); animation-timing-function: cubic-bezier(.3, .6, .4, 1.4); }
+  50% { transform: perspective(2em) rotateX(0deg) rotateY(calc(var(--read) * 0deg)) scale(1); }
+  50% { transform: perspective(2em) rotateX(0deg) rotateY(calc(var(--read) * 0deg)) scale(1); animation-timing-function: cubic-bezier(.3, 0, .2, 1); } /* right */
+  52%, 53% { transform: perspective(2em) rotateX(0deg) rotateY(calc(var(--read) * 20deg)) scale(1); animation-timing-function: cubic-bezier(.3, .6, .4, 1.4); }
+  56% { transform: perspective(2em) rotateX(0deg) rotateY(calc(var(--read) * 0deg)) scale(1); }
+  60% { transform: perspective(2em) rotateX(0deg) rotateY(calc(var(--read) * 0deg)) scale(1); filter: brightness(1); animation-timing-function: cubic-bezier(.2, .8, .3, 1); } /* cheat unlocked */
+  63% { transform: perspective(2em) rotateX(0deg) rotateY(calc(var(--read) * 0deg)) scale(1.22); filter: brightness(1.3); animation-timing-function: cubic-bezier(.34, 1.6, .5, 1); }
+  72%, 100% { transform: perspective(2em) rotateX(0deg) rotateY(calc(var(--read) * 0deg)) scale(1); filter: brightness(1); }
+}
+/* Net height = translate (50%) + translateY: the crouch keeps the bottom on the baseline, the hop is about half the
+   shape's height, the landing dips 10% below its spot and rebounds. */
+@keyframes tip-jump {
+  0% { transform: translateY(-50%) rotate(0deg) scale(1, 1); animation-timing-function: ease-out; }
+  14% { transform: translateY(-42.5%) rotate(0deg) scale(1.18, .85); animation-timing-function: cubic-bezier(.2, .7, .4, 1); }
+  48% { transform: translateY(-105%) rotate(calc(var(--read) * 120deg)) scale(.94, 1.06); animation-timing-function: cubic-bezier(.6, 0, .9, .5); }
+  72% { transform: translateY(-40%) rotate(calc(var(--read) * 180deg)) scale(1, 1); animation-timing-function: ease-out; }
+  86% { transform: translateY(-54%) rotate(calc(var(--read) * 180deg)) scale(1, 1); animation-timing-function: ease-in-out; }
+  100% { transform: translateY(-50%) rotate(calc(var(--read) * 180deg)) scale(1, 1); }
+}
+/* Balancing on the tip like an inverted pendulum: leaning away speeds up (gravity), each lean ends in a quick
+   catch, then it is pushed back through upright and overshoots a little the other way; every lean a bit smaller. */
+@keyframes tip-balance {
+  0% { rotate: calc(var(--read) * 0deg); animation-timing-function: cubic-bezier(.5, 0, .9, .6); }
+  16% { rotate: calc(var(--read) * 5.5deg); animation-timing-function: cubic-bezier(.2, .6, .4, 1); }
+  22% { rotate: calc(var(--read) * 6.5deg); animation-timing-function: ease-in-out; }
+  40% { rotate: calc(var(--read) * -3deg); animation-timing-function: cubic-bezier(.5, 0, .9, .6); }
+  52% { rotate: calc(var(--read) * -5deg); animation-timing-function: cubic-bezier(.2, .6, .4, 1); }
+  58% { rotate: calc(var(--read) * -5.6deg); animation-timing-function: ease-in-out; }
+  74% { rotate: calc(var(--read) * 2deg); animation-timing-function: cubic-bezier(.5, 0, .9, .6); }
+  83% { rotate: calc(var(--read) * 3deg); animation-timing-function: cubic-bezier(.2, .6, .4, 1); }
+  87% { rotate: calc(var(--read) * 3.3deg); animation-timing-function: ease-in-out; }
+  100% { rotate: calc(var(--read) * 0deg); }
+}
+/* Footer: a hairline led by four candy pieces (the site's four worlds: me, UX, Games, 3D), then the small print. */
 .site-footer { position: relative; width: min(var(--max), calc(100% - 48px)); margin: 96px auto 0; padding: 36px 0 32px; display: flex; gap: 20px; color: var(--text-muted); font-size: .85rem; }
 .site-footer::after { content: ''; position: absolute; top: 0; height: 10px; inset-inline: 72px 0; background: linear-gradient(var(--border), var(--border)) 0 50% / 100% 1px no-repeat; }
 .site-footer > span:not(.footer-dots) { margin-inline-end: auto; }
 .site-footer a:hover { color: var(--hover-ink); }
-/* The dots sit on the line (with a roomier area for the pointer). Pointed at, they bounce one after another in
-   reading direction (left to right; right to left in Arabic, where the row mirrors): squash, hop, land, settle.
-   The script in Footer.astro keeps .is-bouncing until the last dot lands, so a bounce always finishes smoothly. */
+/* The pieces sit on the line (with a roomier area for the pointer). While the row is pointed at, each takes its
+   second pose (see --turn-*) one after another in reading direction (the row mirrors in Arabic), springing into
+   place with a little overshoot, and turns back when the pointer leaves. Nothing moves off its spot: no hops, no
+   spins towards the viewer. */
 .footer-dots { position: absolute; top: -12px; inset-inline-start: -8px; display: flex; gap: 6px; padding: 12px 8px; }
-.footer-dots i { width: 10px; height: 10px; border-radius: 50%; background: var(--toy-tangerine); transform-origin: 50% 100%; }
-.footer-dots i:nth-child(2) { background: var(--toy-grape); }
-.footer-dots i:nth-child(3) { background: var(--toy-mint); }
-.footer-dots i:nth-child(4) { background: var(--toy-sky); }
+.footer-dots i { width: 10px; height: 10px; background: var(--fill); }
+.footer-dots i:nth-child(1) { --fill: var(--toy-tangerine); --candy-shape: var(--shape-dot); --turn: var(--turn-dot); }
+.footer-dots i:nth-child(2) { --fill: var(--toy-grape); --candy-shape: var(--shape-triangle); --turn: var(--turn-triangle); --k: 1; }
+.footer-dots i:nth-child(3) { --fill: var(--toy-mint); --candy-shape: var(--shape-dpad); --turn: var(--turn-dpad); --k: 2; }
+.footer-dots i:nth-child(4) { --fill: var(--toy-sky); --candy-shape: var(--shape-tile); --turn: var(--turn-tile); --k: 3; }
 @media (prefers-reduced-motion: no-preference) {
-  .footer-dots.is-bouncing i { animation: dot-bounce .72s cubic-bezier(.3, .7, .4, 1) both; }
-  .footer-dots.is-bouncing i:nth-child(2) { animation-delay: 90ms; }
-  .footer-dots.is-bouncing i:nth-child(3) { animation-delay: 180ms; }
-  .footer-dots.is-bouncing i:nth-child(4) { animation-delay: 270ms; }
-}
-@keyframes dot-bounce {
-  0% { transform: none; }
-  18% { transform: scale(1.25, .75); }
-  48% { transform: translateY(-14px) scale(.85, 1.15); }
-  72% { transform: scale(1.2, .8); }
-  86% { transform: translateY(-3px) scale(.95, 1.05); }
-  100% { transform: none; }
+  .footer-dots i { transition: transform .55s cubic-bezier(.34, 1.6, .5, 1) calc(var(--k, 0) * 70ms); }
+  .footer-dots:hover i { transform: var(--turn); }
 }
 
 /* ---------- stage: the home scene, banners and accent bands ----------
@@ -367,7 +487,7 @@ main > .section:first-child .block-hero:first-child .page-banner { margin-top: c
 /* ---------- text blocks ---------- */
 /* Eyebrow: a small candy pill with a dot in the world's colour. */
 .eyebrow { display: inline-flex; align-items: center; gap: .5em; width: fit-content; padding: .38em .9em .38em .65em; border-radius: 999px; background: color-mix(in srgb, var(--hue-fill) 18%, transparent); color: var(--text); font-size: .8rem; font-weight: 600; line-height: 1.3; }
-.eyebrow::before { content: ''; flex: none; width: .62em; height: .62em; border-radius: 50%; background: var(--hue-fill); box-shadow: inset 0 -1px 0 color-mix(in srgb, var(--ink) 18%, transparent); }
+.eyebrow::before { content: ''; flex: none; width: .72em; height: .72em; background: var(--hue-fill); }
 a.eyebrow { transition: transform .35s cubic-bezier(.34, 1.56, .64, 1), color .2s ease; }
 a.eyebrow:hover { transform: translateY(-2px); color: var(--hover-ink); }
 .b-heading .eyebrow { margin-bottom: 12px; }
@@ -621,7 +741,7 @@ figcaption { margin-top: 8px; color: var(--text-muted); font-size: .8rem; }
 .b-divider.style-short { width: 64px; height: 6px; border: 0; border-radius: 3px; background: linear-gradient(90deg, var(--hue-fill), var(--hue-core)); }
 [dir="rtl"] .b-divider.style-short { background: linear-gradient(-90deg, var(--hue-fill), var(--hue-core)); }
 .align-center .b-divider.style-short { margin-inline: auto; }
-/* ornament: lines fade out from a small accent diamond flanked by two dots; always centred, with room above and below. */
+/* ornament: lines fade out from the page's world shape (the class stays .diamond) flanked by two dots; always centred, with room above and below. */
 .b-divider.style-ornament { display: flex; align-items: center; gap: 12px; max-width: 440px; margin-inline: auto; border: 0; }
 .b-divider.style-ornament::before, .b-divider.style-ornament::after { content: ''; flex: 1; height: 1px; }
 .b-divider.style-ornament::before { background: linear-gradient(to left, var(--border), transparent); }
@@ -629,7 +749,7 @@ figcaption { margin-top: 8px; color: var(--text-muted); font-size: .8rem; }
 [dir="rtl"] .b-divider.style-ornament::before { background: linear-gradient(to right, var(--border), transparent); }
 [dir="rtl"] .b-divider.style-ornament::after { background: linear-gradient(to left, var(--border), transparent); }
 /* A little cluster of paper dots: a big one in the world colour, two small candy ones. */
-.b-divider.style-ornament .diamond { width: 12px; height: 12px; border-radius: 50%; background: var(--hue-fill); box-shadow: inset 0 -2px 0 color-mix(in srgb, var(--ink) 16%, transparent); }
+.b-divider.style-ornament .diamond { width: 14px; height: 14px; background: var(--hue-fill); }
 .b-divider.style-ornament .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--toy-sun); }
 .b-divider.style-ornament .dot:last-child { background: var(--toy-bubblegum); }
 .section-inner > .block-divider:has(.style-ornament), .b-column > .block-divider:has(.style-ornament) { margin-top: clamp(40px, 5vw, 56px); }
@@ -650,15 +770,12 @@ figcaption { margin-top: 8px; color: var(--text-muted); font-size: .8rem; }
 /* On the home stage the labels ("Hi, I'm Salman", "Explore") are plain words, not pills. */
 .b-hero.size-home .eyebrow, .section:has(.b-space) .b-heading .eyebrow { padding: 0; border-radius: 0; background: none; font-size: 1rem; font-weight: 600; }
 .b-hero.size-home .eyebrow::before, .section:has(.b-space) .b-heading .eyebrow::before { content: none; }
-/* The greeting speaks in the site's colours, one word each (orange, purple, green, blue), and hops in word by word. */
+/* The greeting is in the theme's text colour (ink by day, moonlight at dusk) and hops in word by word, once, as
+   the page opens (not on hover). */
 .b-hero.size-home .eyebrow { gap: .3em; font-size: clamp(1.2rem, 1rem + .6vw, 1.45rem); font-weight: 700; letter-spacing: -.01em; }
-.hi-word { display: inline-block; color: var(--say-orange); }
-.hi-word:nth-child(4n + 2) { color: var(--say-purple); }
-.hi-word:nth-child(4n + 3) { color: var(--say-green); }
-.hi-word:nth-child(4n + 4) { color: var(--say-blue); }
+.hi-word { display: inline-block; color: var(--text); }
 @media (prefers-reduced-motion: no-preference) {
   .hi-word { animation: hi-hop .7s cubic-bezier(.3, 1.6, .5, 1) calc(.25s + var(--k) * 110ms) both; }
-  .b-hero.size-home .eyebrow:hover .hi-word { animation: word-hop .6s cubic-bezier(.3, 1.6, .5, 1) calc(var(--k) * 70ms) both; }
 }
 @keyframes hi-hop { 0% { opacity: 0; transform: translateY(.5em) scale(.8); } 60% { opacity: 1; transform: translateY(-.12em) scale(1.06); } 100% { opacity: 1; transform: none; } }
 .section:has(.b-space) .b-heading .eyebrow { color: var(--say-blue); font-weight: 600; }
@@ -809,14 +926,14 @@ figcaption { margin-top: 8px; color: var(--text-muted); font-size: .8rem; }
 .space-word { display: inline-block; }
 .space-link:is(:hover, :focus-visible, .is-active) .space-word { animation: word-hop .6s cubic-bezier(.3, 1.6, .5, 1) calc(var(--k) * 70ms) both; }
 @keyframes word-hop { 0% { transform: translateY(0); } 35% { transform: translateY(-.16em) rotate(var(--word-tilt, -2deg)); } 70% { transform: translateY(.02em); } 100% { transform: translateY(0); } }
-[dir="rtl"] { --word-tilt: 2deg; } /* the wave runs right to left in Arabic, so each word leans the other way */
+[dir="rtl"] { --word-tilt: 2deg; --read: -1; } /* the wave runs right to left in Arabic, so each word leans (and each candy piece turns) the other way */
 /* The world's number: a superscript in its colour, as on the world's own page (UX & Gamification⁰¹), tucked right
    against the title. It hops when the world is pointed at. */
 .space-num { display: inline-block; vertical-align: top; position: relative; top: .3em; margin-inline-start: .04em; font-size: .34em; font-weight: 700; letter-spacing: 0; line-height: 1; color: var(--accent); transition: transform .45s cubic-bezier(.34, 1.56, .64, 1); }
 .space-link:is(:hover, :focus-visible, .is-active) .space-num { transform: translateY(-.2em) scale(1.15); }
 .space-text { margin: 0; max-width: 34ch; color: var(--text-muted); font-size: 1rem; line-height: 1.5; }
 .space-cta { display: inline-flex; align-items: center; gap: 6px; padding: .45em 1em; border-radius: 999px; font-size: .88rem; font-weight: 600; transition: transform .4s cubic-bezier(.34, 1.56, .64, 1), color .2s ease; }
-.space-link:is(:hover, :focus-visible) .space-cta { transform: translateY(-2px) scale(1.04); color: var(--hover-ink); }
+.space-link:is(:hover, :focus-visible) .space-cta { transform: translateY(-2px) scale(1.04); color: var(--hue-fill); } /* in the world's own colour */
 .space-link:is(:hover, :focus-visible) .feature-arrow { transform: translate(3px, -3px); }
 [dir="rtl"] .space-link:is(:hover, :focus-visible) .feature-arrow { transform: translate(-3px, -3px); }
 .space-link:focus-visible { outline-offset: 10px; border-radius: 12px; }
