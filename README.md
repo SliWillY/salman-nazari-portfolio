@@ -84,7 +84,7 @@ The toys are built in code with three.js (`src/lib/toys/`: `models.ts` the toys,
 
 Each project is one file: `src/content/projects/<category>/<route>.yaml`, where category is `3d-renders`, `games-dev` or `ux-and-gamification`. It gets its own page at `/<lang>/<category>/<route>/`, and a card on the category page wherever that page has a `type: projects` block.
 
-Project fields: `title`, `summary`, `cover`, `year`, `role`, `tools`, `order` (lower first), `draft`, `header`, `sections`. Start by copying `src/content/projects/3d-renders/example-scifi-corridor.yaml`.
+Project fields: `title`, `summary`, `cover`, `tags`, `role`, `tools`, `order` (lower first), `draft`, `header`, `sections`. Start by copying `src/content/projects/3d-renders/example-scifi-corridor.yaml`.
 
 `draft: true` shows the project in `pnpm dev` (with a "draft" badge) but keeps it off the live site. Delete the line to publish.
 

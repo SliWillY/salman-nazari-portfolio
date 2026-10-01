@@ -1,0 +1,28 @@
+title: { en: Floating Land, ar: الأرض الطائرة }
+summary:
+  en: Environment design for a floating land in Unreal Engine, with a focus on lighting and atmosphere.
+  ar: تصميم مستويات للأرض الطائرة في Unreal Engine, مع التركيز على الإضاءة والجو.
+cover: Floating_Land_01_yz4et4
+tags: [Environment Design]
+role: { en: "Environment Design, Lighting", ar: "تصميم البيئة, الإضاءة" }
+tools: [Unreal Engine, Megascans]
+order: 4
+
+sections:
+  - theme: dark
+    width: wide
+    blocks:
+
+      # Full row
+      - type: image
+        publicId: Floating_Land_01_yz4et4
+        alt: { en: Floating Land, ar: الأرض الطائرة }
+        lightbox: true
+      - type: image
+        publicId: Floating_Land_02_n63mrq
+        alt: { en: Floating Land, ar: الأرض الطائرة }
+        lightbox: true
+      - type: image
+        publicId: Floating_Land_03_lq7nfz
+        alt: { en: Floating Land, ar: الأرض الطائرة }
+        lightbox: true

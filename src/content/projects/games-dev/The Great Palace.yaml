@@ -3,6 +3,7 @@ summary:
   en: Level design for a palace in Unreal Engine, with a focus on lighting and atmosphere.
   ar: تصميم مستويات لقصر في Unreal Engine, مع التركيز على الإضاءة والجو.
 cover: The_Great_Palace_02_w99mqz
+tags: [Environment Design]
 role: { en: "Environment Design, Lighting", ar: "تصميم البيئة, الإضاءة" }
 tools: [Unreal Engine, Megascans]
 order: 1
@@ -19,6 +20,10 @@ sections:
         lightbox: true
       - type: image
         publicId: The_Great_Palace_02_w99mqz
+        alt: { en: The Great Palace, ar: القصر العظيم }
+        lightbox: true
+      - type: image
+        publicId: The_Great_Palace_03_uzzmch
         alt: { en: The Great Palace, ar: القصر العظيم }
         lightbox: true
       - type: image

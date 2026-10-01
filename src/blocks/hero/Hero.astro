@@ -2,7 +2,7 @@
 // Page hero. `size: home` is the headline on the home stage. `size: page` puts a banner at the top of the page
 // (tall with floating toys on a world's own page; medium on About and Certificates and a slim strip on projects,
 // both with confetti only) and, under it, the big title beside its description, with a superscript number: the
-// page's number (About⁰⁰, UX⁰¹…) or a project's year.
+// page's number (About⁰⁰, UX⁰¹…); projects have none.
 import Banner from '../../components/Banner.astro';
 import { t } from '../../lib/i18n';
 import { categoryHue, pageNumber } from '../../lib/site';
@@ -12,7 +12,7 @@ const title = t(block.title ?? ctx.title, lang);
 const intro = t(block.intro ?? ctx.description, lang);
 const eyebrowHref = block.eyebrow ? undefined : ctx.eyebrowHref;
 const world = ctx.category ? undefined : categoryHue[ctx.route];
-const number = ctx.category ? (ctx.project?.year ? String(ctx.project.year) : '') : pageNumber(ctx.route);
+const number = ctx.category ? '' : pageNumber(ctx.route);
 const bannerSize = world ? 'tall' : ['about-me', 'certificates'].includes(ctx.route) ? 'medium' : 'slim';
 // On a world's own page (and About, in the site's orange star) the title is led by its shape, glued to the first
 // word so it never wraps alone.

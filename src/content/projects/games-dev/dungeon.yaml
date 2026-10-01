@@ -1,0 +1,32 @@
+title: { en: Dungeon, ar: السجن }
+summary:
+  en: Environment design for a dungeon in Unreal Engine, with a focus on lighting and atmosphere.
+  ar: تصميم مستويات لسجن في Unreal Engine, مع التركيز على الإضاءة والجو.
+cover: Dungeon_artstation_01_zdv9nf
+tags: [Lighting Design]
+role: { en: "Lighting Design", ar: "تصميم الإضاءة" }
+tools: [Unreal Engine, Megascans]
+order: 5
+
+sections:
+  - theme: dark
+    width: wide
+    blocks:
+
+      # Full row
+      - type: image
+        publicId: Dungeon_artstation_01_zdv9nf
+        alt: { en: Dungeon, ar: السجن }
+        lightbox: true
+      - type: image
+        publicId: Dungeon_artstation_03_hoyiif
+        alt: { en: Dungeon, ar: السجن }
+        lightbox: true
+      - type: image
+        publicId: Dungeon_artstation_02_tsz80r
+        alt: { en: Dungeon, ar: السجن }
+        lightbox: true
+      - type: image
+        publicId: Dungeon_artstation_04_n9ghyw
+        alt: { en: Dungeon, ar: السجن }
+        lightbox: true

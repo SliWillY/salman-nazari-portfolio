@@ -5,7 +5,8 @@ summary:
   en: An Unreal Engine level built around light shafts guiding the player.
   ar: مرحلة في Unreal Engine مبنية حول أشعة الضوء التي ترشد اللاعب.
 cover: portfolio/games/desert-temple/cover
-year: 2024
+# Kinds of work shown as pills on the card and under the title. Add as many as you like.
+tags: [Environment, Lighting]
 role: { en: Level design, ar: تصميم المراحل }
 tools: [Unreal Engine, Blender]
 draft: true

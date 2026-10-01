@@ -3,9 +3,10 @@ summary:
   en: Environment design for a palace in Unreal Engine, with a focus on lighting and atmosphere.
   ar: تصميم مستويات لقصر في Unreal Engine, مع التركيز على الإضاءة والجو.
 cover: Hope_01_zieyok
+tags: [Environment Design]
 role: { en: "Environment Design, Lighting", ar: "تصميم البيئة, الإضاءة" }
 tools: [Unreal Engine, Megascans]
-order: 1
+order: 3
 
 sections:
   - theme: dark

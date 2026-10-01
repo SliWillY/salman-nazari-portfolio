@@ -16,7 +16,7 @@ export async function getProjects(filter: { category?: string } = {}): Promise<P
   });
   return projects
     .filter((p) => !filter.category || p.category === filter.category)
-    .sort((a, b) => a.data.order - b.data.order || String(b.data.year ?? '').localeCompare(String(a.data.year ?? '')));
+    .sort((a, b) => a.data.order - b.data.order || a.id.localeCompare(b.id));
 }
 
 // Card image: explicit cover, else the first image found in the project's blocks.

@@ -4,7 +4,7 @@ export const meta = { label: 'Spacer', group: 'Layout', description: 'Empty vert
 
 export const schema = z.object({
   type: z.literal('spacer'),
-  size: z.enum(['s', 'm', 'l', 'xl']).default('m')
+  size: z.enum(['xs', 's', 'm', 'l', 'xl']).default('m')
 }).strict();
 
 export const example = { type: 'spacer', size: 'l' };

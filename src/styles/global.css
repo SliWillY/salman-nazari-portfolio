@@ -704,10 +704,13 @@ figcaption { margin-top: 8px; color: var(--text-muted); font-size: .8rem; }
 :lang(ar) .b-image-text-body .b-image-text-title { letter-spacing: 0; line-height: 1.25; }
 :lang(ar) .b-image-text-details dt { font-size: .88rem; }
 :lang(ar) .b-image-text-details dd { line-height: 1.8; }
+.b-spacer.size-xs { height: 8px; }
 .b-spacer.size-s { height: 16px; }
 .b-spacer.size-m { height: 40px; }
 .b-spacer.size-l { height: 80px; }
 .b-spacer.size-xl { height: 140px; }
+/* The spacer is the only gap: the automatic block-to-block margins are switched off on both sides of it. */
+.section-inner > .block-spacer, .b-column > .block-spacer, .section-inner > .block-spacer + .block, .b-column > .block-spacer + .block { margin-top: 0; }
 .b-divider { border: 0; border-top: 1px solid var(--border); margin: 0; }
 .b-divider.style-short { width: 64px; height: 6px; border: 0; border-radius: 3px; background: linear-gradient(90deg, var(--hue-fill), var(--hue-core)); }
 [dir="rtl"] .b-divider.style-short { background: linear-gradient(-90deg, var(--hue-fill), var(--hue-core)); }
@@ -963,8 +966,7 @@ figcaption { margin-top: 8px; color: var(--text-muted); font-size: .8rem; }
 .b-projects-empty { color: var(--text-muted); }
 .project-card { display: block; }
 .project-card-media { overflow: hidden; border-radius: var(--radius); background: var(--placeholder); transition: transform .45s cubic-bezier(.34, 1.56, .64, 1), box-shadow .3s ease; }
-.project-card:hover .project-card-media { transform: translateY(-4px) rotate(-.5deg); box-shadow: var(--shadow-lift); }
-[dir="rtl"] .project-card:hover .project-card-media { transform: translateY(-4px) rotate(.5deg); }
+.project-card:hover .project-card-media { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
 .project-card-media img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; transition: transform .6s cubic-bezier(.2, .8, .2, 1); }
 .project-card:hover .project-card-media img { transform: scale(1.05); }
 .project-card h2 { transition: color .2s ease; }
@@ -972,7 +974,8 @@ figcaption { margin-top: 8px; color: var(--text-muted); font-size: .8rem; }
 .project-card-body { padding-top: 16px; }
 .project-card h2 { font-size: 1.4rem; letter-spacing: -.03em; margin: 0 0 4px; }
 .project-card p { color: var(--text-muted); margin: 0; }
-.project-year { display: inline-block; margin-top: 10px; padding: .15em .7em; border-radius: 999px; font-size: .8rem; font-weight: 600; background: color-mix(in srgb, var(--hue-fill) 16%, transparent); }
+.project-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.project-tag { display: inline-block; padding: .15em .7em; border-radius: 999px; font-size: .8rem; font-weight: 600; background: color-mix(in srgb, var(--hue-fill) 16%, transparent); }
 .draft-badge { margin-inline-start: 10px; padding: .15rem .55rem; border: 1px dashed var(--accent); border-radius: 999px; color: var(--accent); font-size: .7rem; font-weight: 600; vertical-align: middle; }
 .b-project-meta { display: flex; flex-wrap: wrap; gap: 16px 48px; margin: 0; padding: 20px 0; border-block: 1px solid var(--border); }
 .b-project-meta dt { font-size: .82rem; font-weight: 600; color: var(--text-muted); }

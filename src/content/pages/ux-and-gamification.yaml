@@ -3,14 +3,21 @@ description:
   en: Human-centered journeys, working prototypes, and experiments designed around motivation.
   ar: رحلات تتمحور حول الإنسان ونماذج أولية وتجارب مصممة حول الدافع.
 eyebrow: { en: Systems and behavior, ar: الأنظمة والسلوك }
-blocks: 
-  - type: divider
-    style: line
 
 sections:
   # Tanafusi: featured case study — summary, key signals, one framed screenshot; the button opens the full study.
-  - theme: paper
+  - spacing: s
     blocks:
+      #- type: text
+        #size: large
+        #text:
+          #en: "My game development practice moves between visual direction and systems thinking: environment design, lighting, game design documents, level design documents, and playable prototypes."
+          #ar: "يتنقل عملي في تطوير الألعاب بين التوجيه البصري والتفكير في الأنظمة: تصميم البيئات والإضاءة ووثائق تصميم الألعاب والمراحل والنماذج القابلة للعب."
+      - type: divider
+        style: line
+        above: none
+        below: l
+
       - type: image-text
         image: "03-student-analytics_aeokka"
         alt: { en: "Tanafusi student analytics screen", ar: "شاشة تحليلات الطالب في تنافسي" }

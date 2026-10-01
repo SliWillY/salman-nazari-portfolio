@@ -113,15 +113,31 @@
     "cover": {
       "type": "string"
     },
-    "year": {
-      "anyOf": [
-        {
-          "type": "number"
-        },
-        {
-          "type": "string"
-        }
-      ]
+    "tags": {
+      "type": "array",
+      "items": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "en": {
+                "type": "string"
+              },
+              "ar": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "en"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      },
+      "default": []
     },
     "role": {
       "anyOf": [
@@ -1543,6 +1559,7 @@
             },
             "size": {
               "enum": [
+                "xs",
                 "s",
                 "m",
                 "l",

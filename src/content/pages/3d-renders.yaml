@@ -4,8 +4,10 @@ description:
   ar: عوالم بصرية تتشكل بالتكوين والإضاءة والخامات والحرفة الهادئة.
 eyebrow: { en: Selected work, ar: أعمال مختارة }
 
+
 sections:
-  - blocks:
+  - spacing: s
+    blocks:
       #- type: text
         #size: large
         #text:
@@ -13,5 +15,13 @@ sections:
           #ar: من التخطيط الأولي إلى اللقطة النهائية، تستكشف هذه الأعمال الجو العام والسرد المكاني والتفاصيل الصغيرة التي تجعل العالم يبدو حقيقياً.
       - type: divider
         style: line
+        above: none
         below: l
+      - type: heading
+        text: { en: Projects, ar: المشاريع }
+        level: 2
+        size: l
+      - type: spacer
+        size: s
+
       - type: projects

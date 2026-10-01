@@ -43,7 +43,7 @@ export const project = z.object({
   description: L.optional(),
   summary: L,
   cover: z.string().optional(),
-  year: z.union([z.number(), z.string()]).optional(),
+  tags: z.array(L).default([]),
   role: L.optional(),
   tools: z.array(L).default([]),
   order: z.number().default(0),

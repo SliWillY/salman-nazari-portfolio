@@ -31,7 +31,7 @@ const ctx: BlockContext = {
   description: data.summary,
   eyebrow: categoryItem ? { en: categoryItem.en, ar: categoryItem.ar } : category,
   eyebrowHref: categoryHref,
-  project: { year: data.year, role: data.role, tools: data.tools }
+  project: { tags: data.tags, role: data.role, tools: data.tools }
 };
 const sections = await resolveSections(data, `src/content/projects/${project.id}.yaml`);
 if (data.header === 'auto') {

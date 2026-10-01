@@ -7,7 +7,7 @@ summary:
   en: A modular interior study exploring volumetric light and hard-surface detail.
   ar: دراسة لمساحة داخلية معيارية تستكشف الإضاءة الحجمية وتفاصيل الأسطح الصلبة.
 cover: portfolio/3d/scifi-corridor/cover   # card image; falls back to the first image below
-year: 2025
+tags: [Interior, Hard surface]   # kinds of work: pills on the card and under the title
 role: { en: "Modeling, lighting, rendering", ar: "النمذجة والإضاءة والإخراج" }
 tools: [Blender, Substance Painter]
 order: 1        # lower numbers appear first

@@ -9,6 +9,6 @@ export interface BlockContext {
   eyebrow?: unknown;
   eyebrowHref?: string;
   category?: string;
-  project?: { year?: string | number; role?: unknown; tools?: unknown[] };
+  project?: { tags?: unknown[]; role?: unknown; tools?: unknown[] };
   catalog?: boolean;
 }
