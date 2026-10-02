@@ -1,0 +1,76 @@
+title: { en: Creature Sculptures, ar: تشكيلات المخلوقات }
+summary:
+  en: Creative creature sculptures made in Blender.
+  ar: تشكيلات مخلوقات إبداعية مبنية في Blender.
+cover: Capture5_0_ub4p32
+tags: [3D Art, Sculpting]
+role: { en: "3D Artist, Sculptor", ar: "فنان 3D, نحات" }
+tools: [ZBrush]
+order: 20
+
+sections:
+  # first section
+  - theme: dark
+    width: wide
+    blocks:
+      - type: heading
+        text: { en: "Scorpion", ar: "العقرب" }
+        size: l
+      - type: divider
+
+      - type: video
+        title: dsad
+        provider: vimeo
+        id: "1232383070"
+        aspect: 1476 / 920
+        autoplay: true
+      
+      - type: image
+        publicId: FinalRender_hp0prs
+        alt: { en: Golden Clock, ar: الساعة الذهبية }
+        lightbox: true
+        
+
+      - type: spacer
+      - type: gallery
+        layout: grid
+        columns: 2
+        aspect: "16 / 12"
+        items:
+          - Capture5_0_ub4p32
+          - Capture5_1_saeq0z
+          - Capture5_3_vsuqbh
+          - Capture5_2_poorpe
+
+
+
+  # second section
+  - theme: paper
+    width: wide
+    blocks:
+      - type: heading
+        text: { en: "Alien Bug", ar: "الحشرة الفضائية" }
+        size: l
+      - type: divider
+
+      - type: video
+        title: dsad
+        provider: vimeo
+        id: "1232388914"
+        aspect: 1472 / 914
+        autoplay: true
+      
+      - type: image
+        publicId: Final_f5blxv
+        alt: { en: Golden Clock, ar: الساعة الذهبية }
+        lightbox: true
+        
+
+      - type: spacer
+      - type: gallery
+        layout: grid
+        columns: 2
+        aspect: "16 / 12"
+        items:
+          - Process_1_vfommu
+          - Process_2_iz7e5t

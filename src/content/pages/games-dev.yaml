@@ -22,5 +22,5 @@ sections:
         size: l
       - type: spacer
         size: s
-        
+
       - type: projects
