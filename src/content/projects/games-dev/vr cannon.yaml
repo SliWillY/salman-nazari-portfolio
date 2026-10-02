@@ -1,0 +1,52 @@
+title: { en: VR ship warfare, ar: حرب السفن في الواقع الافتراضي }
+summary:
+  en: VR ship warfare game made in Unity.
+  ar: لعبة حرب السفن في الواقع الافتراضي مبنية في Unity.
+cover: GameIcone_jqc8mj
+tags: [Game Development, VR, Prototype]
+role: { en: "Game Developer, 3D Art", ar: "مطور الألعاب, فنان 3D" }
+tools: [Unity, Blender]
+order: 1
+
+sections:
+  - theme: dark
+    width: wide
+    blocks:
+      - type: video
+        provider: vimeo
+        id: "787022350"
+        aspect: 1 / 1
+      
+      
+  - theme: paper
+    width: wide
+    blocks:
+      - type: image
+        publicId: Cannon_Model_01_iv8dmy
+        alt: { en: Golden Clock, ar: الساعة الذهبية }
+        lightbox: true
+        
+
+
+      - type: gallery
+        layout: masonry
+        columns: 2
+        aspect: "1 / 1"
+        items:
+          - enemy_ShipSave_00_xjehcg
+          - enemy_ShipShot_00_r4f69i
+
+  - prefab: showcase-grid
+    props:
+      theme: paper
+      columns: 2
+      aspect: "16 / 10"
+      title: { en: Early Concepts, ar: المفاهيم الأولية }
+      images:
+        - CanonPerception_02_m6u62i
+        - CanonPerception_vxqsrm
+        - Cannon_V1_tqoiyo
+        - GameIcone_jqc8mj
+        - preview_343_j3fjim
+        - Cannon_V2_Final_wwr946
+    
