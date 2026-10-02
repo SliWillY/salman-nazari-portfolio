@@ -78,7 +78,7 @@ const target = languages.find((l) => l.code !== lang)!;
   matchMedia('(min-width: 1121px)').addEventListener('change', (event) => { if (event.matches && isOpen()) setOpen(false); });
 
   // Theme: 'light' | 'dark' | 'system', saved in localStorage ('system' = nothing saved).
-  // The inline script in BaseLayout applies the saved value before first paint; this keeps it in sync afterwards.
+  // BaseLayout's inline script decides what is on screen (window.applyTheme); this button only changes the choice.
   type Theme = 'light' | 'dark' | 'system';
   const root = document.documentElement;
   const themeToggle = header.querySelector<HTMLButtonElement>('[data-theme-toggle]')!;
@@ -106,11 +106,7 @@ const target = languages.find((l) => l.code !== lang)!;
       clearTimeout(transitionTimer);
       transitionTimer = window.setTimeout(() => root.classList.remove('theme-transition'), 300);
     }
-    root.dataset.theme = theme;
-    root.style.colorScheme = theme === 'system' ? '' : theme;
-    for (const meta of document.querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]')) {
-      meta.content = meta.dataset[theme === 'system' ? meta.dataset.scheme! : theme] ?? meta.content;
-    }
+    window.applyTheme(theme);
     updateLabel();
   };
 

@@ -8,11 +8,12 @@
    Each world has its own candy colour (.hue-*: UX grape, Games mint, 3D sky); the site itself is sun and tangerine.
    On the gradients, text stays ink (or moonlight at dusk); world colours appear there as fills, not as text.
    Components use only these semantic tokens, never raw colours.
-   Light is the default. Dark applies when the OS prefers it (unless the visitor picked light)
-   or when the visitor picked dark; the inline script in BaseLayout sets data-theme before first paint.
-   The two dark blocks further down must stay identical. */
+   Light is the default; the one dark block (:root[data-scheme="dark"]) further down changes only what differs.
+   data-scheme is what is on screen: BaseLayout's inline script sets it before first paint from the visitor's
+   choice, or from the OS when the choice is "system" (and follows the OS live), so system and picked dark are the
+   same code. Without JavaScript the site stays light. */
 :root {
-  color-scheme: light dark;
+  color-scheme: light;
   /* Candy palette: toys (read by src/lib/toys), confetti and fills. The same by day and at dusk; only the light changes. */
   --toy-sun: #ffc43d; --toy-tangerine: #ff7a2e; --toy-grape: #9b7bff; --toy-mint: #33d17a;
   --toy-sky: #4c9bff; --toy-bubblegum: #ff7eb9; --toy-cherry: #ff4b4b; --toy-cream: #fff4e4; --toy-ink: #2a2233;
@@ -20,6 +21,9 @@
   --paper: #fffaf3; --paper-hi: #fffdf9; --ink: #19141f;
   --dusk: #17142b; --dusk-hi: #211c3b; --dusk-deep: #100e20; --moonlight: #fff5ea;
   --pale-sky: #bfd3df; --dusk-sky: #1b1638;
+  /* The dusk home stage, a sunset: midnight indigo above, twilight plum in the middle, a warm ember glow below
+     (cool to warm, like the day's pale sky to orange; plum bridges the two so the blend never turns muddy). */
+  --midnight: #191433; --dusk-plum: #6a2e8e; --dusk-ember: #ff6b45;
   /* The scope's world: fill (its candy colour, for surfaces and as text, the same bright colour by day and at dusk),
      and the two colours of its sun gradient, by day (core, edge) and at dusk. These are the site's own; .hue-* override. */
   --hue-fill: var(--toy-tangerine);
@@ -44,9 +48,13 @@
   --hover-ink: var(--toy-sky);
   /* Ground switches: --dusk-mix picks the dusk gradient colours; --stage-mix is how strongly they tint the stage's base. */
   --dusk-mix: 0%; --stage-mix: 100%; --stage-base: var(--pale-sky);
-  /* The home stage's gradient (--home-paint): by day the warm edge is softer and sits low across the whole bottom,
-     so the top stays pale sky; there is no sun core (--home-core-mix 0%), and a small punchy orange glow just
-     peeks in from the bottom-right corner (--home-corner-mix). At dusk it is the same as every other stage. */
+  /* The home stage's gradient (--home-paint), the same layout by day and at dusk: the top is sky, the middle eases
+     into a warmer colour, a warm band sits low across the whole bottom (its colour mixed with the middle's,
+     --home-edge-mix), there is no sun core (--home-core-mix 0%), and a small punchy glow in the edge colour peeks in
+     from the bottom-right corner (--home-corner-mix). By day: pale sky, yellow, orange (the stage's own colours).
+     At dusk the home sets its own (--home-base, --home-mid, --home-edge): midnight, plum, ember, and tunes where they
+     sit (--home-mid-base, --home-stop-*, --home-edge-size/-at, --home-corner-size/-mid/-end; their defaults are the
+     day's). */
   --home-core-mix: 0%; --home-corner-mix: 100%; --home-edge-mix: 48%; --home-edge-size: 120% 42%; --home-edge-at: 60% 104%; --home-angle: 172deg; --home-core-at: 34% 40%; --home-stop-1: 12%; --home-stop-2: 58%; --home-stop-3: 88%;
 
   --bg: var(--paper); --text: var(--ink); --text-muted: #5f586b; --border: #eee5d9;
@@ -91,7 +99,6 @@
   --max: 1120px; --narrow: 760px; --wide: 1320px; --gutter: 24px; --header-h: 80px;
   font-family: var(--font-sans); font-optical-sizing: auto; color: var(--text); background: var(--bg);
 }
-:root[data-theme="light"] { color-scheme: light; }
 /* The worlds (and the site's own orange, for About wherever it appears) */
 .hue-brand { --hue-fill: var(--toy-tangerine); --hue-shape: var(--shape-star); --hue-turn: var(--turn-star); --hue-core: #ffc845; --hue-edge: #ff7a1f; --hue-core-dusk: #ff6fb0; --hue-edge-dusk: var(--toy-grape); }
 .hue-ux { --hue-fill: var(--toy-grape); --hue-shape: var(--shape-triangle); --hue-turn: var(--turn-triangle); --hue-core: #c2b2ff; --hue-edge: #ff96c8; --hue-core-dusk: var(--toy-grape); --hue-edge-dusk: #ff6fb0; }
@@ -114,14 +121,14 @@
     radial-gradient(52% 70% at 36% 48%, var(--stage-b) 0%, color-mix(in oklab, var(--stage-b) 55%, transparent) 42%, transparent 74%),
     radial-gradient(70% 90% at 100% 100%, var(--stage-c) 0%, color-mix(in oklab, var(--stage-c) 50%, transparent) 42%, transparent 80%),
     linear-gradient(135deg, var(--stage-base) 6%, color-mix(in oklab, var(--stage-base) 40%, var(--stage-b)) 40%, color-mix(in oklab, var(--stage-b) 45%, var(--stage-c)) 72%, var(--stage-c) 100%);
-  --home-c: color-mix(in oklab, var(--stage-c) var(--home-edge-mix), var(--stage-b));
-  --home-b: color-mix(in oklab, var(--stage-b) var(--home-core-mix), transparent); /* the sun core */
-  --home-corner: color-mix(in oklab, var(--stage-c) var(--home-corner-mix), transparent); /* the orange corner */
+  --home-c: color-mix(in oklab, var(--home-edge, var(--stage-c)) var(--home-edge-mix), var(--home-mid, var(--stage-b)));
+  --home-b: color-mix(in oklab, var(--home-mid, var(--stage-b)) var(--home-core-mix), transparent); /* the sun core */
+  --home-corner: color-mix(in oklab, var(--home-edge, var(--stage-c)) var(--home-corner-mix), transparent); /* the punchy corner */
   --home-paint:
-    radial-gradient(42% 32% at 100% 100%, var(--home-corner) 0%, color-mix(in oklab, var(--home-corner) 50%, transparent) 42%, transparent 80%),
+    radial-gradient(var(--home-corner-size, 42% 32%) at 100% 100%, var(--home-corner) 0%, color-mix(in oklab, var(--home-corner) 50%, transparent) var(--home-corner-mid, 42%), transparent var(--home-corner-end, 80%)),
     radial-gradient(52% 70% at var(--home-core-at), var(--home-b) 0%, color-mix(in oklab, var(--home-b) 55%, transparent) 42%, transparent 74%),
     radial-gradient(var(--home-edge-size) at var(--home-edge-at), var(--home-c) 0%, color-mix(in oklab, var(--home-c) 50%, transparent) 42%, transparent 80%),
-    linear-gradient(var(--home-angle), var(--stage-base) var(--home-stop-1), color-mix(in oklab, var(--stage-base) 40%, var(--stage-b)) var(--home-stop-2), color-mix(in oklab, var(--stage-b) 45%, var(--home-c)) var(--home-stop-3), var(--home-c) 100%);
+    linear-gradient(var(--home-angle), var(--home-base, var(--stage-base)) var(--home-stop-1), color-mix(in oklab, var(--home-base, var(--stage-base)) var(--home-mid-base, 40%), var(--home-mid, var(--stage-b))) var(--home-stop-2), color-mix(in oklab, var(--home-mid, var(--stage-b)) 45%, var(--home-c)) var(--home-stop-3), var(--home-c) 100%);
 }
 /* Section bands (Jimdo-style), light site. "paper" is the page ground, "light" lifted paper, "dark" a dusk band
    (artwork glows on it, in both themes), "accent" a sun-gradient field with confetti. */
@@ -133,35 +140,14 @@
 /* Dark: the same studio at dusk. Deep indigo ground (never #000), warm moonlight text, world colours as glow,
    the sun gradients as warm glows mixed low into indigo (so moonlight text stays readable on them), lighter surfaces
    for elevation, shadows in the dusk's own colour. Bands keep their order: "light" lifts, "dark" sinks. */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    color-scheme: dark;
-    --dusk-mix: 100%; --stage-mix: 38%; --stage-base: var(--dusk-sky);
-    --home-core-mix: 100%; --home-corner-mix: 0%; --home-edge-mix: 100%; --home-edge-size: 70% 90%; --home-edge-at: 100% 100%; --home-angle: 135deg; --home-core-at: 36% 48%; --home-stop-1: 6%; --home-stop-2: 40%; --home-stop-3: 72%;
-    --bg: var(--dusk); --text: var(--moonlight); --text-muted: #c2b8d6; --border: #2e2850;
-    --accent-contrast: var(--dusk-deep);
-    --hover: #221d3f; --placeholder: #221c3e; --hover-ink: var(--toy-tangerine);
-    --highlight: var(--moonlight);
-    --surface-mix: 5%; --raise-mix: 8%;
-    --shadow: 0 1px 2px color-mix(in srgb, var(--dusk-deep) 60%, transparent), 0 22px 44px -22px color-mix(in srgb, var(--dusk-deep) 90%, transparent);
-    --shadow-lift: 0 2px 4px color-mix(in srgb, var(--dusk-deep) 60%, transparent), 0 30px 50px -24px color-mix(in srgb, var(--toy-grape) 30%, var(--dusk-deep));
-    --shadow-header: 0 14px 34px -18px color-mix(in srgb, var(--dusk-deep) 95%, transparent);
-    --glass: color-mix(in srgb, var(--dusk-hi) 55%, transparent); --glass-edge: color-mix(in srgb, var(--moonlight) 16%, transparent);
-    --media-filter: brightness(.9);
-    --face-top: 62%; --face-left: 36%; --face-right: 20%; --face-flat: 26%;
-    --toy-env: .45; --toy-key: 1.2; --toy-key-color: #ffd8ad; --toy-rim: 2.4; --toy-rim-color: #b69bff; --toy-fill: .3; --toy-ground-color: #1b1638;
-    --grain-opacity: .1;
-    --code-bg: var(--dusk-hi); --code-text: #f1e9fb;
-    --danger: #ff6b81; --danger-bg: #2a1119; --danger-text: #ffc2cc;
-  }
-  :root:not([data-theme="light"]) .section.theme-light { --bg: var(--dusk-hi); --border: #342d5a; --hover: #2a2449; --placeholder: #28224a; }
-  :root:not([data-theme="light"]) .section.theme-dark { --bg: var(--dusk-deep); --border: #231e40; --hover: #1a1733; --placeholder: #1a1634; }
-  :root:not([data-theme="light"]) ::selection { background: color-mix(in srgb, var(--accent) 35%, var(--bg)); color: var(--text); }
-}
-:root[data-theme="dark"] {
+:root[data-scheme="dark"] {
   color-scheme: dark;
   --dusk-mix: 100%; --stage-mix: 38%; --stage-base: var(--dusk-sky);
-  --home-core-mix: 100%; --home-corner-mix: 0%; --home-edge-mix: 100%; --home-edge-size: 70% 90%; --home-edge-at: 100% 100%; --home-angle: 135deg; --home-core-at: 36% 48%; --home-stop-1: 6%; --home-stop-2: 40%; --home-stop-3: 72%;
+  --home-base: var(--midnight); --home-mid: var(--dusk-plum); --home-edge: var(--dusk-ember); /* home: the day's layout as a sunset */
+  /* ...with plum arriving sooner and purer, a taller band reaching higher, and a wider ember corner that fades
+     out slowly so it melts into the band instead of showing an edge */
+  --home-mid-base: 15%; --home-stop-1: 16%; --home-stop-2: 40%; --home-edge-size: 140% 72%; --home-edge-at: 50% 102%;
+  --home-corner-size: 300% 40%; --home-corner-mid: 23%; --home-corner-end: 100%;
   --bg: var(--dusk); --text: var(--moonlight); --text-muted: #c2b8d6; --border: #2e2850;
   --accent-contrast: var(--dusk-deep);
   --hover: #221d3f; --placeholder: #221c3e; --hover-ink: var(--toy-tangerine);
@@ -178,9 +164,9 @@
   --code-bg: var(--dusk-hi); --code-text: #f1e9fb;
   --danger: #ff6b81; --danger-bg: #2a1119; --danger-text: #ffc2cc;
 }
-:root[data-theme="dark"] .section.theme-light { --bg: var(--dusk-hi); --border: #342d5a; --hover: #2a2449; --placeholder: #28224a; }
-:root[data-theme="dark"] .section.theme-dark { --bg: var(--dusk-deep); --border: #231e40; --hover: #1a1733; --placeholder: #1a1634; }
-:root[data-theme="dark"] ::selection { background: color-mix(in srgb, var(--accent) 35%, var(--bg)); color: var(--text); }
+:root[data-scheme="dark"] .section.theme-light { --bg: var(--dusk-hi); --border: #342d5a; --hover: #2a2449; --placeholder: #28224a; }
+:root[data-scheme="dark"] .section.theme-dark { --bg: var(--dusk-deep); --border: #231e40; --hover: #1a1733; --placeholder: #1a1634; }
+:root[data-scheme="dark"] ::selection { background: color-mix(in srgb, var(--accent) 35%, var(--bg)); color: var(--text); }
 
 /* Colours ease over briefly when the visitor switches theme (the toggle adds .theme-transition for ~300ms).
    Never on first load, never with reduced motion. */
@@ -281,7 +267,7 @@ main:focus { outline: none; }
 .theme-toggle:active { transform: scale(.94); }
 .theme-icon { display: none; width: 20px; height: 20px; }
 :root[data-theme="light"] .theme-icon-light, :root[data-theme="dark"] .theme-icon-dark, :root[data-theme="system"] .theme-icon-system { display: block; }
-:root:not([data-theme]) .theme-toggle { display: none; } /* no JS, no working toggle: the OS preference still applies */
+:root:not([data-theme]) .theme-toggle { display: none; } /* no JS, no working toggle (and the site stays light) */
 @media (max-width: 1120px) {
   .menu-toggle { display: grid; place-items: center; }
   .theme-toggle { width: 44px; height: 44px; }
@@ -489,8 +475,7 @@ a.eyebrow:hover { transform: translateY(-2px); color: var(--hover-ink); }
 /* Outline: a frosted pill. */
 .button-outline { border: 1px solid color-mix(in srgb, var(--text) 30%, transparent); background: color-mix(in srgb, var(--paper-hi) 45%, transparent); color: var(--text); }
 .button-outline:hover { background: color-mix(in srgb, var(--paper-hi) 75%, transparent); border-color: var(--hover-ink); color: var(--hover-ink); }
-:root[data-theme="dark"] .button-outline { background: color-mix(in srgb, var(--dusk-hi) 45%, transparent); }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .button-outline { background: color-mix(in srgb, var(--dusk-hi) 45%, transparent); } }
+:root[data-scheme="dark"] .button-outline { background: color-mix(in srgb, var(--dusk-hi) 45%, transparent); }
 @media (prefers-reduced-motion: reduce) { .button, a.eyebrow { transition: none; } .button:hover, a.eyebrow:hover { transform: none; } }
 
 /* ---------- media blocks ---------- */

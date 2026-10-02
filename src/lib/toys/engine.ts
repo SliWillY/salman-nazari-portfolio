@@ -568,8 +568,8 @@ export function mountToys(root: HTMLElement, canvas: HTMLCanvasElement, options:
   new ResizeObserver(resize).observe(canvas);
   document.fonts?.ready.then(() => { layout(); wake(); });
   const relight = () => { readLight(); setTimeout(() => { readLight(); wake(); }, 320); wake(); };
-  new MutationObserver(relight).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
-  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', relight);
+  // data-scheme is what is on screen (BaseLayout), so it also changes when the OS does while the visitor is on "system".
+  new MutationObserver(relight).observe(document.documentElement, { attributes: true, attributeFilter: ['data-scheme'] });
   reduced.addEventListener('change', () => { layout(); wake(); });
   resize();
 }

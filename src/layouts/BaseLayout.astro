@@ -23,19 +23,28 @@ const fullTitle = `${title} · Salman Nazari`;
     <SocialMeta lang={lang} title={fullTitle} description={description} url={Astro.url.pathname} />
     <link rel="icon" type="image/svg+xml" href={path("favicon.svg")} />
     <meta name="color-scheme" content="light dark" />
-    <meta name="theme-color" media="(prefers-color-scheme: light)" content={themeColor.light} data-scheme="light" data-light={themeColor.light} data-dark={themeColor.dark} />
-    <meta name="theme-color" media="(prefers-color-scheme: dark)" content={themeColor.dark} data-scheme="dark" data-light={themeColor.light} data-dark={themeColor.dark} />
-    <!-- Runs before first paint so the saved theme applies without a flash. Mirrors applyTheme() in Header.astro. -->
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content={themeColor.light} data-light={themeColor.light} data-dark={themeColor.dark} />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content={themeColor.dark} data-light={themeColor.light} data-dark={themeColor.dark} />
+    <!-- The one place the theme is decided, before first paint (no flash). <html data-theme> is the visitor's choice
+         (light, dark or system: the toggle's icon reads it); <html data-scheme> is what is on screen (light or dark),
+         the only thing the CSS reads. On "system" it follows the OS, live. The toggle in Header.astro calls
+         window.applyTheme(). -->
     <script is:inline>
       (() => {
-        let theme = 'system';
-        try { const saved = localStorage.getItem('theme'); if (saved === 'light' || saved === 'dark') theme = saved; } catch {}
         const root = document.documentElement;
-        root.dataset.theme = theme;
-        if (theme !== 'system') {
-          root.style.colorScheme = theme;
-          for (const meta of document.querySelectorAll('meta[name="theme-color"]')) meta.content = meta.dataset[theme];
-        }
+        const osDark = matchMedia('(prefers-color-scheme: dark)');
+        const resolve = () => {
+          const theme = root.dataset.theme;
+          const scheme = theme === 'light' || theme === 'dark' ? theme : osDark.matches ? 'dark' : 'light';
+          if (root.dataset.scheme === scheme) return; // unchanged: nothing to repaint (the toys relight on a change)
+          root.dataset.scheme = scheme;
+          for (const meta of document.querySelectorAll('meta[name="theme-color"]')) meta.content = meta.dataset[scheme];
+        };
+        window.applyTheme = (theme) => { root.dataset.theme = theme; resolve(); };
+        let saved = 'system';
+        try { const value = localStorage.getItem('theme'); if (value === 'light' || value === 'dark') saved = value; } catch {}
+        window.applyTheme(saved);
+        osDark.addEventListener('change', resolve);
       })();
     </script>
     <title>{fullTitle}</title>
