@@ -3,10 +3,11 @@ summary:
   en: An augmented reality maze game made in Unity.
   ar: لعبة لغز الواقع المعزز مبنية في Unity.
 cover: Icon_fxolnf
-tags: [Game Development, AR, Prototype]
+tags: [Game Development, AR, Prototype, Unity]
 role: { en: "Game Developer, 3D Art", ar: "مطور الألعاب, فنان 3D" }
 tools: [Unity, Vuforia Engine, Blender]
-order: 11
+projectCategory: Game Development
+order: 2
 
 sections:
   - theme: dark

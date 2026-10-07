@@ -949,6 +949,8 @@ figcaption { margin-top: 8px; color: var(--text-muted); font-size: .8rem; }
 }
 .b-projects { display: grid; grid-template-columns: repeat(var(--columns), minmax(0, 1fr)); gap: 32px 20px; }
 .b-projects-empty { color: var(--text-muted); }
+.b-project-group + .b-project-group { margin-top: clamp(56px, 8vw, 96px); }
+.b-project-group > .b-heading { margin-bottom: 16px; } /* same air as the old heading + `spacer: s` */
 .project-card { display: block; }
 .project-card-media { overflow: hidden; border-radius: var(--radius); background: var(--placeholder); transition: transform .45s cubic-bezier(.34, 1.56, .64, 1), box-shadow .3s ease; }
 .project-card:hover .project-card-media { transform: translateY(-4px); box-shadow: var(--shadow-lift); }

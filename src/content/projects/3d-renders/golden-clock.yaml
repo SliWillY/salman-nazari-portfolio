@@ -1,10 +1,11 @@
 title: { en: Golden Clock, ar: الساعة الذهبية }
 summary:
   en: Product renders of the Golden Clock, made in Blender.
-  ar: لقطات منتج للساعة الذهبية، مُنفّذة في Blender.
+  ar: منتج للساعة الذهبية، مُنفّذة في Blender.
 cover: Clock_7_lqak0t
 role: { en: "Modeling, texturing, lighting, rendering", ar: "النمذجة والإكساء والإضاءة والإخراج" }
 tools: [Blender]
+projectCategory: Projects
 order: 3
 
 sections:

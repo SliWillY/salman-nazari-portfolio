@@ -3,10 +3,11 @@ summary:
   en: VR ship warfare game made in Unity.
   ar: لعبة حرب السفن في الواقع الافتراضي مبنية في Unity.
 cover: GameIcone_jqc8mj
-tags: [Game Development, VR, Prototype]
+tags: [Game Development, VR, Prototype, Unity]
 role: { en: "Game Developer, 3D Art", ar: "مطور الألعاب, فنان 3D" }
 tools: [Unity, Blender]
-order: 10
+projectCategory: Game Development
+order: 1
 
 sections:
   - theme: dark

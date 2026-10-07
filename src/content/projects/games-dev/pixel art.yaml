@@ -3,10 +3,11 @@ summary:
   en: Creative pixel art pieces made using Aseprite.
   ar: أعمال فن البكسل الإبداعية مبنية في Aseprite.
 cover: lineart_castle_df2onh
-tags: [Pixel Art]
+tags: [Pixel Art, Aseprite]
 role: { en: "Pixel Artist", ar: "فنان بكسل" }
 tools: [Aseprite]
-order: 21
+projectCategory: Game Art
+order: 2
 
 sections:
   # first section

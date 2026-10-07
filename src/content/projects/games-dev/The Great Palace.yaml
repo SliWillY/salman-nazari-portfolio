@@ -3,9 +3,10 @@ summary:
   en: environment design for a palace in Unreal Engine, with a focus on lighting and atmosphere.
   ar: تصميم البيئة لقصر في Unreal Engine.
 cover: The_Great_Palace_02_w99mqz
-tags: [Environment Design]
+tags: [Environment Design, Unreal Engine]
 role: { en: "Environment Design, Lighting", ar: "تصميم البيئة, الإضاءة" }
 tools: [Unreal Engine, Megascans]
+projectCategory: Environment/Lighting Design
 order: 1
 
 sections:

@@ -10,6 +10,7 @@ cover: portfolio/3d/scifi-corridor/cover   # card image; falls back to the first
 tags: [Interior, Hard surface]   # kinds of work: pills on the card and under the title
 role: { en: "Modeling, lighting, rendering", ar: "النمذجة والإضاءة والإخراج" }
 tools: [Blender, Substance Painter]
+projectCategory: Projects
 order: 1        # lower numbers appear first
 draft: true     # visible in `pnpm dev` only; delete this line to publish
 

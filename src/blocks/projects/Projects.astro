@@ -1,14 +1,26 @@
 ---
 import ProjectCard from '../../components/ProjectCard.astro';
-import { getProjects } from '../../lib/projects';
+import { t } from '../../lib/i18n';
+import { getProjectGroups } from '../../lib/projects';
 const { block, lang, ctx } = Astro.props;
 const category = block.category ?? ctx.category ?? ctx.route;
-const projects = (await getProjects({ category })).slice(0, block.limit);
+// One heading + grid per project category; `limit` caps the total number of cards.
+let left = block.limit ?? Infinity;
+const groups = (await getProjectGroups(category))
+  .map((group) => { const projects = group.projects.slice(0, left); left -= projects.length; return { ...group, projects }; })
+  .filter((group) => group.projects.length > 0);
 const empty = lang === 'ar' ? 'المشاريع قادمة قريباً.' : 'Projects coming soon.';
 ---
-{projects.length > 0 ? (
-  <div class="b-projects" style={`--columns: ${block.columns}`}>
-    {projects.map((project) => <ProjectCard project={project} lang={lang} />)}
+{groups.length > 0 ? (
+  <div class="b-project-groups">
+    {groups.map((group) => (
+      <div class="b-project-group">
+        {block.headings && <div class="b-heading size-l"><h2>{t(group.title, lang)}</h2></div>}
+        <div class="b-projects" style={`--columns: ${block.columns}`}>
+          {group.projects.map((project) => <ProjectCard project={project} lang={lang} />)}
+        </div>
+      </div>
+    ))}
   </div>
 ) : (
   <p class="b-projects-empty">{empty}</p>

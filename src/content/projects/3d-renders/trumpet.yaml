@@ -1,10 +1,11 @@
 title: { en: Trumpet, ar: بوق }
 summary:
   en: Product renders of a trumpet, made in Blender.
-  ar: لقطات منتج لبوق، مُنفّذة في Blender.
+  ar: منتج لبوق، مُنفّذة في Blender.
 cover: Trumpet_01_rkvpg2
 role: { en: "Modeling, texturing, lighting, rendering", ar: "النمذجة والإكساء والإضاءة والإخراج" }
 tools: [Blender]
+projectCategory: Projects
 order: 5
 
 sections:
@@ -14,16 +15,23 @@ sections:
       - type: heading
         text: { en: Renders, ar: اللقطات }
 
-      # 2 row images
-      - type: gallery
-        layout: masonry
-        columns: 2
-        aspect: "1920 / 1080"
-        items:
-          - { publicId: Trumpet_01_rkvpg2}
-          - { publicId: Trumpet_03_sjbrdc}
-          - { publicId: Trumpet_02_wftuxr}
-          - { publicId: Trumpet_Wireframe_nj8lyu}
+      - type: image
+        publicId: Trumpet_01_rkvpg2
+        alt: { en: Trumpet, ar: بوق }
+        lightbox: true
+      - type: image
+        publicId: Trumpet_03_sjbrdc
+        alt: { en: Trumpet, ar: بوق }
+        lightbox: true
+      - type: image
+        publicId: Trumpet_02_wftuxr
+        alt: { en: Trumpet, ar: بوق }
+        lightbox: true
+      - type: image
+        publicId: Trumpet_Wireframe_nj8lyu
+        alt: { en: Trumpet, ar: بوق }
+        lightbox: true
+        
 
 
 

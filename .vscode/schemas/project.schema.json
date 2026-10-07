@@ -187,6 +187,14 @@
       },
       "default": []
     },
+    "projectCategory": {
+      "enum": [
+        "Environment/Lighting Design",
+        "Game Development",
+        "Game Art",
+        "Projects"
+      ]
+    },
     "order": {
       "type": "number",
       "default": 0
@@ -198,7 +206,8 @@
   },
   "required": [
     "title",
-    "summary"
+    "summary",
+    "projectCategory"
   ],
   "additionalProperties": false,
   "definitions": {
@@ -1483,6 +1492,10 @@
             },
             "limit": {
               "type": "number"
+            },
+            "headings": {
+              "type": "boolean",
+              "default": true
             }
           },
           "required": [
@@ -1490,7 +1503,7 @@
           ],
           "additionalProperties": false,
           "title": "Projects",
-          "description": "Automatic grid of project cards from src/content/projects/<category>/. Defaults to the current page’s category."
+          "description": "Automatic grid of project cards from src/content/projects/<category>/, grouped under the project categories listed in src/blocks/projects/schema.ts. Defaults to the current page’s category."
         },
         {
           "type": "object",

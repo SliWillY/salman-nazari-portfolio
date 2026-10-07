@@ -5,6 +5,7 @@ summary:
 cover: turkish_coffepot_05_2x_wdq5gx
 role: { en: "Modeling, texturing, lighting, rendering", ar: "النمذجة والإكساء والإضاءة والإخراج" }
 tools: [Blender]
+projectCategory: Projects
 order: 2
 
 sections:

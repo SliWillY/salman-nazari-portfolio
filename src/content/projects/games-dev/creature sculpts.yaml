@@ -3,10 +3,11 @@ summary:
   en: Creative creature sculptures made using ZBrush.
   ar: تشكيلات مخلوقات إبداعية مبنية في ZBrush.
 cover: Capture5_0_ub4p32
-tags: [3D Art, Sculpting]
+tags: [3D Art, Sculpting, Zbrush]
 role: { en: "3D Artist, Sculptor", ar: "فنان 3D, نحات" }
 tools: [ZBrush]
-order: 20
+projectCategory: Game Art
+order: 1
 
 sections:
   # first section

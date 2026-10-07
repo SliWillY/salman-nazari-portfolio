@@ -3,9 +3,10 @@ summary:
   en: Environment design for a floating land in Unreal Engine, with a focus on lighting and atmosphere.
   ar: تصميم البيئة لأرض طائرة في Unreal Engine.
 cover: Floating_Land_01_yz4et4
-tags: [Environment Design]
+tags: [Environment Design, Unreal Engine]
 role: { en: "Environment Design, Lighting", ar: "تصميم البيئة, الإضاءة" }
 tools: [Unreal Engine, Megascans]
+projectCategory: Environment/Lighting Design
 order: 4
 
 sections:

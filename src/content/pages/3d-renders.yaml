@@ -4,7 +4,6 @@ description:
   ar: عوالم بصرية تتشكل بالتكوين والإضاءة والخامات والحرفة الهادئة.
 eyebrow: { en: Selected work, ar: أعمال مختارة }
 
-
 sections:
   - spacing: s
     blocks:
@@ -17,11 +16,6 @@ sections:
         style: line
         above: none
         below: l
-      - type: heading
-        text: { en: Projects, ar: المشاريع }
-        level: 2
-        size: l
-      - type: spacer
-        size: s
 
+      # One heading + grid per project category
       - type: projects

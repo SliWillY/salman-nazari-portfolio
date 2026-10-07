@@ -4,6 +4,8 @@ import type { Lang } from './i18n';
 // Each world has its own candy colour (global.css, .hue-*): UX grape, Games mint, 3D sky; the site is sun and tangerine.
 // Category pages and their projects take it from the category; home cards from their icon.
 export type Hue = 'ux' | 'games' | '3d';
+// Worlds that hold projects: each is a folder in src/content/projects/ and a page in src/content/pages/.
+export const categories = ['3d-renders', 'games-dev', 'ux-and-gamification'] as const;
 export const categoryHue: Record<string, Hue> = { 'ux-and-gamification': 'ux', 'games-dev': 'games', '3d-renders': '3d' };
 export const iconHue: Record<'ux' | 'game' | 'render', Hue> = { ux: 'ux', game: 'games', render: '3d' };
 

@@ -1376,6 +1376,10 @@
             },
             "limit": {
               "type": "number"
+            },
+            "headings": {
+              "type": "boolean",
+              "default": true
             }
           },
           "required": [
@@ -1383,7 +1387,7 @@
           ],
           "additionalProperties": false,
           "title": "Projects",
-          "description": "Automatic grid of project cards from src/content/projects/<category>/. Defaults to the current page’s category."
+          "description": "Automatic grid of project cards from src/content/projects/<category>/, grouped under the project categories listed in src/blocks/projects/schema.ts. Defaults to the current page’s category."
         },
         {
           "type": "object",

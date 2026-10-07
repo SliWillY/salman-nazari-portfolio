@@ -1,10 +1,11 @@
 title: { en: Perfume, ar: عطور }
 summary:
   en: Product renders of various perfumes, made in Blender.
-  ar: لقطات منتج لعطور مختلفة في عبوات مختلفة، مُنفّذة في Blender.
+  ar: منتج لعطور مختلفة في عبوات مختلفة، مُنفّذة في Blender.
 cover: AUDELA_Angaled_03_poan8q
 role: { en: "Modeling, texturing, lighting, rendering", ar: "النمذجة والإكساء والإضاءة والإخراج" }
 tools: [Blender]
+projectCategory: Projects
 order: 4
 
 sections:

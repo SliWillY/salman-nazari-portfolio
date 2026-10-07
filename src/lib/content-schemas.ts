@@ -1,10 +1,11 @@
 import { z } from 'astro/zod';
+import { projectCategoryNames } from '../blocks/projects/schema';
 import { L } from './i18n';
 
 // Shapes of the YAML files. Blocks are checked loosely here and strictly
 // after prefabs are expanded (see src/lib/prefabs.ts).
 
-export const categories = ['3d-renders', 'games-dev', 'ux-and-gamification'] as const;
+export { categories } from './site';
 
 export const prefabInstance = z.object({
   prefab: z.string(),
@@ -46,6 +47,10 @@ export const project = z.object({
   tags: z.array(L).default([]),
   role: L.optional(),
   tools: z.array(L).default([]),
+  // Heading the card is grouped under on the category page: one of the names in
+  // src/blocks/projects/schema.ts (projectCategories).
+  projectCategory: z.enum(projectCategoryNames),
+  // Position inside its project category (lower first).
   order: z.number().default(0),
   draft: z.boolean().default(false)
 }).strict();

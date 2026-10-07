@@ -3,10 +3,11 @@ summary:
   en: Casual mobile game made in Unity.
   ar: لعبة هاتف كاجوال  مبنية في Unity.
 cover: CandyBlast-1_i1ktwk
-tags: [Game Development, Prototype]
+tags: [Game Development, Prototype, Unity]
 role: { en: "Game Developer", ar: "مطور الألعاب" }
 tools: [Unity]
-order: 12
+projectCategory: Game Development
+order: 4
 
 sections:
       

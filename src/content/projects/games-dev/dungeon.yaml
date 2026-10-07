@@ -3,9 +3,10 @@ summary:
   en: lighting design for a dungeon in Unreal Engine, with a focus on lighting and atmosphere.
   ar: تصميم الإضاءة لسجن في Unreal Engine, مع التركيز على الجو.
 cover: Dungeon_artstation_01_zdv9nf
-tags: [Lighting Design]
+tags: [Lighting Design, Unreal Engine]
 role: { en: "Lighting Design", ar: "تصميم الإضاءة" }
 tools: [Unreal Engine, Megascans]
+projectCategory: Environment/Lighting Design
 order: 5
 
 sections:

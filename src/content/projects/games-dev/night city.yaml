@@ -3,9 +3,10 @@ summary:
   en: environment design for a night city in Unreal Engine, with a focus on lighting and atmosphere.
   ar: تصميم البيئة لمدينة ليلية في Unreal Engine.
 cover: islamic_city_01_lkteuz
-tags: [Environment Design]
+tags: [Environment Design, Unreal Engine]
 role: { en: "Environment Design, Lighting", ar: "تصميم البيئة, الإضاءة" }
 tools: [Unreal Engine, Megascans]
+projectCategory: Environment/Lighting Design
 order: 2
 
 sections:

@@ -3,9 +3,10 @@ summary:
   en: Environment design for a post-apocalyptic city in Unreal Engine, with a focus on lighting and atmosphere.
   ar: تصميم البيئة لمدينة ما بعد نهاية العالم في Unreal Engine.
 cover: Hope_01_zieyok
-tags: [Environment Design]
+tags: [Environment Design, Unreal Engine]
 role: { en: "Environment Design, Lighting", ar: "تصميم البيئة, الإضاءة" }
 tools: [Unreal Engine, Megascans]
+projectCategory: Environment/Lighting Design
 order: 3
 
 sections:

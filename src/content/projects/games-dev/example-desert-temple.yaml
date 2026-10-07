@@ -9,6 +9,7 @@ cover: portfolio/games/desert-temple/cover
 tags: [Environment, Lighting]
 role: { en: Level design, ar: تصميم المراحل }
 tools: [Unreal Engine, Blender]
+projectCategory: Projects
 draft: true
 header: none
 

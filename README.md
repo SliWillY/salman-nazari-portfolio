@@ -84,7 +84,17 @@ The toys are built in code with three.js (`src/lib/toys/`: `models.ts` the toys,
 
 Each project is one file: `src/content/projects/<category>/<route>.yaml`, where category is `3d-renders`, `games-dev` or `ux-and-gamification`. It gets its own page at `/<lang>/<category>/<route>/`, and a card on the category page wherever that page has a `type: projects` block.
 
-Project fields: `title`, `summary`, `cover`, `tags`, `role`, `tools`, `order` (lower first), `draft`, `header`, `sections`. Start by copying `src/content/projects/3d-renders/example-scifi-corridor.yaml`.
+Project fields: `title`, `summary`, `cover`, `tags`, `role`, `tools`, `projectCategory`, `order`, `draft`, `header`, `sections`. Start by copying `src/content/projects/3d-renders/example-scifi-corridor.yaml`.
+
+### Project categories and order
+
+On the category page, the `projects` block shows one heading per **project category**, with that category's cards under it.
+
+- The project categories live in one list, `projectCategories` in `src/blocks/projects/schema.ts`, with their English and Arabic names. **The order of that list is the order of the headings**: move a line to move its heading. A heading only shows on a page that has projects in it.
+- Each project picks one with `projectCategory: Projects` (the English name, exactly as in the list). VS Code autocompletes it, and a misspelled name stops the build with the list of valid names. To add a new category, add a line to the list first.
+- `order` in the project file is its position **inside its project category** (lower first), so each category can start again from 1.
+- The "previous / next" links on a project page follow the same order.
+- `headings: false` on the `projects` block hides the headings and shows the cards as plain grids.
 
 `draft: true` shows the project in `pnpm dev` (with a "draft" badge) but keeps it off the live site. Delete the line to publish.
 
