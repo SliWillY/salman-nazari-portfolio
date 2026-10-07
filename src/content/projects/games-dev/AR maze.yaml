@@ -1,0 +1,30 @@
+title: { en: AR Maze, ar: لغز الواقع المعزز }
+summary:
+  en: An augmented reality maze game made in Unity.
+  ar: لعبة لغز الواقع المعزز مبنية في Unity.
+cover: Icon_fxolnf
+tags: [Game Development, AR, Prototype]
+role: { en: "Game Developer, 3D Art", ar: "مطور الألعاب, فنان 3D" }
+tools: [Unity, Vuforia Engine, Blender]
+order: 10
+
+sections:
+  - theme: dark
+    width: wide
+    blocks:
+      - type: video
+        provider: vimeo
+        id: "787021174"
+        aspect: 1 / 1
+      
+  - prefab: showcase-grid
+    props:
+      theme: paper
+      columns: 3
+      aspect: "1/ 1"
+      title: { en: Level Designs, ar: تصميمات المستويات }
+      images:
+        - Screenshot_2026-10-07_153413_kd5qi8
+        - Screenshot_2026-10-07_153413_kd5qi8
+        - Screenshot_2026-10-07_153444_erlkkh
+    
