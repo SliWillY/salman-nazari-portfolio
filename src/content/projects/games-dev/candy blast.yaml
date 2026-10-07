@@ -1,0 +1,26 @@
+title: { en: Candy Blast, ar: انفجار الحلوى }
+summary:
+  en: Casual mobile game made in Unity.
+  ar: لعبة هاتف كاجوال  مبنية في Unity.
+cover: CandyBlast-1_i1ktwk
+tags: [Game Development, Prototype]
+role: { en: "Game Developer", ar: "مطور الألعاب" }
+tools: [Unity]
+order: 12
+
+sections:
+      
+  - prefab: showcase-grid
+    props:
+      theme: dark
+      columns: 3
+      aspect: "1/ 1.8"
+      title: { en: Screenshots, ar: صور شاشة }
+      images:
+        - CandyBlast-1_i1ktwk
+        - CandyBlast-2_zohf5q
+        - CandyBlast-3_dq22my
+        - CandyBlast-4_l7trd4
+        - CandyBlast-5_ssolvd
+        - CandyBlast-6_uehsv4
+    

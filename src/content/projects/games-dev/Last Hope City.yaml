@@ -1,7 +1,7 @@
-title: { en: Last Hope City, ar: مدينة آخر الأمل }
+title: { en: Last Hope City, ar: مدينة الأمل الأخير}
 summary:
-  en: Environment design for a palace in Unreal Engine, with a focus on lighting and atmosphere.
-  ar: تصميم مستويات لقصر في Unreal Engine, مع التركيز على الإضاءة والجو.
+  en: Environment design for a post-apocalyptic city in Unreal Engine, with a focus on lighting and atmosphere.
+  ar: تصميم البيئة لمدينة ما بعد نهاية العالم في Unreal Engine.
 cover: Hope_01_zieyok
 tags: [Environment Design]
 role: { en: "Environment Design, Lighting", ar: "تصميم البيئة, الإضاءة" }

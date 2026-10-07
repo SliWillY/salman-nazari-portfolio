@@ -1,0 +1,84 @@
+title: { en: Pixel Art, ar: فن البكسل }
+summary:
+  en: Creative pixel art pieces made using Aseprite.
+  ar: أعمال فن البكسل الإبداعية مبنية في Aseprite.
+cover: Capture5_0_ub4p32
+tags: [Pixel Art]
+role: { en: "Pixel Artist", ar: "فنان بكسل" }
+tools: [Aseprite]
+order: 21
+
+sections:
+  # first section
+  - theme: dark
+    width: wide
+    blocks:
+      - type: heading
+        text: { en: "Environment", ar: "البيئة" }
+        size: l
+      - type: divider
+
+      - type: video
+        title: dsad
+        provider: youtube
+        id: "6sH39CbgBnw"
+        aspect: 1476 / 920
+        autoplay: true
+      
+      - type: image
+        publicId: RPG_e6wcjj
+        alt: { en: Golden Clock, ar: الساعة الذهبية }
+        lightbox: true
+        
+
+      # - type: spacer
+      - type: gallery
+        layout: grid
+        columns: 3
+        transparent: true
+        aspect: "12 / 12"
+        items:
+          - P1_tyyjqw
+          - P2_bsjzh2
+          - P3_lc4pvy
+
+  # second section
+  - theme: dark
+    width: wide
+    blocks:
+      - type: heading
+        text: { en: "Customizable Characters", ar: "الشخصيات القابلة للتخصيص" }
+        size: l
+      - type: divider
+      - type: gallery
+        layout: grid
+        columns: 2
+        transparent: true
+        aspect: "12 / 12"
+        items:
+          - CHarachter_4_q0cyt4
+          - CHarachter_3_vzpkff
+          - CHarachter_j3pbsj
+          - CHarachter_2_izbuw0
+  - theme: dark
+    width: wide
+    blocks:
+      - type: heading
+        text: { en: "Other Works", ar: "أعمال أخرى" }
+        size: l
+      - type: divider
+      - type: gallery
+        transparent: true
+        layout: masonry
+        columns: 2
+        items:
+          - izometric_house_o7uab7
+          - izometric_room_gww3up
+          - building_izdvxs
+          - gokce_space_ship_d2khlc
+          - lineart_castle_df2onh
+          - lineart_cup_dzjaxt
+          - PokemonCreature_kemkyn
+          - Black_and_White_Scene_qkfsxd
+          - Topdown_tileset_t8v8xd
+

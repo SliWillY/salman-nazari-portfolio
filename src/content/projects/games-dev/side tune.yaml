@@ -1,0 +1,20 @@
+title: { en: Side Tune, ar: اللحن الجانبي }
+summary:
+  en: A rhythm-based mobile game.
+  ar: لعبة نغمات مبنية في Unity.
+cover: Character_dknvcv
+tags: [Game Development, Prototype]
+role: { en: "Game Developer, 3D Art", ar: "مطور الألعاب, فنان 3D" }
+tools: [Unity, Blender]
+order: 13
+
+sections:
+  - theme: dark
+    width: wide
+    blocks:
+      - type: video
+        provider: youtube
+        id: "RXNnlAu0ROw"
+        aspect: 1 / 1
+      
+    

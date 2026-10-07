@@ -6,7 +6,7 @@ cover: Icon_fxolnf
 tags: [Game Development, AR, Prototype]
 role: { en: "Game Developer, 3D Art", ar: "مطور الألعاب, فنان 3D" }
 tools: [Unity, Vuforia Engine, Blender]
-order: 10
+order: 11
 
 sections:
   - theme: dark
