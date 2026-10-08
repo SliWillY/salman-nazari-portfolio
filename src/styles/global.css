@@ -78,18 +78,6 @@
   --toy-env: 1; --toy-key: 1.5; --toy-key-color: #fff3e2; --toy-rim: .9; --toy-rim-color: #bfd3df; --toy-fill: .55; --toy-ground-color: #ffe2c2;
   --grain-opacity: .09;
   --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 0 0 0 0 1'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
-  /* Paper confetti: flat dots, some turned edge-on (ellipses), scattered over banners and accent bands. */
-  --confetti:
-    radial-gradient(7px 7px at 6% 22%, var(--toy-sun) 90%, transparent),
-    radial-gradient(9px 4px at 17% 78%, var(--toy-grape) 90%, transparent),
-    radial-gradient(5px 5px at 29% 12%, var(--toy-bubblegum) 90%, transparent),
-    radial-gradient(4px 8px at 44% 88%, var(--toy-mint) 90%, transparent),
-    radial-gradient(6px 6px at 57% 30%, var(--toy-sky) 90%, transparent),
-    radial-gradient(8px 3px at 68% 70%, var(--toy-tangerine) 90%, transparent),
-    radial-gradient(5px 5px at 79% 16%, var(--toy-cherry) 90%, transparent),
-    radial-gradient(7px 7px at 90% 58%, var(--toy-sun) 90%, transparent),
-    radial-gradient(3px 7px at 95% 90%, var(--toy-grape) 90%, transparent),
-    radial-gradient(5px 5px at 36% 52%, var(--toy-cream) 90%, transparent);
   --scrim: var(--dusk-deep);
   --overlay-bg: color-mix(in srgb, var(--dusk-deep) 94%, transparent); --overlay-text: var(--moonlight); --overlay-text-muted: #c9c0dc;
   --code-bg: var(--dusk); --code-text: #f1e9fb;
@@ -131,7 +119,7 @@
     linear-gradient(var(--home-angle), var(--home-base, var(--stage-base)) var(--home-stop-1), color-mix(in oklab, var(--home-base, var(--stage-base)) var(--home-mid-base, 40%), var(--home-mid, var(--stage-b))) var(--home-stop-2), color-mix(in oklab, var(--home-mid, var(--stage-b)) 45%, var(--home-c)) var(--home-stop-3), var(--home-c) 100%);
 }
 /* Section bands (Jimdo-style), light site. "paper" is the page ground, "light" lifted paper, "dark" a dusk band
-   (artwork glows on it, in both themes), "accent" a sun-gradient field with confetti. */
+   (artwork glows on it, in both themes), "accent" a sun-gradient field with live paper confetti, like the banners. */
 .section.theme-light { --bg: var(--paper-hi); --hover: #fbf3e8; --placeholder: #f5ecdf; }
 .section.theme-dark { --bg: var(--dusk); --text: var(--moonlight); --text-muted: #c2b8d6; --border: #2e2850; --hover: #221d3f; --placeholder: #221c3e; --accent-contrast: var(--dusk-deep); --surface-mix: 5%; --raise-mix: 8%; }
 /* On the gradients (home stage, banners, accent bands): muted text and lines are the text colour, see-through. */
@@ -292,8 +280,8 @@ main:focus { outline: none; }
 }
 main { min-height: 70vh; }
 /* Candy pieces: a world's shape in its flat colour. Used by the footer, the eyebrow
-   pill, the ornament divider and the world titles; each takes --candy-shape if set, else the page's world shape. */
-.footer-dots i, .eyebrow::before, .b-divider.style-ornament .diamond, .world-shape {
+   pill, the ornament divider, the world titles and the contact cards (and their confetti); each takes --candy-shape if set, else the page's world shape. */
+.footer-dots i, .eyebrow::before, .b-divider.style-ornament .diamond, .world-shape, .contact-shape, .contact-confetti {
   -webkit-mask: var(--candy-shape, var(--hue-shape)) center / contain no-repeat;
   mask: var(--candy-shape, var(--hue-shape)) center / contain no-repeat;
 }
@@ -390,8 +378,8 @@ main { min-height: 70vh; }
 
 /* ---------- stage: the home scene, banners and accent bands ----------
    One family of pictures: the sun gradient (--stage-paint), fine grain on top against banding, paper confetti,
-   inset from the window with big round corners. The home stage and every banner also hold the toys' canvas
-   (on banners: a world's toys, or confetti only). */
+   inset from the window with big round corners. The home stage, every banner and every accent band hold the toys'
+   canvas (on a world's banner its toys float too; the other banners and the accent bands drift confetti only). */
 .page-banner { position: relative; isolation: isolate; overflow: hidden; margin: 0 var(--frame); border-radius: var(--radius-l); background: var(--stage-paint); }
 .page-banner::after, .section:has(.b-space)::after, .section.theme-accent:not(.has-background)::before { content: ''; position: absolute; inset: 0; z-index: 1; background: var(--grain); opacity: var(--grain-opacity); pointer-events: none; border-radius: inherit; }
 .page-banner.is-slim { height: clamp(180px, 26vh, 240px); }
@@ -399,7 +387,7 @@ main { min-height: 70vh; }
 .page-banner:is(.is-tall, .is-medium) { height: clamp(260px, 40vh, 400px); }
 /* The first thing on the page runs up behind the floating header. */
 main > .section:first-child .block-hero:first-child .page-banner { margin-top: calc(var(--frame) - var(--header-h)); }
-.banner-canvas { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; pointer-events: none; }
+.stage-canvas { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; pointer-events: none; }
 .banner-eyebrow { position: absolute; z-index: 2; inset-inline-start: clamp(16px, 3vw, 32px); bottom: clamp(16px, 3vw, 28px); }
 /* Glass pills (a few, on pictures): frosted, with a bright edge. */
 .banner-eyebrow, .space-cta {
@@ -411,8 +399,9 @@ main > .section:first-child .block-hero:first-child .page-banner { margin-top: c
 /* ---------- sections (Jimdo-style bands) ---------- */
 .section { position: relative; background: var(--bg); color: var(--text); }
 .section.theme-paper:not(.has-background, :has(.b-space)) { background: none; } /* the home stage paints its own */
-/* Accent band: a sun-gradient field in the page's world colours, sprinkled with confetti, inset with round corners. */
-.section.theme-accent:not(.has-background) { margin-inline: var(--frame); border-radius: var(--radius-l); overflow: hidden; isolation: isolate; background: var(--confetti), var(--stage-paint); }
+/* Accent band: a stage like the banners, a sun-gradient field in the page's world colours with paper confetti drifting
+   in it (StageToys.astro), inset with round corners. */
+.section.theme-accent:not(.has-background) { margin-inline: var(--frame); border-radius: var(--radius-l); overflow: hidden; isolation: isolate; background: var(--stage-paint); }
 .section.theme-accent > .section-inner { z-index: 2; }
 .section.has-background { background: var(--bg) var(--section-image) center / cover no-repeat; }
 .section.has-background::before { content: ''; position: absolute; inset: 0; background: var(--scrim); opacity: var(--section-overlay); }
@@ -1000,6 +989,43 @@ figcaption { margin-top: 8px; color: var(--text-muted); font-size: .8rem; }
 .catalog-head h2 code { font-size: .9rem; color: var(--accent); margin-inline-start: 8px; }
 .catalog-head p { margin: 4px 0 0; color: var(--text-muted); font-size: .92rem; }
 .catalog-head pre { margin: 0; padding: 14px 16px; border-radius: var(--radius-s); background: var(--code-bg); color: var(--code-text); font-family: var(--font-mono); font-size: .76rem; line-height: 1.5; overflow: auto; max-height: 320px; direction: ltr; text-align: left; }
+
+/* ---------- contact (the contact block, in the contact band at the end of About) ----------
+   Two flat frosted cards on the band, lightly tinted with their colour: the email led by the site's orange star,
+   LinkedIn by the blue tile. No highlights, lips or shadows (they're cards, not buttons); pointed at, the tint deepens
+   and the shape takes its second pose. */
+.b-contact { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 20px; max-width: 720px; margin: 8px auto 0; }
+.contact-option { display: grid; align-content: start; justify-items: center; gap: 12px; }
+.contact-card {
+  --fill: var(--toy-tangerine); --candy-shape: var(--shape-star); --turn: var(--turn-star);
+  position: relative; display: grid; gap: 4px; width: 100%; min-height: 150px; padding: 22px 24px 20px;
+  border: 1px solid var(--glass-edge); border-radius: var(--radius); color: var(--text); text-align: start;
+  background: color-mix(in srgb, var(--fill) 14%, var(--glass));
+  backdrop-filter: blur(14px) saturate(1.4); -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  transition: background .25s ease, border-color .25s ease;
+}
+.contact-card.is-linkedin { --fill: var(--toy-sky); --candy-shape: var(--shape-tile); --turn: var(--turn-tile); }
+.contact-card:hover { background: color-mix(in srgb, var(--fill) 24%, var(--glass)); border-color: color-mix(in srgb, var(--fill) 55%, transparent); }
+.contact-shape { position: absolute; bottom: 20px; inset-inline-end: 20px; width: 44px; height: 44px; background: var(--fill); }
+.contact-label { font-size: .85rem; font-weight: 600; color: var(--text-muted); }
+.contact-value { font-size: clamp(1.15rem, 2.4vw, 1.4rem); font-weight: 700; letter-spacing: -.02em; line-height: 1.2; overflow-wrap: anywhere; }
+.contact-hint { display: inline-flex; align-items: center; gap: 6px; align-self: end; justify-self: start; margin-top: 12px; font-size: .88rem; font-weight: 600; }
+:is(.contact-hint, .contact-copy) svg { width: 1.05em; height: 1.05em; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+[dir="rtl"] .contact-arrow { transform: scaleX(-1); }
+/* Under the email card: copy the address instead. For a moment after a copy it reads "Copied!" with a tick. */
+.contact-copy { display: grid; padding: 4px 6px; border: 0; background: none; color: var(--text-muted); font: inherit; font-size: .88rem; cursor: pointer; }
+.contact-copy > span { grid-area: 1 / 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+.contact-copy-idle { text-decoration: underline; text-decoration-color: color-mix(in srgb, currentColor 40%, transparent); text-underline-offset: 3px; }
+.contact-copy:hover { color: var(--hover-ink); }
+.contact-copy-done, .contact-copy.is-copied .contact-copy-idle { visibility: hidden; }
+.contact-copy.is-copied .contact-copy-done { visibility: visible; color: var(--text); font-weight: 600; }
+/* Confetti from a copy: candy pieces on the page, above everything, that fly out and fall away (Contact.astro). */
+.contact-confetti { position: fixed; z-index: 100; width: 13px; height: 13px; pointer-events: none; }
+@media (prefers-reduced-motion: no-preference) {
+  .contact-shape { transition: transform .55s cubic-bezier(.34, 1.6, .5, 1); }
+  .contact-card:is(:hover, :focus-visible) .contact-shape { transform: var(--turn); }
+}
+@media (prefers-reduced-motion: reduce) { .contact-card { transition: none; } }
 
 /* ---------- responsive ---------- */
 @media (max-width: 800px) {

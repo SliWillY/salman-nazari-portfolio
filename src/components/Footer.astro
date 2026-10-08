@@ -3,4 +3,4 @@ import { labels, path, type Lang } from '../lib/site';
 const { lang } = Astro.props as { lang: Lang };
 ---
 <!-- The site's four worlds as candy pieces (me, UX, Games, 3D); pointed at, each takes its second pose in reading direction (global.css). -->
-<footer class="site-footer"><span class="footer-dots" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span>© {new Date().getFullYear()} Salman Nazari</span><a href={path(`/${lang}/about-me/`)}>{labels[lang].contact}</a><a href={path("sitemap-index.xml")}>Sitemap</a></footer>
+<footer class="site-footer"><span class="footer-dots" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span>© {new Date().getFullYear()} Salman Nazari</span><a href={path(`/${lang}/about-me/#contact`)}>{labels[lang].contact}</a><a href={path("sitemap-index.xml")}>Sitemap</a></footer>

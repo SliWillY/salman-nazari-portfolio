@@ -9,7 +9,8 @@
 //   story (stories.ts) plays, while every other toy steps out of that stage (keeping its size) so the show reads
 //   clearly; leaving sends them back. Touch screens: the world nearest the middle plays, taking turns.
 //   Confetti (paper dots) drifts and bursts.
-// - Banner mode (page tops): the world's toys and a few others float, or only confetti (no toys); no stories.
+// - Banner mode (page tops and accent bands, StageToys.astro): the world's toys and a few others float, or only
+//   confetti (no toys); no stories.
 // Colours and lighting come from CSS tokens (--toy-*), so light and dark are the same studio in different light.
 // Reduced motion: no drift, no stories in motion (the finished pose appears), a frame is drawn only on change.
 // The loop runs only while the canvas is on screen and the tab is visible.

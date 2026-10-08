@@ -317,6 +317,20 @@
           "type": "object",
           "properties": {
             "type": {
+              "const": "contact"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "additionalProperties": false,
+          "title": "Contact",
+          "description": "Two cards: the email (opens the mail app, with a line under it to copy the address instead) and LinkedIn. The address and profile are set once in src/lib/site.ts (contact)."
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
               "const": "divider"
             },
             "style": {

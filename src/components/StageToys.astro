@@ -1,0 +1,31 @@
+---
+// Floats toys and paper confetti (three.js, loaded after first paint) on every page-top banner (Banner.astro) and
+// accent band (Section.astro): each marks itself with data-toys (its world, or empty for confetti only) and holds a
+// .stage-canvas. A world's banner floats its own story toys plus three of its own; the others only drift confetti.
+// Fewer on phones. Included once, by BaseLayout.
+---
+<script>
+  import type { ToyKind } from '../lib/toys/models';
+  const STORY = { ux: 'ux', games: 'game', '3d': 'render' } as const;
+  const EXTRA: Record<keyof typeof STORY, ToyKind[]> = { ux: ['eyeball', 'bubbles', 'pill'], games: ['candycorn', 'worm', 'gem'], '3d': ['donut', 'ridgeball', 'coil'] };
+  const stages = [...document.querySelectorAll<HTMLElement>('[data-toys]')];
+  async function start() {
+    const [{ mountToys }, { stories }] = await Promise.all([import('../lib/toys/engine'), import('../lib/toys/stories')]);
+    const small = matchMedia('(max-width: 700px)').matches;
+    // Toys are sized from the stage's height. On desktop a world's banner is as low as About's (global.css), so its
+    // toys take a bigger share to stay the size they were in the taller banner.
+    const desktop = matchMedia('(min-width: 801px)').matches;
+    for (const stage of stages) {
+      const world = stage.dataset.toys as keyof typeof STORY | '';
+      const canvas = stage.querySelector<HTMLCanvasElement>(':scope > .stage-canvas');
+      if (!canvas) continue;
+      const float = world in STORY ? [...Object.values(stories[STORY[world as keyof typeof STORY]].parts), ...EXTRA[world as keyof typeof STORY].map((kind) => ({ kind }))] : [];
+      const size = small ? 0.24 : float.length && desktop ? 0.28 : 0.2;
+      mountToys(stage, canvas, { float: small ? float.slice(0, 6) : float, confetti: (small ? 8 : 18) + (float.length ? 0 : small ? 4 : 10), seed: 5, size, avoid: () => [...stage.querySelectorAll('.banner-eyebrow')] });
+    }
+  }
+  if (stages.length) {
+    if ('requestIdleCallback' in window) requestIdleCallback(() => start(), { timeout: 700 });
+    else setTimeout(start, 250);
+  }
+</script>

@@ -29,6 +29,17 @@ export const labels = {
   ar: { menu: 'القائمة', close: 'إغلاق القائمة', home: 'الرئيسية', explore: 'استكشف', contact: 'تواصل', language: 'اللغة', back: 'العودة للرئيسية', skip: 'انتقل إلى المحتوى', nav: 'التنقل الرئيسي', homeLink: 'سلمان نظري — الصفحة الرئيسية' }
 } as const;
 
+// How to reach Salman: the one place for these, read by the contact block (src/blocks/contact/), shown in the contact
+// band (the contact-cta prefab) at the end of About.
+export const contact = {
+  email: 'salmansaif@live.com',
+  linkedin: { url: 'https://www.linkedin.com/in/salman-nazari/', handle: 'in/salman-nazari' },
+  labels: {
+    en: { email: 'Email', send: 'Send an email', copy: 'or copy the address', copied: 'Copied!', linkedin: 'LinkedIn', open: 'Open profile' },
+    ar: { email: 'البريد الإلكتروني', send: 'أرسل رسالة', copy: 'أو انسخ العنوان', copied: 'تم النسخ!', linkedin: 'لينكدإن', open: 'افتح الملف' }
+  }
+} as const;
+
 // Theme toggle wording. The button's label reads e.g. "Theme: Dark. Switch to System."
 export const themeLabels = {
   en: { name: 'Theme', template: 'Theme: {current}. Switch to {next}.', light: 'Light', dark: 'Dark', system: 'System' },

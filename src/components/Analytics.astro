@@ -51,7 +51,9 @@
     if (target.closest('.lang-switch')) return send('language_switch', { language: target.closest('.lang-switch')!.getAttribute('hreflang') ?? '' });
     if (target.closest('[data-theme-toggle]')) return send('theme_change', { theme: document.documentElement.dataset.theme ?? '' });
 
-    // Contact: email / phone links (GA doesn't count these as outbound clicks).
+    // Contact: the contact block (email copied, LinkedIn), then email / phone links (GA doesn't count these as outbound clicks).
+    const tile = target.closest<HTMLElement>('[data-contact]');
+    if (tile) return send('contact', { method: tile.dataset.contact! });
     if (link && /^(mailto|tel):/.test(link.getAttribute('href')!)) return send('contact', { method: link.href.startsWith('mailto:') ? 'email' : 'phone' });
   });
 </script>

@@ -3,13 +3,17 @@ import BlockRenderer from './BlockRenderer.astro';
 import { cloudinaryUrl } from '../lib/cloudinary';
 const { section, lang, ctx } = Astro.props;
 const bg = section.background?.image;
+// An accent band (without its own picture) is a stage like the page banners: live confetti drifts in it (StageToys.astro).
+const stage = section.theme === 'accent' && !bg;
 const style = bg ? `--section-image: url('${cloudinaryUrl(bg, 2400)}'); --section-overlay: ${section.background.overlay}` : undefined;
 ---
 <section
   id={section.id}
   class:list={['section', `theme-${section.theme}`, `width-${section.width}`, `spacing-${section.spacing}`, `align-${section.align}`, { 'has-background': bg }]}
   style={style}
+  data-toys={stage ? '' : undefined}
 >
+  {stage && <canvas class="stage-canvas" aria-hidden="true"></canvas>}
   <div class="section-inner">
     {section.blocks.map((block: any) => <BlockRenderer block={block} lang={lang} ctx={ctx} />)}
   </div>

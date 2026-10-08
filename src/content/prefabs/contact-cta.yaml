@@ -1,20 +1,18 @@
 name: Contact call-to-action
-description: "Closing band inviting visitors to get in touch."
+description: "Closing band inviting visitors to get in touch: a headline over the email and LinkedIn tiles (the contact block). About ends with it (id: contact, where the footer's Contact link jumps)."
 props:
+  eyebrow: { en: "Let's talk", ar: لنتحدث }
   title: { en: Let's make something people remember, ar: لنصنع شيئاً يبقى في الذاكرة }
-  text: { en: "Open to game, 3D and UX collaborations.", ar: "متاح للتعاون في الألعاب والتصميم ثلاثي الأبعاد وتجربة المستخدم." }
-  label: { en: Get in touch, ar: تواصل معي }
-  href: "mailto:REPLACE-WITH-YOUR-EMAIL"
+  text: { en: "Open to UX & gamification, game dev and 3D art collaborations.", ar: "متاح للتعاون في تجربة المستخدم والتلعيب وتطوير الألعاب والفن ثلاثي الأبعاد." }
 section:
   theme: accent
   align: center
-  spacing: l
+  spacing: m
   blocks:
     - type: heading
+      eyebrow: "{{eyebrow}}"
       text: "{{title}}"
+      size: l
     - type: text
       text: "{{text}}"
-    - type: button
-      label: "{{label}}"
-      href: "{{href}}"
-      style: outline
+    - type: contact

@@ -1,41 +1,14 @@
 ---
 // Page-top banner (the page hero's picture): a sun gradient in the page's colours under the floating glass header,
-// with 3D paper confetti drifting in it (three.js, loaded after first paint). On a world's own page it is tall and
-// that world's toys float in it too; About and Certificates (medium) and projects (slim) have the confetti only.
+// with 3D paper confetti drifting in it (StageToys.astro). On a world's own page it is tall and that world's toys
+// float in it too; About and Certificates (medium) and projects (slim) have the confetti only.
 // The eyebrow sits on it as a frosted-glass pill. Styles: global.css, "stage".
 import type { Hue } from '../lib/site';
 const { world, size = 'slim', eyebrow, eyebrowHref } = Astro.props as { world?: Hue; size?: 'tall' | 'medium' | 'slim'; eyebrow?: string; eyebrowHref?: string };
 ---
-<div class:list={['page-banner', `is-${size}`]} data-banner={world ?? ''}>
-  <canvas class="banner-canvas" aria-hidden="true"></canvas>
+<div class:list={['page-banner', `is-${size}`]} data-toys={world ?? ''}>
+  <canvas class="stage-canvas" aria-hidden="true"></canvas>
   {eyebrow && (eyebrowHref
     ? <a class="eyebrow banner-eyebrow" href={eyebrowHref}>{eyebrow}</a>
     : <span class="eyebrow banner-eyebrow">{eyebrow}</span>)}
 </div>
-
-<script>
-  // A world's banner floats its own story toys plus three of its own; the others only drift confetti. Fewer on phones.
-  import type { ToyKind } from '../lib/toys/models';
-  const STORY = { ux: 'ux', games: 'game', '3d': 'render' } as const;
-  const EXTRA: Record<keyof typeof STORY, ToyKind[]> = { ux: ['eyeball', 'bubbles', 'pill'], games: ['candycorn', 'worm', 'gem'], '3d': ['donut', 'ridgeball', 'coil'] };
-  const banners = [...document.querySelectorAll<HTMLElement>('.page-banner[data-banner]')];
-  async function start() {
-    const [{ mountToys }, { stories }] = await Promise.all([import('../lib/toys/engine'), import('../lib/toys/stories')]);
-    const small = matchMedia('(max-width: 700px)').matches;
-    // Toys are sized from the banner's height. On desktop a world's banner is as low as About's (global.css), so its
-    // toys take a bigger share to stay the size they were in the taller banner.
-    const desktop = matchMedia('(min-width: 801px)').matches;
-    for (const banner of banners) {
-      const world = banner.dataset.banner as keyof typeof STORY | '';
-      const canvas = banner.querySelector('canvas');
-      if (!canvas) continue;
-      const float = world in STORY ? [...Object.values(stories[STORY[world as keyof typeof STORY]].parts), ...EXTRA[world as keyof typeof STORY].map((kind) => ({ kind }))] : [];
-      const size = small ? 0.24 : float.length && desktop ? 0.28 : 0.2;
-      mountToys(banner, canvas, { float: small ? float.slice(0, 6) : float, confetti: (small ? 8 : 18) + (float.length ? 0 : small ? 4 : 10), seed: 5, size, avoid: () => [...banner.querySelectorAll('.banner-eyebrow')] });
-    }
-  }
-  if (banners.length) {
-    if ('requestIdleCallback' in window) requestIdleCallback(() => start(), { timeout: 700 });
-    else setTimeout(start, 250);
-  }
-</script>

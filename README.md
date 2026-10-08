@@ -158,7 +158,7 @@ sections:
 - **Nesting:** a prefab's blocks may contain other prefab instances.
 - Using a prop the prefab doesn't have is an error (catches typos).
 
-Starter prefabs: `section-title`, `showcase-grid`, `showcase-slider`, `video-showcase`, `document-feature`, `pdf-slider` (goes inside a section's `blocks:`), `project-header`, `contact-cta` (set your email in its `href` first).
+Starter prefabs: `section-title`, `showcase-grid`, `showcase-slider`, `video-showcase`, `document-feature`, `pdf-slider` (goes inside a section's `blocks:`), `project-header`, `contact-cta` (ends About; the email and LinkedIn are set in `src/lib/site.ts`, `contact`).
 
 ## Errors
 
@@ -196,7 +196,7 @@ Google Analytics 4 (`src/components/Analytics.astro`) loads on the deployed site
 | `select_content` | a home category card, project card, lightbox image or screen-stack screen is clicked | `content_type` (category, project, image, screen), `item_id` |
 | `language_switch` | the EN / ع switch | `language` |
 | `theme_change` | the theme toggle | `theme` |
-| `contact` | an email or phone link | `method` |
+| `contact` | the email copied, an email or phone link, or LinkedIn opened from the contact block | `method` (email_copy, email, phone, linkedin) |
 
 To use the parameters in GA reports, register each one once under *Admin → Custom definitions → Create custom dimension* (scope: Event).
 

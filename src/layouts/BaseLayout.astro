@@ -1,6 +1,7 @@
 ---
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import StageToys from '../components/StageToys.astro';
 import Analytics from '../components/Analytics.astro';
 import SocialMeta from '../components/SocialMeta.astro';
 import { path, themeColor, type Hue, type Lang } from '../lib/site';
@@ -54,6 +55,7 @@ const fullTitle = `${title} · Salman Nazari`;
       <Header lang={lang} currentSlug={currentSlug} />
       <main id="main" tabindex="-1"><slot /></main>
       <Footer lang={lang} />
+      <StageToys />
     </div>
   </body>
 </html>

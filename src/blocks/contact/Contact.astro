@@ -1,0 +1,82 @@
+---
+// Contact cards: two flat frosted cards, the email led by the site's orange star and LinkedIn by the blue tile.
+// The email card opens the visitor's mail app; the line under it copies the address instead (for visitors without
+// one), with a little confetti. The address and handle stay left-to-right in Arabic. Styles: global.css, "contact".
+import { contact } from '../../lib/site';
+const { lang } = Astro.props;
+const text = contact.labels[lang as 'en' | 'ar'];
+// SVG icons so they look the same on every device; the arrows mirror in Arabic (CSS).
+const icons = { send: ['M7 17 17 7', 'M8 7h9v9'], copy: ['M9 9h10v10H9z', 'M5 15V5h10'], check: ['m5 12.5 4.5 4.5L19 7'] };
+---
+<div class="b-contact">
+  <div class="contact-option">
+    <a class="contact-card is-email" href={`mailto:${contact.email}`}>
+      <span class="contact-shape" aria-hidden="true"></span>
+      <span class="contact-label">{text.email}</span>
+      <span class="contact-value"><bdi dir="ltr">{contact.email}</bdi></span>
+      <span class="contact-hint">{text.send}<svg class="contact-arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false">{icons.send.map((d) => <path d={d} />)}</svg></span>
+    </a>
+    <button type="button" class="contact-copy" data-copy={contact.email} data-contact="email_copy">
+      <span class="contact-copy-idle"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">{icons.copy.map((d) => <path d={d} />)}</svg>{text.copy}</span>
+      <span class="contact-copy-done" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">{icons.check.map((d) => <path d={d} />)}</svg>{text.copied}</span>
+    </button>
+  </div>
+  <div class="contact-option">
+    <a class="contact-card is-linkedin" href={contact.linkedin.url} target="_blank" rel="noreferrer" data-contact="linkedin">
+      <span class="contact-shape" aria-hidden="true"></span>
+      <span class="contact-label">{text.linkedin}</span>
+      <span class="contact-value"><bdi dir="ltr">{contact.linkedin.handle}</bdi></span>
+      <span class="contact-hint">{text.open}<svg class="contact-arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false">{icons.send.map((d) => <path d={d} />)}</svg></span>
+    </a>
+  </div>
+  <span class="sr-only" role="status" data-copied-text={text.copied}></span>
+</div>
+
+<script>
+  // Copy the address; if the clipboard isn't available (an old browser, an insecure page) nothing changes: the address
+  // is on the card to read.
+  const COLOURS = ['--toy-tangerine', '--toy-sun', '--toy-grape', '--toy-mint', '--toy-sky', '--toy-bubblegum'];
+  const SHAPES = ['--shape-star', '--shape-triangle', '--shape-dpad', '--shape-tile'];
+  const still = matchMedia('(prefers-reduced-motion: reduce)');
+  const pick = <T,>(list: T[]) => list[Math.floor(Math.random() * list.length)];
+
+  // A handful of candy pieces burst from the point clicked (or the button's middle, from the keyboard) and fall away.
+  function burst(x: number, y: number) {
+    if (still.matches) return;
+    for (let k = 0; k < 14; k++) {
+      const piece = document.createElement('i');
+      piece.className = 'contact-confetti';
+      piece.setAttribute('aria-hidden', 'true');
+      piece.style.cssText = `left: ${x}px; top: ${y}px; --candy-shape: var(${pick(SHAPES)}); background: var(${pick(COLOURS)});`;
+      document.body.append(piece);
+      const angle = (k / 14) * Math.PI * 2 + Math.random() * 0.4;
+      const reach = 50 + Math.random() * 70;
+      const dx = Math.cos(angle) * reach;
+      const dy = Math.sin(angle) * reach - 30;
+      const spin = (Math.random() - 0.5) * 540;
+      piece.animate([
+        { transform: 'translate(-50%, -50%) scale(.4) rotate(0deg)', opacity: 1 },
+        { transform: `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) scale(1) rotate(${spin / 2}deg)`, opacity: 1, offset: 0.45 },
+        { transform: `translate(calc(-50% + ${dx * 1.2}px), calc(-50% + ${dy + 90}px)) scale(.8) rotate(${spin}deg)`, opacity: 0 }
+      ], { duration: 900 + Math.random() * 300, easing: 'cubic-bezier(.2, .7, .4, 1)' }).finished.then(() => piece.remove());
+    }
+  }
+
+  for (const button of document.querySelectorAll<HTMLButtonElement>('.contact-copy[data-copy]')) {
+    const status = button.closest('.b-contact')?.querySelector<HTMLElement>('[role="status"]');
+    let timer = 0;
+    button.addEventListener('click', async (event) => {
+      try {
+        await navigator.clipboard.writeText(button.dataset.copy!);
+      } catch {
+        return;
+      }
+      const box = button.getBoundingClientRect();
+      burst(event.detail ? event.clientX : box.left + box.width / 2, event.detail ? event.clientY : box.top + box.height / 2);
+      button.classList.add('is-copied');
+      if (status) status.textContent = status.dataset.copiedText!;
+      clearTimeout(timer);
+      timer = window.setTimeout(() => { button.classList.remove('is-copied'); if (status) status.textContent = ''; }, 2200);
+    });
+  }
+</script>
