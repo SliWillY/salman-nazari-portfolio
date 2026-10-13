@@ -200,6 +200,16 @@ Google Analytics 4 (`src/components/Analytics.astro`) loads on the deployed site
 
 To use the parameters in GA reports, register each one once under *Admin → Custom definitions → Create custom dimension* (scope: Event).
 
+## Brief
+
+`/en/brief/` and `/ar/brief/`: Salman on one A4 sheet (name, portrait, the three worlds, certificates, a QR code to the site) with a **Download PDF** button. The page is **unlisted**: nothing on the site links to it and it is kept out of the sitemap and of search engines (`noindex`), so only people who are given the link see it.
+
+- Words: `src/lib/brief.ts` (every text is `{ en, ar }`). Design: `src/pages/[lang]/brief.astro` and `src/styles/brief.css`.
+- **After changing either, run `pnpm brief`** and commit the two PDFs it writes to `public/brief/`: those are what the button downloads. It prints the real page with the Chrome or Edge already installed (like `pnpm og`), from `pnpm dev` if it is running, otherwise from a dev server it starts itself. If a language's sheet no longer fits one page it stops with a message instead of writing a PDF. In the PDFs the banner is one flat picture (its layered gradient made PDF viewers slow); on the page it stays live.
+- The QR code on the sheet (the dotted one with the four candy pieces in its middle) opens the site's home page in the sheet's language (English sheet, `/en/`; Arabic sheet, `/ar/`). It is drawn at build time with the `qrcode-generator` package.
+- On screens narrower than A4 the sheet reflows into one column for reading; the PDF and a printed page are always the exact A4 sheet.
+- PDF downloads show as GA's automatic `file_download` event.
+
 ## GitHub Pages
 
 `.github/workflows/deploy.yml` builds and deploys `main` to GitHub Pages. Enable Pages for the repository with **GitHub Actions** as the source.

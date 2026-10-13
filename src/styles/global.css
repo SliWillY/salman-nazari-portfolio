@@ -1019,7 +1019,7 @@ figcaption { margin-top: 8px; color: var(--text-muted); font-size: .8rem; }
 .contact-copy:hover { color: var(--hover-ink); }
 .contact-copy-done, .contact-copy.is-copied .contact-copy-idle { visibility: hidden; }
 .contact-copy.is-copied .contact-copy-done { visibility: visible; color: var(--text); font-weight: 600; }
-/* Confetti from a copy: candy pieces on the page, above everything, that fly out and fall away (Contact.astro). */
+/* Confetti from a copy: candy pieces on the page, above everything, that fly out and fall away (src/lib/confetti.ts). */
 .contact-confetti { position: fixed; z-index: 100; width: 13px; height: 13px; pointer-events: none; }
 @media (prefers-reduced-motion: no-preference) {
   .contact-shape { transition: transform .55s cubic-bezier(.34, 1.6, .5, 1); }

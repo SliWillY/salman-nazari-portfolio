@@ -1,0 +1,181 @@
+/* ---------- the brief (src/pages/[lang]/brief.astro) ----------
+   One A4 sheet in the site's toy-studio look: a low sun-gradient stage with the name and drifting 3D confetti, the portrait hanging from it, calm
+   content on warm paper. Always the light theme, like paper. Uses global.css's tokens.
+   Every length on the sheet is a multiple of --u, one millimetre on the A4 page, so the sheet on screen, the printed
+   page and the PDF (`pnpm brief`) are one and the same layout. On screens narrower than A4 the sheet reflows into one
+   column and --u grows a little for reading on a phone (see "narrow screens").
+   What has to survive the PDF is drawn (gradients, inline SVG), never filtered, masked or blurred in CSS: a PDF keeps
+   drawings sharp and small but turns those into heavy pictures. For the same reason the layered gradient is
+   `no-repeat`: Chrome's PDF printer keeps a gradient layer as a drawing only if it is not tiled (repeating, the
+   default, makes each layer a full-size picture and the file five times heavier).
+   Screen-only extras (motion, glass, grain) say so. */
+@page { size: A4; margin: 0; }
+
+/* ---------- the page around the sheet (screen only) ---------- */
+/* A pale wash of the site's sun gradient, so the paper sheet stands out on it. */
+.brief-page { min-height: 100vh; background-image: linear-gradient(color-mix(in srgb, var(--paper) 62%, transparent) 0 0), var(--stage-paint); background-attachment: fixed; }
+.brief-bar .site-header-inner { width: min(calc(210mm + 40px), 100%); }
+.brief-bar .header-actions { gap: 8px; }
+.brief-download svg, .brief-arrow { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+[dir='rtl'] .brief-arrow { transform: scaleX(-1); }
+.brief-bar .brief-download { padding: .62rem 1.15rem; font-size: .9rem; }
+.brief-download-short { display: none; }
+.brief-main { display: grid; justify-items: center; align-content: start; gap: 28px; padding: calc(var(--header-h) + 20px) var(--gutter) 72px; }
+.brief-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+
+/* ---------- the sheet ---------- */
+.brief-sheet {
+  --u: 1mm;
+  position: relative; display: flex; flex-direction: column; width: calc(210 * var(--u)); height: calc(297 * var(--u)); padding: calc(7 * var(--u)); overflow: hidden;
+  border-radius: 8px; background: var(--paper); color: var(--ink); box-shadow: var(--shadow-lift);
+  font-size: calc(3.6 * var(--u)); line-height: 1.5; text-align: start;
+}
+.brief-sheet :where(h1, h2, h3, p, ul, ol, figure) { margin: 0; padding: 0; list-style: none; }
+.brief-sheet .candy { display: block; flex: none; overflow: visible; }
+
+/* The sun gradient of the site's banners (the stage), drawn as on the social card: the pale sky
+   corner at the reading start, the vivid edge at the far end, so the whole picture mirrors in Arabic. */
+.brief-sun {
+  --corner: 100%; --sweep: 135deg;
+  position: relative; isolation: isolate; overflow: hidden; flex: none;
+  background:
+    radial-gradient(46% 62% at 50% 46%, var(--hue-core) 0%, color-mix(in oklab, var(--hue-core) 55%, transparent) 42%, transparent 74%),
+    radial-gradient(62% 92% at var(--corner) 100%, var(--hue-edge) 0%, color-mix(in oklab, var(--hue-edge) 50%, transparent) 42%, transparent 80%),
+    linear-gradient(var(--sweep), var(--pale-sky) 6%, color-mix(in oklab, var(--pale-sky) 40%, var(--hue-core)) 40%, color-mix(in oklab, var(--hue-core) 45%, var(--hue-edge)) 72%, var(--hue-edge) 100%);
+  background-repeat: no-repeat;
+}
+[dir='rtl'] .brief-sun { --corner: 0%; --sweep: 225deg; }
+/* The stage: like the site's banners, 3D paper confetti drifts on its canvas (.stage-canvas, global.css); the words
+   sit at the reading start, clear of the portrait that hangs from the far end. .brief-stage-shot is the canvas's photograph, for print. */
+.brief-hero { height: calc(58 * var(--u)); border-radius: calc(9 * var(--u)); }
+.brief-hero-link { position: absolute; inset: 0; z-index: 4; }
+.brief-stage-shot { display: none; position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; object-fit: cover; }
+.brief-hero-words { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; height: 100%; padding: calc(11 * var(--u)) calc(11 * var(--u)) calc(5 * var(--u)); } /* a little below the middle */
+.brief-hi { display: flex; gap: .3em; font-size: calc(5.6 * var(--u)); font-weight: 700; letter-spacing: -.01em; line-height: 1.2; }
+.brief-name { margin-top: calc(0.5 * var(--u)); font-size: calc(15.5 * var(--u)); font-weight: 800; line-height: 1; letter-spacing: -.025em; white-space: nowrap; }
+.brief-dot { display: inline-block; width: .19em; height: .19em; margin-inline-start: .04em; border-radius: 50%; background: radial-gradient(circle at 34% 28%, #fff 0 8%, color-mix(in srgb, #fff 45%, var(--toy-tangerine)) 20%, var(--toy-tangerine) 52%, color-mix(in oklab, var(--toy-tangerine) 70%, #7a2300) 100%); }
+/* The line under the name: a frosted pill, like the few on the site's pictures. No soft shadow under it: a PDF holds
+   a blurred shadow as a masked picture, which some viewers (iOS) show as a dark box. */
+.brief-role {
+  margin-top: calc(4.5 * var(--u)); padding: calc(1.9 * var(--u)) calc(4.8 * var(--u)) calc(2.3 * var(--u)); border-radius: 999px; font-size: calc(4.4 * var(--u)); font-weight: 600; line-height: 1.2;
+  background: color-mix(in srgb, var(--paper-hi) 66%, transparent); border: calc(0.45 * var(--u)) solid color-mix(in srgb, #fff 85%, transparent);
+  box-shadow: inset 0 calc(0.3 * var(--u)) 0 #fff;
+}
+/* Arabic: Readex Pro, never tracked, taller lines for the letters' rise and fall. */
+:lang(ar) .brief-hi { letter-spacing: 0; }
+:lang(ar) .brief-name { font-size: calc(15.5 * var(--u)); font-weight: 700; line-height: 1.15; letter-spacing: 0; }
+:lang(ar) .brief-dot { width: .17em; height: .17em; margin-inline-start: .06em; }
+:lang(ar) .brief-role { padding-block: calc(1.5 * var(--u)) calc(2.9 * var(--u)); font-weight: 500; line-height: 1.4; }
+
+/* The paper: three rows sharing the room under the stage. The first starts a fixed step below it, so the portrait
+   can be hung from the stage exactly. */
+.brief-body { --step: calc(9 * var(--u)); flex: 1; min-height: 0; display: flex; flex-direction: column; justify-content: space-between; padding: var(--step) calc(9 * var(--u)) calc(16 * var(--u)); }
+.brief-row { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: calc(10 * var(--u)); }
+/* The worlds and, under them, the certificates and the QR code stand on the same three columns. */
+.brief-thirds { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: calc(7 * var(--u)); }
+/* The portrait: upright, beside the introduction, pulled up so that a third of it lies on the stage and two thirds on
+   the paper. */
+.brief-intro { --photo: calc(64 * var(--u)); grid-template-columns: minmax(0, 1fr) var(--photo); align-items: start; }
+.brief-photo {
+  position: relative; z-index: 2; width: var(--photo); aspect-ratio: 4 / 5; margin-top: calc(-1 * var(--step) - var(--photo) * 1.25 / 3); overflow: hidden;
+  border: calc(2.6 * var(--u)) solid var(--paper-hi); border-radius: calc(8.5 * var(--u)); background: var(--toy-cream);
+}
+.brief-photo img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; }
+/* The paper is set like a printed page: words, space and colour, no boxes and hardly a line.
+   Headings: plain words followed by a short hairline, the same length under every heading (12 characters wide). Only "about me" is led by a shape, its own
+   (the site's star), as each world is by its own. */
+.brief-h { display: flex; align-items: center; gap: calc(2 * var(--u)); margin-bottom: calc(2.8 * var(--u)); font-size: calc(4.7 * var(--u)); letter-spacing: -.03em; line-height: 1.2; white-space: nowrap; }
+.brief-h .candy { width: calc(3.5 * var(--u)); height: calc(3.5 * var(--u)); }
+.brief-h::after { content: ''; flex: none; width: 12ch; height: calc(0.25 * var(--u)); margin-inline-start: calc(1.4 * var(--u)); background: color-mix(in srgb, var(--ink) 16%, transparent); }
+:lang(ar) .brief-h { letter-spacing: 0; line-height: 1.3; }
+.brief-about { font-size: calc(3.75 * var(--u)); line-height: 1.55; }
+:lang(ar) .brief-about { font-size: calc(3.6 * var(--u)); line-height: 1.7; }
+/* Facts under the introduction, side by side: a small label, then the value. */
+.brief-facts { display: flex; gap: calc(12 * var(--u)); margin: calc(6 * var(--u)) 0 0; white-space: nowrap; }
+.brief-facts dt { font-size: calc(3 * var(--u)); font-weight: 600; line-height: 1.4; color: var(--text-muted); }
+.brief-facts dd { margin: calc(0.6 * var(--u)) 0 0; font-size: calc(3.8 * var(--u)); font-weight: 700; line-height: 1.3; }
+.brief-facts dd span { display: block; margin-top: calc(0.4 * var(--u)); font-size: calc(3.1 * var(--u)); font-weight: 400; color: var(--text-muted); }
+:lang(ar) .brief-facts dd { line-height: 1.55; }
+
+/* The worlds, side by side. Each title is set as on the world's own page: led by its shape (the same size as the
+   star of "about me"), with its number above the end of the name in its colour. */
+.brief-world h3 { font-size: calc(4.4 * var(--u)); letter-spacing: -.035em; line-height: 1.2; white-space: nowrap; }
+.brief-world h3 .candy { display: inline-block; width: calc(3.5 * var(--u)); height: calc(3.5 * var(--u)); margin-inline-end: calc(2 * var(--u)); vertical-align: baseline; }
+/* A number above the end of a title, as on the site (About is 00, the worlds 01 to 03). */
+.brief-h sup { color: var(--toy-tangerine); }
+.brief-h sup, .brief-world sup { position: relative; top: .1em; margin-inline-start: .12em; font-size: .6em; font-weight: 700; letter-spacing: 0; line-height: 1; vertical-align: top; }
+.brief-world sup { color: var(--hue-fill); }
+.brief-world-label { display: block; margin-top: calc(1 * var(--u)); font-size: calc(3.05 * var(--u)); font-weight: 600; line-height: 1.3; color: var(--text-muted); }
+.brief-world p { margin-top: calc(2 * var(--u)); font-size: calc(3.5 * var(--u)); line-height: 1.5; }
+:lang(ar) .brief-world h3 { letter-spacing: 0; line-height: 1.4; }
+:lang(ar) .brief-world-label { line-height: 1.5; }
+:lang(ar) .brief-world p { line-height: 1.62; }
+
+/* Certificates (what it is, then who gave it, on one line), one under the other across two of the columns; in the
+   third, the QR code to the site (the four candy pieces in its middle), its foot level with the last certificate. */
+.brief-proof > :first-child { grid-column: span 2; }
+.brief-certs { display: grid; gap: calc(3.6 * var(--u)); margin-top: calc(1.4 * var(--u)); }
+.brief-certs li { font-size: calc(3.6 * var(--u)); font-weight: 600; line-height: 1.3; text-wrap: balance; }
+.brief-certs li span { margin-inline-start: calc(1.6 * var(--u)); font-size: calc(3.1 * var(--u)); font-weight: 400; color: var(--text-muted); white-space: nowrap; }
+:lang(ar) .brief-certs li { line-height: 1.5; }
+.brief-side { display: grid; place-items: end center; }
+.brief-qr { display: block; }
+.brief-qr > svg { display: block; width: calc(30 * var(--u)); height: calc(30 * var(--u)); }
+.brief-qr-dots, .brief-qr-eye { fill: var(--ink); }
+.brief-qr-ring { fill: none; stroke: var(--ink); stroke-width: 1; }
+
+/* The site's footer mark: four candy pieces, then a hairline to the far edge. */
+.brief-foot { flex: none; display: flex; align-items: center; gap: calc(3 * var(--u)); margin: 0 calc(9 * var(--u)) calc(2 * var(--u)); }
+.brief-foot span { display: flex; gap: calc(1.6 * var(--u)); }
+.brief-foot .candy { width: calc(2.8 * var(--u)); height: calc(2.8 * var(--u)); }
+.brief-foot::after { content: ''; flex: 1; height: calc(0.25 * var(--u)); background: var(--border); }
+
+/* ---------- screen-only extras ---------- */
+@media screen {
+  /* Fine grain on the gradient, against banding, and a little frosted glass, as on the site. */
+  .brief-sun::after { content: ''; position: absolute; inset: 0; z-index: 3; background: var(--grain); opacity: var(--grain-opacity);    pointer-events: none; }
+  .brief-role { backdrop-filter: blur(14px) saturate(1.5); -webkit-backdrop-filter: blur(14px) saturate(1.5); }
+}
+
+/* ---------- narrow screens: the sheet reflows into one column ---------- */
+@media screen and (max-width: 859px) {
+  .brief-main { gap: 20px; padding-bottom: 48px; }
+  .brief-sheet { --u: 1.16mm; width: 100%; max-width: 620px; height: auto; padding: calc(2.6 * var(--u)); border-radius: calc(8.5 * var(--u)); }
+  .brief-hero { height: auto; border-radius: calc(6.5 * var(--u)); }
+  /* The portrait hangs from the middle of the stage, above the introduction; the stage leaves room for it. */
+  .brief-intro { --photo: calc(50 * var(--u)); }
+  .brief-photo { order: -1; margin-inline: auto; }
+  .brief-hero-words { height: auto; padding: calc(8 * var(--u)) calc(6 * var(--u)) calc(30 * var(--u)); }
+  .brief-name { white-space: normal; }
+  .brief-name > span { display: block; }
+  .brief-hi { font-size: calc(5 * var(--u)); }
+  .brief-name, :lang(ar) .brief-name { font-size: calc(16.5 * var(--u)); }
+  .brief-body { justify-content: flex-start; gap: calc(9 * var(--u)); padding-inline: calc(4.4 * var(--u)); }
+  .brief-row { grid-template-columns: minmax(0, 1fr); gap: calc(9 * var(--u)); }
+  .brief-role { padding-inline: calc(3.8 * var(--u)); font-size: calc(3.8 * var(--u)); }
+  .brief-facts { flex-wrap: wrap; gap: calc(5 * var(--u)) calc(10 * var(--u)); white-space: normal; }
+  .brief-thirds { grid-template-columns: minmax(0, 1fr); }
+  .brief-proof > :first-child { grid-column: auto; }
+  .brief-thirds { gap: calc(8 * var(--u)); }
+  .brief-world h3 { font-size: calc(5.6 * var(--u)); white-space: normal; }
+  .brief-foot { margin: calc(9 * var(--u)) calc(4.4 * var(--u)) calc(5 * var(--u)); }
+}
+@media screen and (max-width: 520px) {
+  .brief-bar .brief-download { padding-inline: .9rem; }
+  .brief-download-long { display: none; }
+  .brief-download-short { display: inline; }
+}
+
+/* ---------- print (and the PDF): the sheet alone, edge to edge on its A4 page ---------- */
+@media print {
+  html, body { margin: 0; background: none; }
+  .brief-page { min-height: 0; background: none; }
+  .brief-bar, .brief-actions, astro-dev-toolbar { display: none !important; }
+  /* The canvas's photograph stands in for it. The canvas keeps its box (hidden, not removed), so it can still be drawn
+     and photographed while the page is laid out for print. */
+  .brief-hero .stage-canvas { visibility: hidden; }
+  .brief-stage-shot[src] { display: block; }
+  .brief-main { display: block; min-height: 0; padding: 0; }
+  .brief-sheet { border-radius: 0; box-shadow: none; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  .brief-sheet *, .brief-sheet *::before, .brief-sheet *::after { animation: none !important; transition: none !important; }
+}

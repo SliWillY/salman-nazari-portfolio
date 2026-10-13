@@ -1,0 +1,224 @@
+---
+// The brief: Salman on one A4 sheet, in English and Arabic, with a button that downloads it as a PDF.
+// Unlisted (see src/lib/brief.ts, which also holds every word on the sheet): no menu, no sitemap entry, no indexing.
+// The page is its own document rather than a BaseLayout page: a slim bar (wordmark, language, download) over the
+// sheet, always in the light theme, like paper. On screens narrower than A4 the sheet reflows into one column;
+// printed, or rendered by `pnpm brief`, it is always the exact A4 page. Styles: src/styles/brief.css.
+import qrcode from 'qrcode-generator';
+import Analytics from '../../components/Analytics.astro';
+import Candy, { type CandyShape } from '../../components/Candy.astro';
+import SocialMeta from '../../components/SocialMeta.astro';
+import Wordmark from '../../components/Wordmark.astro';
+import { brief, briefPdf, siteUrl } from '../../lib/brief';
+import { cloudinaryUrl } from '../../lib/cloudinary';
+import { langs, t, type Lang } from '../../lib/i18n';
+import { categoryHue, pageNumber, path, siteName, themeColor, worldNumber, type Hue } from '../../lib/site';
+import '../../styles/global.css';
+import '../../styles/brief.css';
+
+export const getStaticPaths = () => langs.map((lang) => ({ params: { lang } }));
+
+const lang = Astro.params.lang as Lang;
+const dir = lang === 'ar' ? 'rtl' : 'ltr';
+const fullTitle = `${t(brief.title, lang)} · Salman Nazari`;
+const description = t(brief.description, lang);
+const languages = [{ code: 'en' as Lang, label: 'EN', name: 'English' }, { code: 'ar' as Lang, label: 'ع', name: 'العربية' }];
+const target = languages.find((l) => l.code !== lang)!;
+const pdf = path(briefPdf(lang));
+const [first, last] = siteName[lang].split(' ');
+const worldCandy: Record<Hue, [CandyShape, string]> = { ux: ['triangle', 'grape'], games: ['dpad', 'mint'], '3d': ['tile', 'sky'] };
+
+// The QR code to the site's home page in this language, drawn round and friendly: every module a dot, the three
+// corner eyes as soft rings around a soft square.
+// It is made with the strongest error correction, which lets a square in its middle be cleared for the site's four
+// candy pieces and still scan.
+const home = `${siteUrl}/${lang}/`;
+const code = qrcode(0, 'H');
+code.addData(home);
+code.make();
+const qr = { size: code.getModuleCount(), hole: 11, dots: '' };
+const holeStart = (qr.size - qr.hole) / 2;
+const inHole = (n: number) => n >= holeStart && n < holeStart + qr.hole;
+const eyes = [{ x: 0, y: 0 }, { x: qr.size - 7, y: 0 }, { x: 0, y: qr.size - 7 }];
+const inEye = (row: number, col: number) => eyes.some((eye) => col >= eye.x && col < eye.x + 7 && row >= eye.y && row < eye.y + 7);
+// Each dot is a filled circle (two arcs), which every PDF viewer draws the same; a full module wide, so that dots
+// touch and cameras have as much ink to read as a round dot can give.
+for (let row = 0; row < qr.size; row++) {
+  for (let col = 0; col < qr.size; col++) if (code.isDark(row, col) && !(inHole(row) && inHole(col)) && !inEye(row, col)) qr.dots += `M${col} ${row + 0.5}a.5 .5 0 1 0 1 0a.5 .5 0 1 0-1 0z`;
+}
+// The four pieces, two by two in the cleared square (in modules: 1 of margin, 4.1 each, .8 between).
+const qrPieces: [CandyShape, string][] = [['star', 'tangerine'], ['triangle', 'grape'], ['tile', 'sky'], ['dpad', 'mint']];
+const qrPlace = (k: number) => ({ x: holeStart + 1 + (k % 2) * 4.9, y: holeStart + 1 + Math.floor(k / 2) * 4.9, width: 4.1, height: 4.1 });
+
+// SVG icons, drawn like the contact block's.
+const icons = { download: ['M12 4v11', 'm7 10.5 5 5 5-5', 'M5 20h14'], arrow: ['M7 17 17 7', 'M8 7h9v9'] };
+---
+<!doctype html>
+<!-- As in BaseLayout, text direction lives on the .page wrapper, so the scrollbar stays put in both languages. -->
+<html lang={lang} dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <Analytics />
+    <meta name="robots" content="noindex" />
+    <meta name="description" content={description} />
+    <SocialMeta lang={lang} title={fullTitle} description={description} url={Astro.url.pathname} />
+    <link rel="icon" type="image/svg+xml" href={path('favicon.svg')} />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content={themeColor.light} />
+    <title>{fullTitle}</title>
+  </head>
+  <body>
+    <div class="page hue-brand brief-page" dir={dir} data-page>
+      <!-- The site's floating glass bar, with only what this page needs. Always left-to-right, like the site header. -->
+      <header class="site-header brief-bar" dir="ltr">
+        <div class="site-header-inner">
+          <Wordmark lang={lang} />
+          <div class="header-actions">
+            <a class="lang-switch" href={path(`/${target.code}/brief/`)} hreflang={target.code} title={target.name}>
+              {languages.map((l) => <span class:list={['lang-option', { 'is-current': l.code === lang }]} lang={l.code} aria-hidden="true">{l.label}</span>)}
+              <span class="sr-only" lang={target.code}>{target.name}</span>
+            </a>
+            <a class="button button-primary brief-download" href={pdf} download data-brief-download aria-label={t(brief.download, lang)} dir={dir}>
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">{icons.download.map((d) => <path d={d} />)}</svg>
+              <span class="brief-download-long">{t(brief.download, lang)}</span><span class="brief-download-short">{brief.download.short}</span>
+            </a>
+          </div>
+        </div>
+      </header>
+
+      <main id="main" class="brief-main">
+        {/* data-brief-sheet: where `pnpm brief` saves this sheet's PDF, under public/. */}
+        <article class="brief-sheet" data-brief-sheet={briefPdf(lang)}>
+          <header class="brief-hero brief-sun">
+            {/* 3D paper confetti drifts on the canvas, as on the site's banners; printed, its photograph (the script below) stands in. */}
+            <canvas class="stage-canvas" aria-hidden="true" data-brief-stage></canvas>
+            <img class="brief-stage-shot" alt="" aria-hidden="true" data-brief-shot />
+            {/* The whole stage is a link to this page on the site, so a reader of the PDF can open the brief online. */}
+            <a class="brief-hero-link" href={`${siteUrl}/${lang}/brief/`} aria-label={fullTitle}></a>
+            <div class="brief-hero-words">
+              {/* The greeting hops in word by word, like the home page's (whole words, so Arabic stays joined). */}
+              <p class="brief-hi">{t(brief.hi, lang).split(' ').map((word, k) => <span class="hi-word" style={`--k: ${k}`}>{word}</span>)}</p>
+              <h1 class="brief-name"><span>{first}</span> <span>{last}<i class="brief-dot" aria-hidden="true"></i></span></h1>
+              <p class="brief-role">{t(brief.role, lang)}</p>
+            </div>
+          </header>
+
+          <div class="brief-body">
+            <div class="brief-row brief-intro">
+              <section>
+                {/* Numbered like the worlds: About is 00 on the site. */}
+                <h2 class="brief-h"><Candy shape="star" color="tangerine" /><span>{t(brief.about.heading, lang)}<sup aria-hidden="true">{pageNumber('about-me')}</sup></span></h2>
+                <p class="brief-about">{t(brief.about.text, lang)}</p>
+                <dl class="brief-facts">
+                  {brief.facts.map((fact) => (
+                    <div><dt>{t(fact.label, lang)}</dt><dd>{t(fact.value, lang)}{'note' in fact && <span>{t(fact.note, lang)}</span>}</dd></div>
+                  ))}
+                </dl>
+              </section>
+              {/* The portrait hangs from the stage: a third of it on the banner, the rest on the paper (brief.css). */}
+              <figure class="brief-photo"><img src={cloudinaryUrl(brief.photo.publicId, 900, 'auto', 'jpg')} alt={t(brief.photo.alt, lang)} width="900" height="1125" loading="eager" decoding="async" /></figure>
+            </div>
+
+            <section class="brief-worlds">
+              <h2 class="brief-h">{t(brief.worlds.heading, lang)}</h2>
+              <ul class="brief-thirds">
+                {brief.worlds.items.map((world) => {
+                  const hue = categoryHue[world.slug];
+                  const [shape, color] = worldCandy[hue];
+                  return (
+                    <li>
+                      {/* The title as on the world's own page: its shape, its name, its number above in its colour. */}
+                      <div class:list={['brief-world', `hue-${hue}`]}>
+                        <h3><Candy shape={shape} color={color} />{t(world.title, lang)}<sup aria-hidden="true">{worldNumber(world.slug)}</sup></h3>
+                        {/* A world may have a short label under its title (label: in src/lib/brief.ts). */}
+                        {'label' in world && <span class="brief-world-label">{t(world.label, lang)}</span>}
+                        <p>{t(world.text, lang)}</p>
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            </section>
+
+            {/* On the same three columns as the worlds: certificates down two of them, the QR code to the site at the foot of the third. */}
+            <div class="brief-thirds brief-proof">
+              <section>
+                <h2 class="brief-h">{t(brief.certificates.heading, lang)}</h2>
+                <ul class="brief-certs">
+                  {/* The space before the issuer is a real one: without it an Arabic title's last letter joins on to the issuer's first. */}
+                  {brief.certificates.items.map((item) => <li>{t(item.name, lang)}{' '}<span>{t(item.issuer, lang)}</span></li>)}
+                </ul>
+              </section>
+              <div class="brief-side">
+                <a class="brief-qr" href={home}>
+                  <svg viewBox={`0 0 ${qr.size} ${qr.size}`} role="img" aria-label={t(brief.qr, lang)}>
+                    <path class="brief-qr-dots" d={qr.dots} />
+                    {eyes.map((eye) => (
+                      <Fragment>
+                        <rect class="brief-qr-ring" x={eye.x + 0.5} y={eye.y + 0.5} width="6" height="6" rx="2.1" />
+                        <rect class="brief-qr-eye" x={eye.x + 2} y={eye.y + 2} width="3" height="3" rx="1.15" />
+                      </Fragment>
+                    ))}
+                    {qrPieces.map(([shape, color], k) => <Candy shape={shape} color={color} {...qrPlace(k)} />)}
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* The site's footer mark: its four worlds as candy pieces (me, UX, Games, 3D) leading a hairline. */}
+          <footer class="brief-foot" aria-hidden="true">
+            <span><Candy shape="star" color="tangerine" /><Candy shape="triangle" color="grape" /><Candy shape="dpad" color="mint" /><Candy shape="tile" color="sky" /></span>
+          </footer>
+        </article>
+
+        <div class="brief-actions">
+          <a class="button button-primary brief-download" href={pdf} download data-brief-download>
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">{icons.download.map((d) => <path d={d} />)}</svg>{t(brief.download, lang)}
+          </a>
+          <a class="button button-outline" href={path(`/${lang}/`)}>
+            {t(brief.portfolio, lang)}<svg class="brief-arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false">{icons.arrow.map((d) => <path d={d} />)}</svg>
+          </a>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      // A little party for a download: candy pieces burst from the button (the same confetti as copying the email).
+      import { burst } from '../../lib/confetti';
+      for (const button of document.querySelectorAll<HTMLElement>('[data-brief-download]')) {
+        button.addEventListener('click', (event) => {
+          const box = button.getBoundingClientRect();
+          burst(event.detail ? event.clientX : box.left + box.width / 2, event.detail ? event.clientY : box.top + box.height / 2);
+        });
+      }
+
+      // The stage: the same 3D paper confetti as the site's banners (three.js, loaded after the page has painted).
+      // A PDF cannot hold a live 3D canvas, so before printing the canvas is photographed into the picture beside it,
+      // which print shows instead (brief.css). window.briefShot does that and resolves once the picture is ready
+      // (false without WebGL: the sheet then prints with the gradient alone); `pnpm brief` waits for it.
+      const stage = document.querySelector<HTMLElement>('.brief-hero')!;
+      const canvas = stage.querySelector<HTMLCanvasElement>('[data-brief-stage]')!;
+      const shot = stage.querySelector<HTMLImageElement>('[data-brief-shot]')!;
+      const mounted: Promise<boolean> = new Promise((resolve) => {
+        const start = async () => {
+          const { mountToys } = await import('../../lib/toys/engine');
+          mountToys(stage, canvas, { float: [], confetti: 28, seed: 5, avoid: () => [], pixelRatio: 3, keepFrame: true });
+          // Two frames, so the first picture has been drawn.
+          requestAnimationFrame(() => requestAnimationFrame(() => resolve(!!(canvas.getContext('webgl2') ?? canvas.getContext('webgl')))));
+        };
+        if ('requestIdleCallback' in window) requestIdleCallback(() => start(), { timeout: 700 });
+        else setTimeout(start, 250);
+      });
+      const briefShot = async () => {
+        if (!(await mounted)) return false;
+        shot.src = canvas.toDataURL('image/png');
+        await shot.decode();
+        return true;
+      };
+      (window as unknown as { briefShot: typeof briefShot }).briefShot = briefShot;
+      addEventListener('beforeprint', () => { briefShot(); });
+    </script>
+  </body>
+</html>

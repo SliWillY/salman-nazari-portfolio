@@ -1,0 +1,18 @@
+---
+// A candy piece drawn as an inline SVG: one of the worlds' shapes (the same outlines as --shape-* in global.css) or
+// a round dot, flat, in a candy colour (a --toy-* token: "grape", "mint"…). Drawn rather than masked in CSS, so it
+// stays a sharp drawing when the brief is printed to PDF. x, y, width and height place it inside another SVG (the
+// brief's QR code).
+const shapes = {
+  dot: "<circle cx='12' cy='12' r='12'/>",
+  star: "<path d='M15.15 2.53L16.86 5.19A2.19 2.19 0 0 0 18.15 6.12L21.21 6.93A3.75 3.75 0 0 1 23.15 12.92L21.15 15.37A2.19 2.19 0 0 0 20.66 16.88L20.84 20.04A3.75 3.75 0 0 1 15.74 23.75L12.79 22.60A2.19 2.19 0 0 0 11.21 22.60L8.26 23.75A3.75 3.75 0 0 1 3.16 20.04L3.34 16.88A2.19 2.19 0 0 0 2.85 15.37L0.85 12.92A3.75 3.75 0 0 1 2.79 6.93L5.85 6.12A2.19 2.19 0 0 0 7.14 5.19L8.85 2.53A3.75 3.75 0 0 1 15.15 2.53Z'/>",
+  tile: "<rect width='24' height='24' rx='7'/>",
+  dpad: "<path d='M7 3.5A3.5 3.5 0 0 1 10.5 0h3A3.5 3.5 0 0 1 17 3.5V5a2 2 0 0 0 2 2h1.5A3.5 3.5 0 0 1 24 10.5v3a3.5 3.5 0 0 1-3.5 3.5H19a2 2 0 0 0-2 2v1.5a3.5 3.5 0 0 1-3.5 3.5h-3A3.5 3.5 0 0 1 7 20.5V19a2 2 0 0 0-2-2H3.5A3.5 3.5 0 0 1 0 13.5v-3A3.5 3.5 0 0 1 3.5 7H5a2 2 0 0 0 2-2Z'/>",
+  // The same soft triangle as --shape-triangle (M12 4 20 20H4Z with a round 8-wide outline), as one filled outline.
+  triangle: "<path d='M15.578 2.211 23.578 18.211A4 4 0 0 1 20 24H4A4 4 0 0 1 .422 18.211L8.422 2.211A4 4 0 0 1 15.578 2.211Z'/>"
+};
+export type CandyShape = keyof typeof shapes;
+interface Props { shape: CandyShape; color: string; class?: string; x?: number; y?: number; width?: number; height?: number }
+const { shape, color, class: className, ...place } = Astro.props;
+---
+<svg class:list={['candy', className]} {...place} viewBox="0 0 24 24" aria-hidden="true" focusable="false"><g style={`fill: var(--toy-${color})`} set:html={shapes[shape]} /></svg>

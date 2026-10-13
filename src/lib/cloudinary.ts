@@ -11,9 +11,10 @@ export function normalizePublicId(publicId: string): string {
   return trimmed;
 }
 
-export function cloudinaryUrl(publicId: string, width = 1600, quality = 'auto') {
+// format: "auto" lets Cloudinary pick the best one per browser; name one (e.g. "jpg") where the file type matters.
+export function cloudinaryUrl(publicId: string, width = 1600, quality = 'auto', format = 'auto') {
   const id = normalizePublicId(publicId);
-  return `${base}/image/upload/f_auto,q_${quality},c_limit,w_${width}/${id}`;
+  return `${base}/image/upload/f_${format},q_${quality},c_limit,w_${width}/${id}`;
 }
 
 export function cloudinarySrcSet(publicId: string) {

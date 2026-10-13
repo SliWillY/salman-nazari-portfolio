@@ -28,6 +28,10 @@ export interface Options {
   seed?: number;
   /** Base toy size as a share of the canvas's shorter side (small for the tall home stage, large for short banners). */
   size?: number;
+  /** Canvas pixels per CSS pixel, instead of the screen's own (capped): for a canvas that will be photographed. */
+  pixelRatio?: number;
+  /** Keep the last frame readable (canvas.toDataURL), at some cost: only where the canvas is photographed (the brief). */
+  keepFrame?: boolean;
 }
 
 type Body = {
@@ -61,11 +65,11 @@ export function mountToys(root: HTMLElement, canvas: HTMLCanvasElement, options:
   const hq = !touch.matches && !narrow.matches;
   let renderer: THREE.WebGLRenderer;
   try {
-    renderer = new THREE.WebGLRenderer({ canvas, antialias: (devicePixelRatio || 1) < 1.5, alpha: true, powerPreference: 'high-performance' });
+    renderer = new THREE.WebGLRenderer({ canvas, antialias: (devicePixelRatio || 1) < 1.5, alpha: true, powerPreference: 'high-performance', preserveDrawingBuffer: !!options.keepFrame });
   } catch {
     return; // no WebGL: the page works the same, just without toys
   }
-  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, hq ? 1.75 : 1.5));
+  renderer.setPixelRatio(options.pixelRatio ?? Math.min(devicePixelRatio || 1, hq ? 1.75 : 1.5));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.NeutralToneMapping;
   renderer.setClearColor(0, 0);
