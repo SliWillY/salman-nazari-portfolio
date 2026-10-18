@@ -53,7 +53,6 @@
 .brief-hero-words { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; height: 100%; padding: calc(11 * var(--u)) calc(11 * var(--u)) calc(5 * var(--u)); } /* a little below the middle */
 .brief-hi { display: flex; gap: .3em; font-size: calc(5.6 * var(--u)); font-weight: 700; letter-spacing: -.01em; line-height: 1.2; }
 .brief-name { margin-top: calc(0.5 * var(--u)); font-size: calc(15.5 * var(--u)); font-weight: 800; line-height: 1; letter-spacing: -.025em; white-space: nowrap; }
-.brief-dot { display: inline-block; width: .19em; height: .19em; margin-inline-start: .04em; border-radius: 50%; background: radial-gradient(circle at 34% 28%, #fff 0 8%, color-mix(in srgb, #fff 45%, var(--toy-tangerine)) 20%, var(--toy-tangerine) 52%, color-mix(in oklab, var(--toy-tangerine) 70%, #7a2300) 100%); }
 /* The line under the name: a frosted pill, like the few on the site's pictures. No soft shadow under it: a PDF holds
    a blurred shadow as a masked picture, which some viewers (iOS) show as a dark box. */
 .brief-role {
@@ -64,7 +63,6 @@
 /* Arabic: Readex Pro, never tracked, taller lines for the letters' rise and fall. */
 :lang(ar) .brief-hi { letter-spacing: 0; }
 :lang(ar) .brief-name { font-size: calc(15.5 * var(--u)); font-weight: 700; line-height: 1.15; letter-spacing: 0; }
-:lang(ar) .brief-dot { width: .17em; height: .17em; margin-inline-start: .06em; }
 :lang(ar) .brief-role { padding-block: calc(1.5 * var(--u)) calc(2.9 * var(--u)); font-weight: 500; line-height: 1.4; }
 
 /* The paper: three rows sharing the room under the stage. The first starts a fixed step below it, so the portrait

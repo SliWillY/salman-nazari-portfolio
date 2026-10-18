@@ -9,7 +9,7 @@ import Analytics from '../../components/Analytics.astro';
 import Candy, { type CandyShape } from '../../components/Candy.astro';
 import SocialMeta from '../../components/SocialMeta.astro';
 import Wordmark from '../../components/Wordmark.astro';
-import { brief, briefPdf, siteUrl } from '../../lib/brief';
+import { brief, briefPdf, confettiInPdf, siteUrl } from '../../lib/brief';
 import { cloudinaryUrl } from '../../lib/cloudinary';
 import { langs, t, type Lang } from '../../lib/i18n';
 import { categoryHue, pageNumber, path, siteName, themeColor, worldNumber, type Hue } from '../../lib/site';
@@ -88,8 +88,9 @@ const icons = { download: ['M12 4v11', 'm7 10.5 5 5 5-5', 'M5 20h14'], arrow: ['
       </header>
 
       <main id="main" class="brief-main">
-        {/* data-brief-sheet: where `pnpm brief` saves this sheet's PDF, under public/. */}
-        <article class="brief-sheet" data-brief-sheet={briefPdf(lang)}>
+        {/* data-brief-sheet: where `pnpm brief` saves this sheet's PDF, under public/. data-brief-confetti: whether the
+            PDF gets the confetti (confettiInPdf in src/lib/brief.ts), for `pnpm brief` and the script below. */}
+        <article class="brief-sheet" data-brief-sheet={briefPdf(lang)} data-brief-confetti={confettiInPdf ? 'on' : 'off'}>
           <header class="brief-hero brief-sun">
             {/* 3D paper confetti drifts on the canvas, as on the site's banners; printed, its photograph (the script below) stands in. */}
             <canvas class="stage-canvas" aria-hidden="true" data-brief-stage></canvas>
@@ -99,7 +100,7 @@ const icons = { download: ['M12 4v11', 'm7 10.5 5 5 5-5', 'M5 20h14'], arrow: ['
             <div class="brief-hero-words">
               {/* The greeting hops in word by word, like the home page's (whole words, so Arabic stays joined). */}
               <p class="brief-hi">{t(brief.hi, lang).split(' ').map((word, k) => <span class="hi-word" style={`--k: ${k}`}>{word}</span>)}</p>
-              <h1 class="brief-name"><span>{first}</span> <span>{last}<i class="brief-dot" aria-hidden="true"></i></span></h1>
+              <h1 class="brief-name"><span>{first}</span> <span>{last}</span></h1>
               <p class="brief-role">{t(brief.role, lang)}</p>
             </div>
           </header>
@@ -185,19 +186,16 @@ const icons = { download: ['M12 4v11', 'm7 10.5 5 5 5-5', 'M5 20h14'], arrow: ['
     </div>
 
     <script>
-      // A little party for a download: candy pieces burst from the button (the same confetti as copying the email).
       import { burst } from '../../lib/confetti';
-      for (const button of document.querySelectorAll<HTMLElement>('[data-brief-download]')) {
-        button.addEventListener('click', (event) => {
-          const box = button.getBoundingClientRect();
-          burst(event.detail ? event.clientX : box.left + box.width / 2, event.detail ? event.clientY : box.top + box.height / 2);
-        });
-      }
+      import { replaceWidestJpeg } from '../../lib/pdf-picture';
 
       // The stage: the same 3D paper confetti as the site's banners (three.js, loaded after the page has painted).
       // A PDF cannot hold a live 3D canvas, so before printing the canvas is photographed into the picture beside it,
       // which print shows instead (brief.css). window.briefShot does that and resolves once the picture is ready
       // (false without WebGL: the sheet then prints with the gradient alone); `pnpm brief` waits for it.
+      // All of that only while confetti in the PDF is switched on (confettiInPdf in src/lib/brief.ts): off, a print
+      // and a download carry the plain gradient, and only the page shows the confetti.
+      const confettiInPdf = document.querySelector<HTMLElement>('[data-brief-confetti]')!.dataset.briefConfetti === 'on';
       const stage = document.querySelector<HTMLElement>('.brief-hero')!;
       const canvas = stage.querySelector<HTMLCanvasElement>('[data-brief-stage]')!;
       const shot = stage.querySelector<HTMLImageElement>('[data-brief-shot]')!;
@@ -218,7 +216,49 @@ const icons = { download: ['M12 4v11', 'm7 10.5 5 5 5-5', 'M5 20h14'], arrow: ['
         return true;
       };
       (window as unknown as { briefShot: typeof briefShot }).briefShot = briefShot;
-      addEventListener('beforeprint', () => { briefShot(); });
+      addEventListener('beforeprint', () => { if (confettiInPdf) briefShot(); });
+
+      // Downloading. The PDF in public/brief/ holds the stage as one picture, taken when `pnpm brief` ran. So that a
+      // download shows the confetti where it is right now, the stage is drawn again here (the plain gradient
+      // `pnpm brief` saved beside the PDF, with the live canvas over it, fitted like the printed photograph) and that
+      // picture takes the old one's place in the PDF on its way out. With confetti in the PDF switched off, without
+      // WebGL, or if anything goes wrong, the link simply downloads the PDF as it is.
+      let live = false;
+      mounted.then((ok) => { live = ok && confettiInPdf; });
+      const load = (url: string) => new Promise<HTMLImageElement>((resolve, reject) => { const image = new Image(); image.onload = () => resolve(image); image.onerror = reject; image.src = url; });
+      async function livePdf(url: string) {
+        const [pdf, plain] = await Promise.all([fetch(url).then((response) => response.arrayBuffer()), load(url.replace(/\.pdf$/, '-stage.jpg'))]);
+        const picture = document.createElement('canvas');
+        picture.width = plain.naturalWidth;
+        picture.height = plain.naturalHeight;
+        const pen = picture.getContext('2d')!;
+        pen.drawImage(plain, 0, 0);
+        const fit = Math.max(picture.width / canvas.width, picture.height / canvas.height);
+        pen.drawImage(canvas, (picture.width - canvas.width * fit) / 2, (picture.height - canvas.height * fit) / 2, canvas.width * fit, canvas.height * fit);
+        const jpeg = await new Promise<Blob>((resolve, reject) => picture.toBlob((blob) => (blob ? resolve(blob) : reject(new Error('no picture'))), 'image/jpeg', 0.92));
+        return new Blob([replaceWidestJpeg(new Uint8Array(pdf), new Uint8Array(await jpeg.arrayBuffer()), picture.width, picture.height)], { type: 'application/pdf' });
+      }
+      for (const button of document.querySelectorAll<HTMLAnchorElement>('[data-brief-download]')) {
+        button.addEventListener('click', async (event) => {
+          // A little party for a download: candy pieces burst from the button (the same confetti as copying the email).
+          const box = button.getBoundingClientRect();
+          burst(event.detail ? event.clientX : box.left + box.width / 2, event.detail ? event.clientY : box.top + box.height / 2);
+          if (!live) return;
+          event.preventDefault();
+          const name = button.pathname.split('/').pop()!;
+          try {
+            const save = document.createElement('a');
+            save.href = URL.createObjectURL(await livePdf(button.href));
+            save.download = name;
+            save.click();
+            setTimeout(() => URL.revokeObjectURL(save.href), 60000);
+            // Google Analytics counts file links by itself, but not a file made here.
+            (window as { gtag?: (...args: unknown[]) => void }).gtag?.('event', 'file_download', { file_name: name, file_extension: 'pdf', link_url: button.href });
+          } catch {
+            location.assign(button.href);
+          }
+        });
+      }
     </script>
   </body>
 </html>

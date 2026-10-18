@@ -10,6 +10,11 @@ import type { Lang } from './i18n';
 // Where the site lives. Links printed on the sheet are full addresses: a PDF has no site to be relative to.
 export const siteUrl = 'https://salmannazari.com';
 export const briefPdf = (lang: Lang) => `brief/salman-nazari-brief-${lang}.pdf`;
+// The switch for confetti in the PDF. Off: the PDF's banner is the plain gradient (the page keeps its live confetti
+// either way). On: `pnpm brief` photographs the confetti into the banner, a download from the page redraws the banner
+// with the confetti where it is at that moment, and a print from the browser includes it too. Run `pnpm brief` after
+// changing it.
+export const confettiInPdf = false;
 
 export const brief = {
   title: { en: 'Brief', ar: 'نبذة مختصرة' },

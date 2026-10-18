@@ -2,7 +2,8 @@
 // page per language: `pnpm brief`. Run it again after changing the brief's words or design, then commit the PDFs.
 // It prints the real page with the browser's own PDF printer (scripts/lib/chrome.mjs), from the dev server if
 // `pnpm dev` is running, otherwise from one it starts for the job. Needs internet for the Google Fonts and the portrait.
-// The stage is laid into the PDF as one picture (see `flatten` below).
+// The stage is laid into the PDF as one picture (see `flatten` below); the same picture without its confetti is saved
+// beside the PDF (…-stage.jpg), for the page to draw a download's stage afresh (brief.astro).
 // It stops instead of writing a PDF if a language's sheet is too full for one page, or would use a fallback font.
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -30,8 +31,9 @@ const measure = (faces) => `(async () => {
   const loaded = await Promise.all(${JSON.stringify(faces)}.map((face) => document.fonts.load(face, sheet.textContent))).catch(() => []);
   await document.fonts.ready;
   if (!window.briefShot) return null;
-  const stageShot = await window.briefShot();
-  const pictures = await Promise.all([...document.images].map((image) => image.decode().then(() => true, () => false)));
+  const confetti = sheet.dataset.briefConfetti === 'on'; // the switch: confettiInPdf in src/lib/brief.ts
+  const stageShot = confetti ? await window.briefShot() : true;
+  const pictures = await Promise.all([...document.images].filter((image) => image.getAttribute('src')).map((image) => image.decode().then(() => true, () => false)));
   const mm = (px) => px * 25.4 / 96;
   const box = (el) => el.getBoundingClientRect();
   const style = (el, name) => parseFloat(getComputedStyle(el)[name]);
@@ -41,6 +43,7 @@ const measure = (faces) => `(async () => {
     file: sheet.dataset.briefSheet,
     fonts: loaded.length > 0 && loaded.every((list) => list.length > 0),
     pictures: pictures.every(Boolean),
+    confetti,
     stageShot,
     gap: mm(body.clientHeight - style(body, 'paddingTop') - style(body, 'paddingBottom') - [...body.children].reduce((sum, row) => sum + row.offsetHeight, 0)) / (body.children.length - 1),
     rows: body.children.length,
@@ -49,7 +52,8 @@ const measure = (faces) => `(async () => {
 })()`;
 // The stage's gradient is several soft see-through layers, which PDF viewers redraw slowly at every scroll and zoom.
 // So the stage (gradient and confetti, without the words and the portrait that lie over it) is photographed, and the
-// photograph becomes its whole background: one picture in the PDF instead of the layers. Only these PDFs get this;
+// photograph becomes its whole background: one picture in the PDF instead of the layers. With confetti in the PDF
+// switched off (confettiInPdf in src/lib/brief.ts) that picture is the gradient alone. Only these PDFs get this;
 // the page itself, and a print from the browser, keep the live gradient.
 const bare = `(() => {
   const sheet = document.querySelector('[data-brief-sheet]');
@@ -93,7 +97,13 @@ try {
     if (tooFull) throw new Error(`${lang}: the sheet no longer fits one A4 page (${tooFull}). Shorten a text in src/lib/brief.ts.`);
 
     const { result: stage } = await send('Runtime.evaluate', { expression: bare, returnByValue: true }, sessionId);
-    const shot = await send('Page.captureScreenshot', { format: 'jpeg', quality: 92, clip: { ...stage.value, scale: 3 } }, sessionId);
+    const clip = { ...stage.value, scale: 3 };
+    const confetti = (visibility) => send('Runtime.evaluate', { expression: `document.querySelector('[data-brief-shot]').style.visibility = '${visibility}'` }, sessionId);
+    await confetti('hidden');
+    const plain = await send('Page.captureScreenshot', { format: 'jpeg', quality: 92, clip }, sessionId);
+    writeFileSync(join(root, 'public', sheet.file.replace(/\.pdf$/, '-stage.jpg')), Buffer.from(plain.data, 'base64'));
+    await confetti('');
+    const shot = sheet.confetti ? await send('Page.captureScreenshot', { format: 'jpeg', quality: 92, clip }, sessionId) : plain;
     await send('Runtime.evaluate', { expression: flatten(`data:image/jpeg;base64,${shot.data}`), awaitPromise: true }, sessionId);
 
     const { data } = await send('Page.printToPDF', { printBackground: true, preferCSSPageSize: true, marginTop: 0, marginBottom: 0, marginLeft: 0, marginRight: 0 }, sessionId);
@@ -103,7 +113,7 @@ try {
     const file = join(root, 'public', sheet.file);
     mkdirSync(dirname(file), { recursive: true });
     writeFileSync(file, pdf);
-    console.log(`public/${sheet.file}  ${Math.round(pdf.length / 1024)} KB  (${(sheet.gap * (sheet.rows - 1)).toFixed(1)} mm to spare)`);
+    console.log(`public/${sheet.file}  ${Math.round(pdf.length / 1024)} KB  (${(sheet.gap * (sheet.rows - 1)).toFixed(1)} mm to spare${sheet.confetti ? '' : ', confetti off'})`);
     await send('Target.closeTarget', { targetId });
   }
 } finally {
