@@ -1,37 +1,40 @@
 ---
 // The opening (content.ts, hero): a short intro among column lines, the name set huge beside a black square, the main
 // photo (4:5 on phones, 16:9 on wide screens) and the first call to action. Phones break the name over two lines;
-// wide screens keep it on one.
+// wide screens keep it on one. On load it plays in order (--i): the column lines draw down, the intro rises, the
+// square grows, the name rises word by word, the photo is uncovered, the call to action rises.
 import Photo from '../components/Photo.astro';
 import { visuals } from '../content';
 const { intro, kicker, name, image, line, cta } = visuals.hero;
 ---
 <section>
-  <div class="intro"><p>{intro}</p></div>
-  <p class="kicker">{kicker}</p>
-  <h1 class="name"><span class="mark" aria-hidden="true"></span><span>{name[0]}</span> <span class="last">{name[1]}</span></h1>
-  <div class="image"><Photo photo={image} ratio="4:5" label="4:5 / 16:9" sizes="100vw" eager /></div>
-  <div class="cta">
+  <div class="intro">
+    {[8, 22, 23.4, 50].map((left, i) => <span class="column" style={`left: ${left}%; --i: ${i}`} data-reveal="grow" aria-hidden="true"></span>)}
+    <p data-reveal="rise" style="--i: 4">{intro}</p>
+  </div>
+  <p class="kicker" data-reveal="rise" style="--i: 5">{kicker}</p>
+  <h1 class="name">
+    <span class="mark" data-reveal="pop" style="--i: 5" aria-hidden="true"></span><span data-reveal="rise" style="--i: 6; --rise: 0.35em">{name[0]}</span> <span class="last" data-reveal="rise" style="--i: 7; --rise: 0.35em">{name[1]}</span>
+  </h1>
+  <div class="image"><Photo photo={image} ratio="4:5" label="4:5 / 16:9" sizes="100vw" eager reveal={8} /></div>
+  <div class="cta" data-reveal="rise" style="--i: 10">
     <p>{line}</p>
     <a href="#contact"><span>{cta}</span><svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M17 10H3M9 4l-6 6 6 6" /></svg></a>
   </div>
 </section>
 
 <style>
-  /* The column lines: one, a pair, and the centre, drawn as 1px backgrounds so they always run full height. */
+  /* The column lines: one, a pair, and the centre, each the full height of the block. */
   .intro {
+    position: relative;
     display: flex;
     align-items: flex-end;
     height: 200px;
     padding: 16px var(--gutter);
     border-bottom: 1px solid var(--line);
-    background:
-      linear-gradient(var(--line), var(--line)) 8% 0 / 1px 100% no-repeat,
-      linear-gradient(var(--line), var(--line)) 22% 0 / 1px 100% no-repeat,
-      linear-gradient(var(--line), var(--line)) 23.4% 0 / 1px 100% no-repeat,
-      linear-gradient(var(--line), var(--line)) 50% 0 / 1px 100% no-repeat;
   }
-  .intro p { max-width: 46%; font-size: 13px; line-height: 18px; white-space: pre-line; }
+  .column { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--line); }
+  .intro p { position: relative; max-width: 46%; font-size: 13px; line-height: 18px; white-space: pre-line; }
 
   .kicker { padding: 8px var(--gutter); font-size: 11px; line-height: 16px; }
 
@@ -60,6 +63,10 @@ const { intro, kicker, name, image, line, cta } = visuals.hero;
   .cta p { padding: 13px var(--gutter); border-inline-end: 1px solid var(--line); }
   .cta a { display: flex; align-items: center; justify-content: space-between; min-height: 44px; padding: 0 var(--gutter); text-decoration: none; }
   .cta a:hover { background: var(--ink); color: var(--ground); }
+  @media (prefers-reduced-motion: no-preference) {
+    .cta svg { transition: transform 0.5s var(--ease); }
+    .cta a:hover svg { transform: translateX(-6px); }
+  }
 
   @media (min-width: 720px) {
     .intro { height: 280px; }

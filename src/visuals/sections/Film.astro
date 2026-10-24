@@ -1,7 +1,7 @@
 ---
 // Cinematography, the one dark band (content.ts, film): the showreel, then a frame as shot in LOG beside the same
 // frame graded. Until the reel is uploaded a 16:9 box with a play mark stands in. Only the poster loads with the
-// page; the video loads when it is played.
+// page; the video loads when it is played. The reel, then the LOG frame, then the graded one are uncovered in turn.
 import { cloudinaryUrl, cloudinaryVideoPoster, cloudinaryVideoUrl } from '../../lib/cloudinary';
 import Photo from '../components/Photo.astro';
 import SectionHead from '../components/SectionHead.astro';
@@ -10,7 +10,7 @@ const { heading, reel, log, graded, caption } = visuals.film;
 ---
 <section class="dark" aria-labelledby="film-heading">
   <SectionHead id="film-heading" heading={heading} count="16:9" />
-  <div class="reel">
+  <div class="reel" data-reveal="wipe">
     {reel.id ? (
       <video
         src={cloudinaryVideoUrl(reel.id)}
@@ -27,11 +27,11 @@ const { heading, reel, log, graded, caption } = visuals.film;
       </div>
     )}
   </div>
-  <div class="pair">
-    {[log, graded].map((frame) => (
+  <div class="pair" data-lines>
+    {[log, graded].map((frame, i) => (
       <figure>
-        <Photo photo={frame} ratio="16:9" sizes="(min-width: 720px) 25vw, 50vw" />
-        <figcaption>{frame.label}</figcaption>
+        <Photo photo={frame} ratio="16:9" sizes="(min-width: 720px) 25vw, 50vw" reveal={i * 4 + 1} />
+        <figcaption data-reveal="rise" style={`--i: ${i * 4 + 3}`}>{frame.label}</figcaption>
       </figure>
     ))}
   </div>

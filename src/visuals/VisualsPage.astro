@@ -6,6 +6,7 @@ import { visuals } from './content';
 import './visuals.css';
 import Header from './sections/Header.astro';
 import Hero from './sections/Hero.astro';
+import Marquee from './sections/Marquee.astro';
 import Work from './sections/Work.astro';
 import Angles from './sections/Angles.astro';
 import BeforeAfter from './sections/BeforeAfter.astro';
@@ -26,6 +27,8 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Motion is on only when scripts run (visuals.css, Motion); set before first paint so nothing flashes. -->
+    <script is:inline>document.documentElement.classList.add('js');</script>
     <title>{visuals.title}</title>
     <meta name="description" content={visuals.description} />
     <link rel="canonical" href={url} />
@@ -59,6 +62,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       <Header />
       <main>
         <Hero />
+        <Marquee />
         <Work />
         <Angles />
         <BeforeAfter />
@@ -69,5 +73,17 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       </main>
       <Footer />
     </div>
+    <script>
+      // Reveals (visuals.css, Motion): mark each element the first time it comes into view; CSS does the moving.
+      // The bottom tenth of the screen doesn't count yet, so things start just after they appear.
+      const observer = new IntersectionObserver((entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          entry.target.classList.add('is-in');
+          observer.unobserve(entry.target);
+        }
+      }, { rootMargin: '0px 0px -10% 0px' });
+      document.querySelectorAll('[data-reveal], [data-lines]').forEach((element) => observer.observe(element));
+    </script>
   </body>
 </html>

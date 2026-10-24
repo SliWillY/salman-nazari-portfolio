@@ -1,6 +1,6 @@
 ---
 // One product from every angle a store listing needs (content.ts, angles): four by two on phones, one row of eight
-// on wide screens, each square labelled with its angle.
+// on wide screens, each square labelled with its angle. They are uncovered one by one, like a contact sheet.
 import Photo from '../components/Photo.astro';
 import SectionHead from '../components/SectionHead.astro';
 import { visuals } from '../content';
@@ -9,9 +9,9 @@ const { heading, items } = visuals.angles;
 <section aria-labelledby="angles-heading">
   <SectionHead id="angles-heading" heading={heading} count={String(items.length).padStart(2, '0')} />
   <ul>
-    {items.map((item) => (
+    {items.map((item, i) => (
       <li>
-        <Photo photo={item} ratio="1:1" sizes="(min-width: 720px) 12.5vw, 25vw" />
+        <Photo photo={item} ratio="1:1" sizes="(min-width: 720px) 12.5vw, 25vw" reveal={i} />
         <span>{item.label}</span>
       </li>
     ))}

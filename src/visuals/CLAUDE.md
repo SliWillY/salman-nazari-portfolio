@@ -21,10 +21,15 @@ Chosen from three samples; it draws on obys agency's grids and gallery sites and
   tokens for black. Nothing but greys: no accent colour.
 - IBM Plex Sans Arabic, light (300) for section titles and big numbers, regular (400) for the name, medium (500) for
   labels. Small text is 11 to 15px; the name and the closing heading are set huge.
-- Sharp corners everywhere. No rounded corners, shadows, glow, gradients (other than the 1px line trick below),
-  transitions or animation.
+- Sharp corners everywhere. No rounded corners, shadows, glow, or gradients other than the 1px line trick below.
 - Column lines are 1px `linear-gradient` backgrounds on the grid, so they run its full height whatever the photos'
   heights. Sections open with `SectionHead` (light title, small count, hairline).
+- **Motion: a bit live, never busy.** Things arrive as they scroll into view, using the `data-reveal` types and
+  `data-lines` described at the end of `visuals.css` (rise, wipe, grow, pop, line), staggered with `--i`, all on one
+  easing (`--ease`): hairlines draw, column lines grow down, photos are uncovered from the top, text rises. The
+  opening plays in order on load. The marquee is the one thing always moving. Hovers: photos push in slightly, the
+  arrow nudges, underlines redraw. Nothing bounces, flashes or glows, and everything is off for
+  `prefers-reduced-motion` and when scripts don't run.
 
 ## Files
 
@@ -32,10 +37,10 @@ Chosen from three samples; it draws on obys agency's grids and gallery sites and
 |---|---|
 | `content.ts` | Every word, photo, video and contact detail. Content changes go here. |
 | `VisualsPage.astro` | The whole document: `<head>` (title, description, canonical, link previews, font, analytics) and the sections in order. |
-| `sections/` | One component per section, each with its own scoped `<style>`: `Header`, `Hero`, `Work`, `Angles`, `BeforeAfter`, `Brands`, `Process`, `Film`, `Contact`, `Footer`. |
+| `sections/` | One component per section, each with its own scoped `<style>`: `Header`, `Hero`, `Marquee`, `Work`, `Angles`, `BeforeAfter`, `Brands`, `Process`, `Film`, `Contact`, `Footer`. |
 | `components/Photo.astro` | One photo at a fixed ratio from Cloudinary; a grey stand-in of the same shape while its `id` is empty. |
 | `components/SectionHead.astro` | A section's heading row. |
-| `visuals.css` | Tokens (colours, font, gutter), base rules, and the `.dark` band. |
+| `visuals.css` | Tokens (colours, font, gutter, easing), base rules, the `.dark` band, and the motion rules. |
 | `../pages/visuals/index.astro` | The route; it only renders `VisualsPage`. |
 
 To add a section: give it its content in `content.ts`, make `sections/<Name>.astro`, and place it in
