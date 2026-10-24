@@ -1,0 +1,38 @@
+---
+// One photo at a fixed ratio, cropped to fill it. Without a public ID yet, a grey box of the same shape stands in,
+// marked with its ratio. A parent can change the ratio at a breakpoint with `.wrapper :global(.photo)`.
+import { cloudinarySrcSet, cloudinaryUrl } from '../../lib/cloudinary';
+import type { Photo } from '../content';
+
+interface Props {
+  photo: Photo;
+  ratio: string; // '4:5', '1:1', '16:9'
+  sizes: string;
+  eager?: boolean; // the first photo on the page: load it at once
+  label?: string; // the stand-in's mark when a parent changes the ratio; default: the ratio
+}
+
+const { photo, ratio, sizes, eager = false, label = ratio } = Astro.props;
+const aspect = `--ratio: ${ratio.replace(':', ' / ')}`;
+---
+{photo.id ? (
+  <img
+    class="photo"
+    style={aspect}
+    src={cloudinaryUrl(photo.id, 1024)}
+    srcset={cloudinarySrcSet(photo.id)}
+    sizes={sizes}
+    alt={photo.alt}
+    loading={eager ? 'eager' : 'lazy'}
+    fetchpriority={eager ? 'high' : undefined}
+    decoding="async"
+  />
+) : (
+  <div class="photo placeholder" style={aspect} aria-hidden="true"><span dir="ltr">{label}</span></div>
+)}
+
+<style>
+  .photo { display: block; width: 100%; aspect-ratio: var(--ratio); object-fit: cover; background: var(--placeholder); }
+  .placeholder { position: relative; }
+  span { position: absolute; bottom: 6px; inset-inline-end: 8px; font-size: 10px; line-height: 14px; color: var(--muted); }
+</style>

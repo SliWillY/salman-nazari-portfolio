@@ -1,32 +1,32 @@
 ---
-// How to get in touch (content.ts, contact): email, WhatsApp, Instagram, whichever are filled in.
-// Addresses, numbers and handles are set left to right so they read correctly inside the Arabic text.
+// The close (content.ts, contact): a short line, the invitation set large, then the email in large type and
+// WhatsApp and Instagram when they are filled in. Addresses and handles read left to right inside the Arabic text.
 import { visuals } from '../content';
-const { heading, email, whatsapp, instagram, labels } = visuals.contact;
-const links = [
-  { label: labels.email, value: email, href: `mailto:${email}`, text: email },
-  { label: labels.whatsapp, value: whatsapp, href: `https://wa.me/${whatsapp}`, text: `+${whatsapp}` },
-  { label: labels.instagram, value: instagram, href: `https://www.instagram.com/${instagram}/`, text: `@${instagram}` }
-].filter((link) => link.value);
+const { kicker, heading, email, whatsapp, whatsappLabel, instagram, instagramLabel } = visuals.contact;
 ---
-{links.length > 0 && (
-  <section class="section" aria-labelledby="contact-heading">
-    <h2 id="contact-heading">{heading}</h2>
-    <ul>
-      {links.map((link) => (
-        <li>
-          <a href={link.href}>
-            <span class="label">{link.label}</span>
-            <span dir="ltr">{link.text}</span>
-          </a>
-        </li>
-      ))}
-    </ul>
-  </section>
-)}
+<section id="contact" aria-labelledby="contact-heading">
+  <p class="kicker">{kicker}</p>
+  <h2 id="contact-heading">{heading}</h2>
+  <ul>
+    <li><a href={`mailto:${email}`} dir="ltr">{email}</a></li>
+    {whatsapp && <li><a href={`https://wa.me/${whatsapp}`}>{whatsappLabel} ←</a></li>}
+    {instagram && <li><a href={`https://www.instagram.com/${instagram}/`}>{instagramLabel} ←</a></li>}
+  </ul>
+</section>
 
 <style>
-  ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; }
-  a { color: inherit; }
-  .label { display: block; color: var(--muted); }
+  section { padding: 48px var(--gutter); border-bottom: 1px solid var(--line); }
+  .kicker { font-size: 13px; line-height: 18px; color: var(--muted); }
+  h2 { margin-top: 12px; font-size: 56px; line-height: 64px; font-weight: 300; }
+  ul { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; margin: 16px 0 0; padding: 0; list-style: none; }
+  a { display: inline-block; padding-block: 8px; font-size: 20px; line-height: 28px; text-underline-offset: 4px; }
+  a:hover { text-decoration-thickness: 2px; }
+
+  @media (min-width: 720px) {
+    section { padding-block: 96px; }
+    .kicker { font-size: 15px; line-height: 22px; }
+    h2 { font-size: clamp(5rem, 9vw, 9rem); line-height: 1.1; }
+    ul { margin-top: 32px; }
+    a { font-size: 32px; line-height: 44px; }
+  }
 </style>

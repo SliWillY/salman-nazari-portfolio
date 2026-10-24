@@ -1,0 +1,28 @@
+---
+// The thin bar at the bottom, mirroring the header.
+import { visuals } from '../content';
+---
+<footer>
+  <span class="name"><span class="mark" aria-hidden="true"></span>{visuals.header.name}</span>
+  <span dir="ltr">/visuals</span>
+  <span dir="ltr">©{new Date().getFullYear()}</span>
+</footer>
+
+<style>
+  footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    height: 44px;
+    padding: 0 var(--gutter);
+    font-size: 11px;
+    line-height: 16px;
+  }
+  .name { display: flex; align-items: center; gap: 6px; }
+  .mark { width: 8px; height: 8px; background: var(--ink); }
+
+  @media (min-width: 720px) {
+    footer { font-size: 12px; }
+  }
+</style>

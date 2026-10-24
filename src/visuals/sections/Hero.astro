@@ -1,24 +1,78 @@
 ---
-// The top of the page: name, a line on the work, and an optional picture (content.ts, hero).
-import { cloudinarySrcSet, cloudinaryUrl } from '../../lib/cloudinary';
+// The opening (content.ts, hero): a short intro among column lines, the name set huge beside a black square, the main
+// photo (4:5 on phones, 16:9 on wide screens) and the first call to action. Phones break the name over two lines;
+// wide screens keep it on one.
+import Photo from '../components/Photo.astro';
 import { visuals } from '../content';
-const { heading, text, image } = visuals.hero;
+const { intro, kicker, name, image, line, cta } = visuals.hero;
 ---
-<section class="section">
-  <h1>{heading}</h1>
-  <p>{text}</p>
-  {image.id && (
-    <img
-      src={cloudinaryUrl(image.id)}
-      srcset={cloudinarySrcSet(image.id)}
-      sizes="(min-width: 1232px) 1200px, calc(100vw - 32px)"
-      alt={image.alt}
-      fetchpriority="high"
-    />
-  )}
+<section>
+  <div class="intro"><p>{intro}</p></div>
+  <p class="kicker">{kicker}</p>
+  <h1 class="name"><span class="mark" aria-hidden="true"></span><span>{name[0]}</span> <span class="last">{name[1]}</span></h1>
+  <div class="image"><Photo photo={image} ratio="4:5" label="4:5 / 16:9" sizes="100vw" eager /></div>
+  <div class="cta">
+    <p>{line}</p>
+    <a href="#contact"><span>{cta}</span><svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M17 10H3M9 4l-6 6 6 6" /></svg></a>
+  </div>
 </section>
 
 <style>
-  p { color: var(--muted); }
-  img { width: 100%; margin-top: 24px; }
+  /* The column lines: one, a pair, and the centre, drawn as 1px backgrounds so they always run full height. */
+  .intro {
+    display: flex;
+    align-items: flex-end;
+    height: 200px;
+    padding: 16px var(--gutter);
+    border-bottom: 1px solid var(--line);
+    background:
+      linear-gradient(var(--line), var(--line)) 8% 0 / 1px 100% no-repeat,
+      linear-gradient(var(--line), var(--line)) 22% 0 / 1px 100% no-repeat,
+      linear-gradient(var(--line), var(--line)) 23.4% 0 / 1px 100% no-repeat,
+      linear-gradient(var(--line), var(--line)) 50% 0 / 1px 100% no-repeat;
+  }
+  .intro p { max-width: 46%; font-size: 13px; line-height: 18px; white-space: pre-line; }
+
+  .kicker { padding: 8px var(--gutter); font-size: 11px; line-height: 16px; }
+
+  .name {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    column-gap: 0.16em;
+    padding: 0 var(--gutter) 0.32em; /* room for the tail of ي */
+    font-size: clamp(5rem, 23vw, 11rem);
+    line-height: 1.15;
+    font-weight: 400;
+  }
+  .mark { width: 0.8em; height: 0.8em; background: var(--ink); }
+  .last { flex-basis: 100%; text-align: end; }
+
+  .image { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+
+  .cta {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border-bottom: 1px solid var(--line);
+    font-size: 13px;
+    line-height: 18px;
+  }
+  .cta p { padding: 13px var(--gutter); border-inline-end: 1px solid var(--line); }
+  .cta a { display: flex; align-items: center; justify-content: space-between; min-height: 44px; padding: 0 var(--gutter); text-decoration: none; }
+  .cta a:hover { background: var(--ink); color: var(--ground); }
+
+  @media (min-width: 720px) {
+    .intro { height: 280px; }
+    .intro p { max-width: 40%; font-size: 15px; line-height: 22px; }
+    .kicker { font-size: 12px; }
+    .name { font-size: 18vw; }
+    .image :global(.photo) { aspect-ratio: 16 / 9; }
+    .cta { font-size: 15px; line-height: 22px; }
+    .cta a { min-height: 56px; }
+  }
+
+  @media (min-width: 1200px) {
+    .name { font-size: clamp(9rem, 13vw, 14rem); }
+    .last { flex-basis: auto; }
+  }
 </style>
