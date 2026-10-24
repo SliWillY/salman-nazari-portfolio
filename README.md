@@ -211,6 +211,13 @@ To use the parameters in GA reports, register each one once under *Admin → Cus
 - On screens narrower than A4 the sheet reflows into one column for reading; the PDF and a printed page are always the exact A4 sheet.
 - PDF downloads show as GA's automatic `file_download` event.
 
+## Visuals
+
+`/visuals/` is a separate one-page site for product photography and videography, in Arabic only. It shares this
+repo, domain and deploy but nothing else: no links to or from the portfolio, and none of the blocks, prefabs, layout
+or styles above. It lives in `src/visuals/`; see `src/visuals/CLAUDE.md`, and the root `CLAUDE.md` for how the two
+sites are kept apart.
+
 ## GitHub Pages
 
 `.github/workflows/deploy.yml` builds and deploys `main` to GitHub Pages. Enable Pages for the repository with **GitHub Actions** as the source.

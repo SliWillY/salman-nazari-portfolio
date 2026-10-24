@@ -1,0 +1,24 @@
+---
+// The top of the page: name, a line on the work, and an optional picture (content.ts, hero).
+import { cloudinarySrcSet, cloudinaryUrl } from '../../lib/cloudinary';
+import { visuals } from '../content';
+const { heading, text, image } = visuals.hero;
+---
+<section class="section">
+  <h1>{heading}</h1>
+  <p>{text}</p>
+  {image.id && (
+    <img
+      src={cloudinaryUrl(image.id)}
+      srcset={cloudinarySrcSet(image.id)}
+      sizes="(min-width: 1232px) 1200px, calc(100vw - 32px)"
+      alt={image.alt}
+      fetchpriority="high"
+    />
+  )}
+</section>
+
+<style>
+  p { color: var(--muted); }
+  img { width: 100%; margin-top: 24px; }
+</style>
