@@ -1,0 +1,76 @@
+---
+// Cinematography, the one dark band (content.ts, film): the showreel, then a frame as shot in LOG beside the same
+// frame graded. Until the reel is uploaded a 16:9 box with a play mark stands in. Only the poster loads with the
+// page; the video loads when it is played.
+import { cloudinaryUrl, cloudinaryVideoPoster, cloudinaryVideoUrl } from '../../lib/cloudinary';
+import Photo from '../components/Photo.astro';
+import SectionHead from '../components/SectionHead.astro';
+import { visuals } from '../content';
+const { heading, reel, log, graded, caption } = visuals.film;
+---
+<section class="dark" aria-labelledby="film-heading">
+  <SectionHead id="film-heading" heading={heading} count="16:9" />
+  <div class="reel">
+    {reel.id ? (
+      <video
+        src={cloudinaryVideoUrl(reel.id)}
+        poster={reel.poster ? cloudinaryUrl(reel.poster, 1920) : cloudinaryVideoPoster(reel.id, 1920)}
+        aria-label={reel.title}
+        controls
+        playsinline
+        preload="none"
+      ></video>
+    ) : (
+      <div class="standin" aria-hidden="true">
+        <svg width="52" height="52" viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1h54v54H1zM23 19v18l14-9z" /></svg>
+        <span>{reel.title}</span>
+      </div>
+    )}
+  </div>
+  <div class="pair">
+    {[log, graded].map((frame) => (
+      <figure>
+        <Photo photo={frame} ratio="16:9" sizes="(min-width: 720px) 25vw, 50vw" />
+        <figcaption>{frame.label}</figcaption>
+      </figure>
+    ))}
+  </div>
+  <p class="caption" dir="ltr">{caption}</p>
+</section>
+
+<style>
+  .reel { border-bottom: 1px solid var(--line); }
+  video { width: 100%; aspect-ratio: 16 / 9; background: var(--placeholder); }
+  .standin {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 16 / 9;
+    background: var(--placeholder);
+  }
+  .standin span { position: absolute; bottom: 10px; inset-inline-start: var(--gutter); font-size: 11px; line-height: 16px; color: var(--muted); }
+
+  .pair {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border-bottom: 1px solid var(--line);
+    background: linear-gradient(var(--line), var(--line)) 50% 0 / 1px 100% no-repeat;
+  }
+  figure { margin: 0; padding: 8px; }
+  figcaption { padding-top: 6px; font-size: 11px; line-height: 16px; }
+
+  .caption { padding: 10px var(--gutter) 11px; font-size: 11px; line-height: 16px; color: var(--muted); text-align: right; }
+
+  @media (min-width: 720px) {
+    .pair {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      background:
+        linear-gradient(var(--line), var(--line)) 25% 0 / 1px 100% no-repeat,
+        linear-gradient(var(--line), var(--line)) 50% 0 / 1px 100% no-repeat,
+        linear-gradient(var(--line), var(--line)) 75% 0 / 1px 100% no-repeat;
+    }
+    figure { padding: 12px; }
+    figcaption, .caption { font-size: 13px; line-height: 20px; }
+  }
+</style>

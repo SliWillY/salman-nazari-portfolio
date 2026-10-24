@@ -1,0 +1,40 @@
+---
+// The brands worked with (content.ts, brands), one per column: the logo, or its name until a logo is uploaded.
+import { cloudinaryUrl } from '../../lib/cloudinary';
+import SectionHead from '../components/SectionHead.astro';
+import { visuals } from '../content';
+const { heading, items } = visuals.brands;
+---
+<section aria-labelledby="brands-heading">
+  <SectionHead id="brands-heading" heading={heading} count={String(items.length).padStart(2, '0')} />
+  <ul>
+    {items.map((brand) => (
+      <li>
+        {brand.logo
+          ? <img src={cloudinaryUrl(brand.logo, 320)} alt={brand.name} loading="lazy" decoding="async" />
+          : <span>{brand.name}</span>}
+      </li>
+    ))}
+  </ul>
+</section>
+
+<style>
+  ul {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-bottom: 1px solid var(--line);
+  }
+  li { display: flex; align-items: center; justify-content: center; height: 96px; padding: 16px; }
+  li + li { border-inline-start: 1px solid var(--line); }
+  img { max-height: 36px; width: auto; }
+  span { font-size: 13px; color: var(--muted); }
+
+  @media (min-width: 720px) {
+    li { height: 160px; }
+    img { max-height: 48px; }
+    span { font-size: 15px; }
+  }
+</style>

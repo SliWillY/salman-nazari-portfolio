@@ -4,10 +4,16 @@
 import { cloudinaryUrl } from '../lib/cloudinary';
 import { visuals } from './content';
 import './visuals.css';
+import Header from './sections/Header.astro';
 import Hero from './sections/Hero.astro';
-import Photos from './sections/Photos.astro';
-import Videos from './sections/Videos.astro';
+import Work from './sections/Work.astro';
+import Angles from './sections/Angles.astro';
+import BeforeAfter from './sections/BeforeAfter.astro';
+import Brands from './sections/Brands.astro';
+import Process from './sections/Process.astro';
+import Film from './sections/Film.astro';
 import Contact from './sections/Contact.astro';
+import Footer from './sections/Footer.astro';
 
 // The portfolio's GA4 property: visits show up there under /visuals/. To count them on their own, put another ID here.
 const analyticsId = 'G-B5MPLJRW2E';
@@ -23,8 +29,12 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     <title>{visuals.title}</title>
     <meta name="description" content={visuals.description} />
     <link rel="canonical" href={url} />
+    <meta name="theme-color" content="#F2F2F2" />
     <!-- The portfolio's icon until visuals has its own. -->
     <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500&display=swap" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="ar_AR" />
     <meta property="og:title" content={visuals.title} />
@@ -45,11 +55,19 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     )}
   </head>
   <body>
-    <main>
-      <Hero />
-      <Photos />
-      <Videos />
-      <Contact />
-    </main>
+    <div class="page">
+      <Header />
+      <main>
+        <Hero />
+        <Work />
+        <Angles />
+        <BeforeAfter />
+        <Brands />
+        <Process />
+        <Film />
+        <Contact />
+      </main>
+      <Footer />
+    </div>
   </body>
 </html>

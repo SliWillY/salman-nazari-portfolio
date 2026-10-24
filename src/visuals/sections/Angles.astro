@@ -1,0 +1,47 @@
+---
+// One product from every angle a store listing needs (content.ts, angles): four by two on phones, one row of eight
+// on wide screens, each square labelled with its angle.
+import Photo from '../components/Photo.astro';
+import SectionHead from '../components/SectionHead.astro';
+import { visuals } from '../content';
+const { heading, items } = visuals.angles;
+---
+<section aria-labelledby="angles-heading">
+  <SectionHead id="angles-heading" heading={heading} count={String(items.length).padStart(2, '0')} />
+  <ul>
+    {items.map((item) => (
+      <li>
+        <Photo photo={item} ratio="1:1" sizes="(min-width: 720px) 12.5vw, 25vw" />
+        <span>{item.label}</span>
+      </li>
+    ))}
+  </ul>
+</section>
+
+<style>
+  ul {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    background: var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  li { position: relative; background: var(--ground); }
+  span {
+    position: absolute;
+    bottom: 4px;
+    inset-inline-start: 6px;
+    padding: 0 3px;
+    background: var(--ground);
+    font-size: 10px;
+    line-height: 14px;
+  }
+
+  @media (min-width: 720px) {
+    ul { grid-template-columns: repeat(8, minmax(0, 1fr)); }
+    span { bottom: 8px; inset-inline-start: 8px; font-size: 12px; line-height: 16px; }
+  }
+</style>

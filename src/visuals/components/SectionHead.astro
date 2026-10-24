@@ -1,0 +1,32 @@
+---
+// A section's heading row: the title in light weight and a small count at the other end, over a hairline.
+interface Props {
+  id: string; // the section's aria-labelledby points here
+  heading: string;
+  count?: string;
+}
+
+const { id, heading, count } = Astro.props;
+---
+<div class="head">
+  <h2 id={id}>{heading}</h2>
+  {count && <span dir="ltr">{count}</span>}
+</div>
+
+<style>
+  .head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 24px var(--gutter) 12px;
+    border-bottom: 1px solid var(--line);
+  }
+  h2 { font-size: 32px; line-height: 40px; font-weight: 300; }
+  span { font-size: 11px; line-height: 16px; }
+
+  @media (min-width: 720px) {
+    .head { padding-top: 48px; }
+    h2 { font-size: 48px; line-height: 60px; }
+    span { font-size: 12px; }
+  }
+</style>

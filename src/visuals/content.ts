@@ -1,52 +1,139 @@
 // Everything on salmannazari.com/visuals/: every word, photo and video, and how to get in touch. Arabic only.
-// The words are placeholders until Salman writes the real ones.
+// Words in [brackets] are placeholders for the copywriter; the plain ones are working labels, also free to change.
 // Media are Cloudinary public IDs, kept under visuals/ in the media library (the portfolio's are under portfolio/).
+// An empty id shows a grey box of the same shape, so the layout holds until the photo is uploaded.
+
+export type Ratio = '1:1' | '4:5';
 
 export type Photo = {
-  id: string; // e.g. 'visuals/photos/perfume-01'
+  id: string; // e.g. 'visuals/white/sneaker-side'
   alt: string; // what the photo shows, for screen readers and image search
 };
 
-export type Video = {
-  id: string; // e.g. 'visuals/videos/perfume-reel'
-  title: string; // what it shows, read out by screen readers
-  poster?: string; // a photo's public ID to show before it plays; without one, the video's first frame
-};
+export type GalleryPhoto = Photo & { ratio: Ratio };
 
 export const visuals = {
   // The browser tab, search results and link previews.
   title: 'سلمان نظري · تصوير المنتجات',
-  description: 'تصوير فوتوغرافي وفيديو للمنتجات.',
+  description: '[وصف قصير للصفحة يظهر في نتائج البحث]',
   // The picture in link previews (WhatsApp, X…); empty: the preview shows the title and description only.
   shareImage: '',
 
+  header: { name: 'سلمان نظري', tagline: 'تصوير منتجات', contact: 'تواصل' },
+
   hero: {
-    heading: 'سلمان نظري',
-    text: 'تصوير فوتوغرافي وفيديو للمنتجات',
-    image: { id: '', alt: '' } as Photo // empty id: no picture
+    intro: '[سطر تعريفي]\n[سطر ثانٍ]',
+    kicker: '[سطر صغير]',
+    name: ['سلمان', 'نظري'],
+    image: { id: '', alt: '' } as Photo, // 4:5 on phones, cropped to 16:9 on wide screens
+    line: '[سطر قصير]',
+    cta: 'اطلب تصويرًا'
   },
 
-  // A section with no items is left off the page.
-  photos: {
-    heading: 'الصور',
+  // Photos run in two columns on phones (the first half of a group in one, the rest in the other) and four on wide
+  // screens. Alternating 4:5 and 1:1 staggers them; keep each half the same mix so the two phone columns end level.
+  work: {
+    heading: 'الأعمال',
+    groupLabel: 'المجموعة',
+    groups: [
+      {
+        name: 'خلفية بيضاء',
+        description: '[وصف قصير]',
+        photos: [
+          { id: '', alt: '', ratio: '4:5' },
+          { id: '', alt: '', ratio: '1:1' },
+          { id: '', alt: '', ratio: '1:1' },
+          { id: '', alt: '', ratio: '4:5' }
+        ] as GalleryPhoto[]
+      },
+      {
+        name: 'خلفية ملوّنة',
+        description: '[وصف قصير]',
+        photos: [
+          { id: '', alt: '', ratio: '1:1' },
+          { id: '', alt: '', ratio: '4:5' },
+          { id: '', alt: '', ratio: '4:5' },
+          { id: '', alt: '', ratio: '1:1' }
+        ] as GalleryPhoto[]
+      },
+      {
+        name: 'تفاصيل قريبة',
+        description: '[وصف قصير]',
+        photos: [
+          { id: '', alt: '', ratio: '4:5' },
+          { id: '', alt: '', ratio: '1:1' },
+          { id: '', alt: '', ratio: '1:1' },
+          { id: '', alt: '', ratio: '4:5' }
+        ] as GalleryPhoto[]
+      },
+      {
+        name: 'أزواج ومجموعات',
+        description: '[وصف قصير]',
+        photos: [
+          { id: '', alt: '', ratio: '1:1' },
+          { id: '', alt: '', ratio: '4:5' },
+          { id: '', alt: '', ratio: '4:5' },
+          { id: '', alt: '', ratio: '1:1' }
+        ] as GalleryPhoto[]
+      }
+    ]
+  },
+
+  // One product from every angle a store listing needs, all 1:1.
+  angles: {
+    heading: 'كل الزوايا',
     items: [
-      // { id: 'visuals/photos/perfume-01', alt: 'زجاجة عطر على رخام أبيض' },
-    ] as Photo[]
+      { label: 'جانب', id: '', alt: '' },
+      { label: 'داخل', id: '', alt: '' },
+      { label: 'أمام', id: '', alt: '' },
+      { label: 'خلف', id: '', alt: '' },
+      { label: 'أعلى', id: '', alt: '' },
+      { label: 'نعل', id: '', alt: '' },
+      { label: '٣/٤', id: '', alt: '' },
+      { label: 'تفصيل', id: '', alt: '' }
+    ]
   },
 
-  videos: {
-    heading: 'الفيديو',
+  // The same shot straight from the camera and after retouching, both 4:5.
+  beforeAfter: {
+    heading: 'قبل / بعد',
+    tag: 'RAW / FINAL',
+    before: { label: 'قبل', note: '[ملاحظة]', id: '', alt: '' },
+    after: { label: 'بعد', note: '[ملاحظة]', id: '', alt: '' }
+  },
+
+  // logo: a one-colour logo's public ID; empty: the name shows instead.
+  brands: {
+    heading: 'عملت مع',
     items: [
-      // { id: 'visuals/videos/perfume-reel', title: 'إعلان قصير لعطر' },
-    ] as Video[]
+      { name: '[شعار ١]', logo: '' },
+      { name: '[شعار ٢]', logo: '' },
+      { name: '[شعار ٣]', logo: '' }
+    ]
   },
 
-  // Empty ones are left off.
+  process: {
+    heading: 'طريقة العمل',
+    steps: ['الطلب', 'التصوير', 'التعديل', 'التسليم']
+  },
+
+  // Cinematography: the showreel (a Cloudinary video), and one frame as shot in LOG beside the same frame graded.
+  film: {
+    heading: 'سينماتوغرافي',
+    reel: { id: '', poster: '', title: '[عرض الأعمال]' }, // poster: a photo's public ID; empty: the reel's first frame
+    log: { label: 'LOG', id: '', alt: '' } as Photo & { label: string },
+    graded: { label: 'بعد التلوين', id: '', alt: '' } as Photo & { label: string },
+    caption: 'DaVinci Resolve — LOG → Rec.709'
+  },
+
+  // Empty WhatsApp or Instagram: that line is left off.
   contact: {
-    heading: 'تواصل',
+    kicker: '[سطر صغير]',
+    heading: 'لنعمل معًا',
     email: 'salmansaif@live.com',
     whatsapp: '', // international format, digits only, e.g. '9665XXXXXXXX'
+    whatsappLabel: 'واتساب',
     instagram: '', // the handle without @
-    labels: { email: 'البريد الإلكتروني', whatsapp: 'واتساب', instagram: 'إنستغرام' }
+    instagramLabel: 'إنستغرام'
   }
 };
