@@ -1,6 +1,7 @@
 ---
 // The photos, grouped by style (content.ts, work). Each group: a label/value row, then its photos in columns split by
 // hairlines: two on phones (the first half of the group in one column, the rest in the other), four on wide screens.
+// As a group scrolls in, its labels rise, its column lines grow down and its photos are uncovered one after another.
 import Photo from '../components/Photo.astro';
 import SectionHead from '../components/SectionHead.astro';
 import { visuals } from '../content';
@@ -16,15 +17,15 @@ const halves = (photos: typeof groups[number]['photos']) => {
   {groups.map((group) => (
     <div>
       <div class="meta">
-        <span class="label">{groupLabel}</span>
-        <h3>{group.name}</h3>
-        <p>{group.description}</p>
+        <span class="label" data-reveal="rise">{groupLabel}</span>
+        <h3 data-reveal="rise" style="--i: 1">{group.name}</h3>
+        <p data-reveal="rise" style="--i: 2">{group.description}</p>
       </div>
-      <div class="photos">
-        {halves(group.photos).map((column) => (
+      <div class="photos" data-lines>
+        {halves(group.photos).map((column, c) => (
           <div class="column">
-            {column.map((photo) => (
-              <div class="cell"><Photo photo={photo} ratio={photo.ratio} sizes="(min-width: 720px) 25vw, 50vw" /></div>
+            {column.map((photo, r) => (
+              <div class="cell"><Photo photo={photo} ratio={photo.ratio} sizes="(min-width: 720px) 25vw, 50vw" reveal={c * column.length + r + 1} /></div>
             ))}
           </div>
         ))}

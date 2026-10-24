@@ -8,11 +8,11 @@ const { heading, items } = visuals.brands;
 <section aria-labelledby="brands-heading">
   <SectionHead id="brands-heading" heading={heading} count={String(items.length).padStart(2, '0')} />
   <ul>
-    {items.map((brand) => (
+    {items.map((brand, i) => (
       <li>
         {brand.logo
-          ? <img src={cloudinaryUrl(brand.logo, 320)} alt={brand.name} loading="lazy" decoding="async" />
-          : <span>{brand.name}</span>}
+          ? <img src={cloudinaryUrl(brand.logo, 320)} alt={brand.name} loading="lazy" decoding="async" data-reveal="rise" style={`--i: ${i}`} />
+          : <span data-reveal="rise" style={`--i: ${i}`}>{brand.name}</span>}
       </li>
     ))}
   </ul>

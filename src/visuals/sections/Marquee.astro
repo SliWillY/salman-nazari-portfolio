@@ -1,0 +1,42 @@
+---
+// A slow band of what Salman shoots, running between the opening and the work: the one thing always moving
+// (content.ts, marquee). Two copies sit side by side and the strip slides one copy's width before starting over, so
+// it never ends; it moves toward the right, the way Arabic reads. Decorative (the words repeat the page), so screen
+// readers skip it; hovering pauses it, and with reduced motion it stands still.
+import { visuals } from '../content';
+---
+<div class="marquee" aria-hidden="true">
+  <div class="track">
+    {[0, 1].map(() => (
+      <div class="copy">
+        {visuals.marquee.map((item) => <Fragment><span>{item}</span><span class="mark"></span></Fragment>)}
+      </div>
+    ))}
+  </div>
+</div>
+
+<style>
+  .marquee { overflow: hidden; border-bottom: 1px solid var(--line); }
+  .track { display: flex; width: max-content; }
+  .copy {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    padding-inline-end: 0.5em;
+    font-size: 40px;
+    line-height: 64px;
+    font-weight: 300;
+    white-space: nowrap;
+  }
+  .mark { width: 0.2em; height: 0.2em; background: var(--ink); }
+
+  @media (min-width: 720px) {
+    .copy { font-size: 72px; line-height: 112px; }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .track { animation: run 45s linear infinite; }
+    .marquee:hover .track { animation-play-state: paused; }
+  }
+  @keyframes run { to { transform: translateX(50%); } }
+</style>
