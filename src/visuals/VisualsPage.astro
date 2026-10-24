@@ -1,0 +1,55 @@
+---
+// The visuals page: its own document, not a BaseLayout page, so none of the portfolio's header, footer, theme or
+// styles come with it. Arabic only. The sections run in the order below; their words and media are in content.ts.
+import { cloudinaryUrl } from '../lib/cloudinary';
+import { visuals } from './content';
+import './visuals.css';
+import Hero from './sections/Hero.astro';
+import Photos from './sections/Photos.astro';
+import Videos from './sections/Videos.astro';
+import Contact from './sections/Contact.astro';
+
+// The portfolio's GA4 property: visits show up there under /visuals/. To count them on their own, put another ID here.
+const analyticsId = 'G-B5MPLJRW2E';
+const url = new URL(Astro.url.pathname, Astro.site).href;
+const shareImage = visuals.shareImage && cloudinaryUrl(visuals.shareImage, 1200, 'auto', 'jpg');
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{visuals.title}</title>
+    <meta name="description" content={visuals.description} />
+    <link rel="canonical" href={url} />
+    <!-- The portfolio's icon until visuals has its own. -->
+    <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ar_AR" />
+    <meta property="og:title" content={visuals.title} />
+    <meta property="og:description" content={visuals.description} />
+    <meta property="og:url" content={url} />
+    {shareImage && <meta property="og:image" content={shareImage} />}
+    <meta name="twitter:card" content={shareImage ? 'summary_large_image' : 'summary'} />
+    {import.meta.env.PROD && (
+      <Fragment>
+        <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${analyticsId}`}></script>
+        <script is:inline define:vars={{ analyticsId }}>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', analyticsId);
+        </script>
+      </Fragment>
+    )}
+  </head>
+  <body>
+    <main>
+      <Hero />
+      <Photos />
+      <Videos />
+      <Contact />
+    </main>
+  </body>
+</html>

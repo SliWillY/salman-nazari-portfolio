@@ -39,6 +39,11 @@ export function cloudinaryVideoUrl(publicId: string) {
   return `${base}/video/upload/q_auto,f_auto/${normalizePublicId(publicId)}.mp4`;
 }
 
+// A video's first frame as a still, for <video poster>.
+export function cloudinaryVideoPoster(publicId: string, width = 960) {
+  return `${base}/video/upload/so_0,f_auto,q_auto,c_limit,w_${width}/${normalizePublicId(publicId)}.jpg`;
+}
+
 // Shown while media has not been uploaded yet; in dev it names the missing public ID.
 // Three paper confetti dots above the text, in the site's style. Colours mirror the --placeholder / --text-muted
 // tokens and the --toy-* candy colours; an <img> can't read CSS variables,

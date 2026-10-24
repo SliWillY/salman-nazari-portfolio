@@ -1,0 +1,37 @@
+/* The visuals page's shared styles: tokens and base rules. Each section styles itself in its own <style>.
+   Mobile first: the plain rules are the phone layout, min-width queries add to them for wider screens.
+   The look is not decided yet (see CLAUDE.md here): this is a plain, neutral base to build it on. */
+:root {
+  --bg: #ffffff;
+  --text: #111111;
+  --muted: #666666;
+  --font: system-ui, -apple-system, 'Segoe UI', Tahoma, sans-serif;
+  --gutter: 16px; /* side margin on phones */
+  --gap: 8px; /* between photos and videos */
+  --section-space: 48px;
+  --max-width: 1200px;
+  color-scheme: light;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  line-height: 1.6;
+  -webkit-text-size-adjust: 100%;
+}
+
+img, video { display: block; max-width: 100%; height: auto; }
+
+h1, h2 { margin: 0 0 16px; line-height: 1.2; }
+p { margin: 0; }
+
+/* Every section is one band of the page. */
+.section {
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding: var(--section-space) var(--gutter);
+}

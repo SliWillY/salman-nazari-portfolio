@@ -1,0 +1,32 @@
+---
+// How to get in touch (content.ts, contact): email, WhatsApp, Instagram, whichever are filled in.
+// Addresses, numbers and handles are set left to right so they read correctly inside the Arabic text.
+import { visuals } from '../content';
+const { heading, email, whatsapp, instagram, labels } = visuals.contact;
+const links = [
+  { label: labels.email, value: email, href: `mailto:${email}`, text: email },
+  { label: labels.whatsapp, value: whatsapp, href: `https://wa.me/${whatsapp}`, text: `+${whatsapp}` },
+  { label: labels.instagram, value: instagram, href: `https://www.instagram.com/${instagram}/`, text: `@${instagram}` }
+].filter((link) => link.value);
+---
+{links.length > 0 && (
+  <section class="section" aria-labelledby="contact-heading">
+    <h2 id="contact-heading">{heading}</h2>
+    <ul>
+      {links.map((link) => (
+        <li>
+          <a href={link.href}>
+            <span class="label">{link.label}</span>
+            <span dir="ltr">{link.text}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
+
+<style>
+  ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; }
+  a { color: inherit; }
+  .label { display: block; color: var(--muted); }
+</style>
