@@ -1,2 +1,5 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# The Impeccable launcher runs in Linux cloud sessions: keep it LF; with CRLF, Linux cannot run it.
+.claude/skills/impeccable/scripts/impeccable text eol=lf
