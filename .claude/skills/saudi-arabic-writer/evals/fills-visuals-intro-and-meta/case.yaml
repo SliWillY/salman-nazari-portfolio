@@ -1,0 +1,6 @@
+schema_version: "1.1"
+name: fills-visuals-intro-and-meta
+expected_outcome: |
+  Paste-ready Arabic for hero.intro (two short lines), description (about 120-155 characters, a search
+  description) and contact.note (reply time), in clear modern standard Arabic, first person singular, Western
+  digits, fitting the page's slots, using the given reply time and inventing no other facts.
