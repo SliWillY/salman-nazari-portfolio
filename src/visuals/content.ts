@@ -33,7 +33,7 @@ export const visuals = {
     name: ['سلمان', 'نظري'],
     offer: 'تصوير منتجات للمتاجر الإلكترونية',
     intro: 'أغلب ما أصوره أحذية، ومن كل زاوية.\nعلى خلفية بيضاء أو ملونة، هنا في جدة.',
-    cta: 'اطلب تصويرا'
+    cta: 'اطلب تصويرا على واتساب' // opens a WhatsApp chat (whatsapp.ts), here and mid-page
   },
 
   // The band that runs between the opening and the work, separated by small squares.
@@ -107,8 +107,8 @@ export const visuals = {
   // The same shot straight from the camera and after retouching, both 4:5.
   beforeAfter: {
     heading: 'قبل / بعد',
-    before: { label: 'من الكاميرا', note: 'بدون أي تعديل', id: '', alt: '' },
-    after: { label: 'بعد التعديل', note: 'جاهزة للمتجر', id: '', alt: '' }
+    before: { label: 'من الكاميرا', note: 'صورة خام بدون تعديل', id: '', alt: '' },
+    after: { label: 'بعد التعديل', note: 'ألوان مطابقة وبدون عيوب', id: '', alt: '' }
   },
 
   // A short ask between the angles and the retouching, for whoever has seen enough; its button reads like the opening's.
@@ -126,14 +126,14 @@ export const visuals = {
     ]
   },
 
-  // How a shoot runs, each step with one line of what happens in it.
+  // How each photo is made, from the camera to the store, each step with one line of what happens in it.
   process: {
     heading: 'طريقة العمل',
     steps: [
-      { name: 'الطلب', note: 'ترسل لي نوع المنتجات وعددها، ونتفق على الموعد.' },
-      { name: 'التصوير', note: 'أصور في جدة، على الخلفية التي تختارها.' },
-      { name: 'التعديل', note: 'أعدل كل صورة قبل التسليم.' },
-      { name: 'التسليم', note: 'تصلك الصور جاهزة للرفع خلال [مدة التسليم].' }
+      { name: 'التصوير', note: 'أصور بصيغة RAW مع بطاقة معايرة الألوان.' },
+      { name: 'الألوان', note: 'أطابق الألوان في Lightroom على بطاقة المعايرة.' },
+      { name: 'التنظيف', note: 'أزيل العيوب الصغيرة من المنتج.' },
+      { name: 'التسليم', note: 'أضيف بيانات الصورة لمحركات البحث، وتصلك خلال يومي عمل.' }
     ]
   },
 
@@ -141,11 +141,11 @@ export const visuals = {
   deliverables: {
     heading: 'ما تستلمه',
     items: [
-      { label: 'الزوايا', value: '[عدد الزوايا لكل منتج]' },
+      { label: 'الزوايا', value: 'حسب ما يحتاجه منتجك' },
       { label: 'المقاسات', value: '1:1 و4:5' },
-      { label: 'الخلفية والصيغة', value: 'بيضاء أو ملونة، بصيغة [JPG أو PNG]' },
-      { label: 'مدة التسليم', value: '[عدد أيام العمل]' },
-      { label: 'السعر', value: '[للمنتج الواحد أو للمجموعة]' }
+      { label: 'الخلفية', value: 'بيضاء أو ملونة' },
+      { label: 'مدة التسليم', value: 'يومي عمل' },
+      { label: 'السعر', value: 'نتفق عليه حسب المنتجات وعددها' }
     ]
   },
 
@@ -158,8 +158,9 @@ export const visuals = {
     caption: 'التلوين على DaVinci Resolve، من LOG إلى Rec.709'
   },
 
-  // Empty WhatsApp or Instagram: that line is left off. A new email or WhatsApp message opens already filled in with
-  // the subject and the questions below, so the first message carries what a quote needs.
+  // WhatsApp is the main way in: the calls to action open a chat with whatsappText already typed, and the contact
+  // section leads with it, the number in large type; the email comes second. Empty WhatsApp or Instagram: that line
+  // is left off (and the calls to action fall back to the contact section).
   contact: {
     heading: 'لنعمل معا',
     email: 'salmansaif@live.com',
@@ -167,11 +168,11 @@ export const visuals = {
     emailBody: 'اسم المتجر:\nنوع المنتجات وعددها:\nالموعد المطلوب:\n',
     copyLabel: 'نسخ العنوان',
     copiedLabel: 'تم النسخ',
-    whatsapp: '', // international format, e.g. '9665XXXXXXXX' (spaces and + are dropped)
+    whatsapp: '966532411688', // international format; spaces and + are dropped
     whatsappLabel: 'واتساب',
     whatsappText: 'السلام عليكم، أبغى تصوير لمنتجات متجري.',
     instagram: '', // the handle without @
     instagramLabel: 'إنستغرام',
-    note: '[متى ترد عادة على الرسائل]'
+    note: 'متاح في أي وقت، وأرد بأسرع وقت.'
   }
 };

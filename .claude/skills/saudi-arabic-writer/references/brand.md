@@ -10,7 +10,10 @@ Read this when writing for Salman's own business or for salmannazari.com/visuals
 - **Retouching:** the same shot straight from the camera and after retouching (من الكاميرا / بعد التعديل).
 - **Cinematography:** a showreel, and colour grading in DaVinci Resolve (from LOG to Rec.709).
 - **Who buys:** Saudi e-commerce stores and brands. Write for their owners and marketing leads.
-- **Contact:** email salmansaif@live.com. The WhatsApp and Instagram fields on the site are still empty.
+- **Contact:** WhatsApp is the main way in: 053 241 1688 (+966532411688). Email salmansaif@live.com comes second. He is available any time and replies as soon as he can.
+- **How a photo is made:** shot in RAW with a colour checker; colours matched in Lightroom against the checker for accurate colour; small imperfections removed; image metadata added so the photos are web-ready for search. Delivery in 2 working days.
+- **Price:** never published. It is agreed per request, depending on the products and how many there are.
+- **Angles:** as many as each client's product needs; no fixed number.
 
 ## Voice
 
@@ -22,12 +25,9 @@ Read this when writing for Salman's own business or for salmannazari.com/visuals
 
 ## Not known (never invent)
 
-- prices or how pricing works (per product, per package, per angle);
-- turnaround in days;
-- usual reply time;
 - how products reach him (shipped from other cities, or dropped off in Jeddah);
-- angles, sizes and formats included as standard;
-- brands he has worked with;
+- file formats delivered;
+- brands he has worked with (he will add the logos himself);
 - years of experience and number of clients.
 
 Ask Salman for these. If he isn't asked or doesn't know yet, keep a bracketed placeholder that names the fact.
@@ -58,4 +58,4 @@ While `indexed` is `false`, the page is hidden from search. Once it is `true`, t
 | `contact.note` | The reply-time line under the contact links | One line |
 | `contact.emailSubject`, `emailBody`, `whatsappText` | Pre-filled message text | Short |
 
-The call-to-action wording on the page is «اطلب تصويرا» in both places. Keep it the same wherever it appears. The page's text carries no vowel marks; keep it that way.
+The call-to-action wording on the page is «اطلب تصويرا على واتساب» in both places, and both open a WhatsApp chat. Keep it the same wherever it appears. The page's text carries no vowel marks; keep it that way.

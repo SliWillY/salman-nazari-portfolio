@@ -45,6 +45,7 @@ Chosen from three samples; it draws on obys agency's grids and gallery sites and
 | `content.ts` | Every word, photo, video and contact detail. Content changes go here. |
 | `VisualsPage.astro` | The whole document: `<head>` (title, description, canonical, link previews, font, analytics) and the sections in order. |
 | `sections/` | One component per section, each with its own scoped `<style>`, in page order: `Header`, `Hero`, `Marquee`, `Work`, `Angles`, `Ask` (a mid-page call to action), `BeforeAfter`, `Brands`, `Film`, `Process`, `Deliverables` (what a brand receives), `Contact`, `Footer`. The process and deliverables sit right before the contact, so the questions that decide a brand are answered before the ask. |
+| `whatsapp.ts` | The WhatsApp chat link (greeting already typed) and the number as shown. WhatsApp is the main way in: both calls to action open it, and the contact section leads with it. |
 | `components/Photo.astro` | One photo at a fixed ratio from Cloudinary; a grey stand-in of the same shape while its `id` is empty. |
 | `components/SectionHead.astro` | A section's heading row. |
 | `visuals.css` | Tokens (colours, font, gutter, easing), base rules, the `.dark` band, and the motion rules. |
