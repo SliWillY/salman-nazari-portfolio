@@ -1,85 +1,88 @@
 ---
-// The opening (content.ts, hero): a short intro among column lines, the name set huge beside a black square, the main
-// photo (4:5 on phones, 16:9 on wide screens) and the first call to action. Phones break the name over two lines;
-// wide screens keep it on one. On load it plays in order (--i): the column lines draw down, the intro rises, the
-// square grows, the name rises word by word, the photo is uncovered, the call to action rises.
+// The opening (content.ts, hero): the work leads. Phones stack a square photo, the name on one line, what Salman
+// shoots, a short intro and the call to action as a black bar. Wide screens split the screen: the photo (4:5, trimmed
+// to fit the screen's height) takes the first half; the other half sets the name over two lines with the offer under
+// it at the top, and the intro and call to action at the bottom, level with the photo's foot. The name and the offer
+// are together the page's heading. On load it plays in order (--i): the photo is uncovered, the hairline between the
+// halves draws down, the square grows, the name rises word by word, then the offer, the intro and the call to action.
 import Photo from '../components/Photo.astro';
 import { visuals } from '../content';
-const { intro, kicker, name, image, line, cta } = visuals.hero;
+const { image, name, offer, intro, cta } = visuals.hero;
 ---
 <section>
-  <div class="intro">
-    {[8, 22, 23.4, 50].map((left, i) => <span class="column" style={`left: ${left}%; --i: ${i}`} data-reveal="grow" aria-hidden="true"></span>)}
-    <p data-reveal="rise" style="--i: 4">{intro}</p>
-  </div>
-  <p class="kicker" data-reveal="rise" style="--i: 5">{kicker}</p>
-  <h1 class="name">
-    <span class="mark" data-reveal="pop" style="--i: 5" aria-hidden="true"></span><span data-reveal="rise" style="--i: 6; --rise: 0.35em">{name[0]}</span> <span class="last" data-reveal="rise" style="--i: 7; --rise: 0.35em">{name[1]}</span>
-  </h1>
-  <div class="image"><Photo photo={image} ratio="4:5" label="4:5 / 16:9" sizes="100vw" eager reveal={8} /></div>
-  <div class="cta" data-reveal="rise" style="--i: 10">
-    <p>{line}</p>
-    <a href="#contact"><span>{cta}</span><svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M17 10H3M9 4l-6 6 6 6" /></svg></a>
+  <div class="image"><Photo photo={image} ratio="1:1" label="1:1 / 4:5" sizes="(min-width: 720px) 50vw, 100vw" eager reveal={0} /></div>
+  <div class="text">
+    <span class="divider" data-reveal="grow" style="--i: 1" aria-hidden="true"></span>
+    <h1>
+      <span class="name"><span class="mark" data-reveal="pop" style="--i: 2" aria-hidden="true"></span><span data-reveal="rise" style="--i: 3; --rise: 0.35em">{name[0]}</span> <span class="last" data-reveal="rise" style="--i: 4; --rise: 0.35em">{name[1]}</span></span>
+      <span class="offer" data-reveal="rise" style="--i: 5">{offer}</span>
+    </h1>
+    <div class="act">
+      <p data-reveal="rise" style="--i: 6">{intro}</p>
+      <a href="#contact" data-reveal="rise" style="--i: 7"><span>{cta}</span><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M17 10H3M9 4l-6 6 6 6" /></svg></a>
+    </div>
   </div>
 </section>
 
 <style>
-  /* The column lines: one, a pair, and the centre, each the full height of the block. */
-  .intro {
-    position: relative;
-    display: flex;
-    align-items: flex-end;
-    height: 200px;
-    padding: 16px var(--gutter);
-    border-bottom: 1px solid var(--line);
-  }
-  .column { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--line); }
-  .intro p { position: relative; max-width: 46%; font-size: 13px; line-height: 18px; white-space: pre-line; }
+  section { border-bottom: 1px solid var(--line); }
+  .image { border-bottom: 1px solid var(--line); }
+  .text { position: relative; display: flex; flex-direction: column; }
+  .divider { display: none; }
 
-  .kicker { padding: 8px var(--gutter); font-size: 11px; line-height: 16px; }
-
+  h1 { display: flex; flex-direction: column; padding: 16px var(--gutter) 0; font-weight: 400; }
   .name {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: wrap; /* one line on phones while the name fits; a longer one wraps rather than pushing the page sideways */
     align-items: center;
     column-gap: 0.16em;
-    padding: 0 var(--gutter) 0.32em; /* room for the tail of ي */
-    font-size: clamp(5rem, 23vw, 11rem);
+    padding-bottom: 0.3em; /* room for the tail of ي */
+    font-size: clamp(3rem, 15vw, 7rem);
     line-height: 1.15;
-    font-weight: 400;
   }
-  .mark { width: 0.8em; height: 0.8em; background: var(--ink); }
-  .last { flex-basis: 100%; text-align: end; }
+  .mark { flex: none; width: 0.8em; height: 0.8em; background: var(--ink); }
+  .offer { font-size: 24px; line-height: 32px; font-weight: 300; }
 
-  .image { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .act { display: flex; flex-direction: column; gap: 20px; padding-top: 16px; }
+  .act p { padding: 0 var(--gutter); font-size: 13px; line-height: 20px; white-space: pre-line; }
 
-  .cta {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    border-bottom: 1px solid var(--line);
-    font-size: 13px;
-    line-height: 18px;
+  /* The call to action is a cell of its own: black, the full width of its column. */
+  a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 52px;
+    padding: 0 var(--gutter);
+    background: var(--ink);
+    color: var(--ground);
+    font-size: 15px;
+    line-height: 22px;
+    font-weight: 500;
+    text-decoration: none;
   }
-  .cta p { padding: 13px var(--gutter); border-inline-end: 1px solid var(--line); }
-  .cta a { display: flex; align-items: center; justify-content: space-between; min-height: 44px; padding: 0 var(--gutter); text-decoration: none; }
-  .cta a:hover { background: var(--ink); color: var(--ground); }
+  /* The cell runs to the screen's edge, so its focus ring sits inside it, in the ground colour. */
+  a:focus-visible { outline-color: var(--ground); outline-offset: -6px; }
   @media (prefers-reduced-motion: no-preference) {
-    .cta svg { transition: transform 0.5s var(--ease); }
-    .cta a:hover svg { transform: translateX(-6px); }
+    svg { transition: transform 0.5s var(--ease); }
+    a:is(:hover, :focus-visible) svg { transform: translateX(-6px); }
   }
 
   @media (min-width: 720px) {
-    .intro { height: 280px; }
-    .intro p { max-width: 40%; font-size: 15px; line-height: 22px; }
-    .kicker { font-size: 12px; }
-    .name { font-size: 18vw; }
-    .image :global(.photo) { aspect-ratio: 16 / 9; }
-    .cta { font-size: 15px; line-height: 22px; }
-    .cta a { min-height: 56px; }
-  }
+    section { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .image { display: grid; border-bottom: 0; }
+    /* Never taller than the screen under the header, so the call to action at the foot of the other half shows. */
+    .image :global(.photo) { aspect-ratio: 4 / 5; max-height: calc(100vh - 44px); max-height: calc(100svh - 44px); min-height: 100%; }
+    .text { justify-content: space-between; }
+    .divider { display: block; position: absolute; inset-inline-start: 0; top: 0; bottom: 0; width: 1px; background: var(--line); }
 
-  @media (min-width: 1200px) {
-    .name { font-size: clamp(9rem, 13vw, 14rem); }
-    .last { flex-basis: auto; }
+    h1 { gap: 8px; padding-top: 20px; }
+    /* Sized by the screen's height too, so short screens (laptops, phones on their side) keep the offer in view. */
+    .name { font-size: clamp(3.5rem, min(11vw, 18vh), 12rem); font-size: clamp(3.5rem, min(11vw, 18svh), 12rem); padding-bottom: 0.2em; }
+    .last { flex-basis: 100%; text-align: end; }
+    .offer { font-size: clamp(24px, 2.6vw, 40px); line-height: 1.3; }
+
+    .act { gap: 24px; padding-top: 32px; }
+    .act p { max-width: 32em; font-size: 15px; line-height: 22px; }
+    a { min-height: 64px; font-size: 16px; line-height: 24px; }
   }
 </style>

@@ -1,6 +1,7 @@
 ---
 // One photo at a fixed ratio, cropped to fill it. Without a public ID yet, a grey box of the same shape stands in,
-// marked with its ratio. A parent can change the ratio at a breakpoint with `.wrapper :global(.photo)`.
+// marked with its ratio in the bottom corner at the end of the line (left). The mark's own text reads left to right
+// inside a <bdi>, so its box keeps the page's direction and the corner stays on the left. A parent can change the ratio at a breakpoint with `.wrapper :global(.photo)`.
 // reveal: the photo's place in a staggered wipe as it scrolls into view (visuals.css, Motion); left out, no wipe.
 import { cloudinarySrcSet, cloudinaryUrl } from '../../lib/cloudinary';
 import type { Photo } from '../content';
@@ -15,6 +16,8 @@ interface Props {
 }
 
 const { photo, ratio, sizes, eager = false, label = ratio, reveal } = Astro.props;
+// A photo without words would reach screen readers and image search as nothing at all.
+if (photo.id && !photo.alt.trim()) throw new Error(`visuals: the photo ${photo.id} needs its alt text in content.ts`);
 const style = `--ratio: ${ratio.replace(':', ' / ')}${reveal === undefined ? '' : `; --i: ${reveal}`}`;
 ---
 <div
@@ -34,7 +37,7 @@ const style = `--ratio: ${ratio.replace(':', ' / ')}${reveal === undefined ? '' 
       decoding="async"
     />
   ) : (
-    <span dir="ltr">{label}</span>
+    <span><bdi dir="ltr">{label}</bdi></span>
   )}
 </div>
 

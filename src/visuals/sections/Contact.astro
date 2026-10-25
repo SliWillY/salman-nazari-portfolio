@@ -1,25 +1,57 @@
 ---
-// The close (content.ts, contact): a short line, the invitation set large, then the email in large type and
-// WhatsApp and Instagram when they are filled in. Addresses and handles read left to right inside the Arabic text.
-// It rises line by line as it scrolls in; a hovered link redraws its underline.
+// The close (content.ts, contact): the invitation set large, then the email in large type with a button to copy it
+// (for phones without a mail app; it only shows where the browser can copy), WhatsApp and Instagram when they are
+// filled in, and a line on when Salman replies. A new email or WhatsApp message opens already filled in. Addresses
+// and handles read left to right inside the Arabic text. It rises line by line as it scrolls in; a hovered link
+// redraws its underline.
 import { visuals } from '../content';
-const { kicker, heading, email, whatsapp, whatsappLabel, instagram, instagramLabel } = visuals.contact;
+const { heading, email, emailSubject, emailBody, copyLabel, copiedLabel, whatsapp, whatsappLabel, whatsappText, instagram, instagramLabel, note } = visuals.contact;
+const mailto = `mailto:${email}?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+const whatsappNumber = whatsapp.replace(/\D/g, '');
 ---
 <section id="contact" aria-labelledby="contact-heading">
-  <p class="kicker" data-reveal="rise">{kicker}</p>
-  <h2 id="contact-heading" data-reveal="rise" style="--i: 1; --rise: 0.3em">{heading}</h2>
-  <ul data-reveal="rise" style="--i: 3">
-    <li><a href={`mailto:${email}`} dir="ltr">{email}</a></li>
-    {whatsapp && <li><a href={`https://wa.me/${whatsapp}`}>{whatsappLabel} ←</a></li>}
+  <h2 id="contact-heading" data-reveal="rise" style="--rise: 0.3em">{heading}</h2>
+  <ul data-reveal="rise" style="--i: 2">
+    <li class="email">
+      <a href={mailto} dir="ltr">{email}</a>
+      <button type="button" data-copy={email} data-done={copiedLabel} hidden>{copyLabel}</button>
+    </li>
+    {whatsappNumber && <li><a href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappText)}`}>{whatsappLabel} ←</a></li>}
     {instagram && <li><a href={`https://www.instagram.com/${instagram}/`}>{instagramLabel} ←</a></li>}
   </ul>
+  <p class="note" data-reveal="rise" style="--i: 3">{note}</p>
+  <span class="status" role="status"></span>
 </section>
+
+<script>
+  // Copy the address, where the browser allows it; the button names what happened for two seconds, and the status
+  // line tells screen readers.
+  const status = document.querySelector<HTMLElement>('#contact .status');
+  document.querySelectorAll<HTMLButtonElement>('#contact [data-copy]').forEach((button) => {
+    if (!navigator.clipboard) return;
+    button.hidden = false;
+    const label = button.textContent;
+    button.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(button.dataset.copy ?? '');
+      } catch {
+        return;
+      }
+      button.textContent = button.dataset.done ?? label;
+      if (status) status.textContent = button.dataset.done ?? '';
+      setTimeout(() => {
+        button.textContent = label;
+        if (status) status.textContent = '';
+      }, 2000);
+    });
+  });
+</script>
 
 <style>
   section { padding: 48px var(--gutter); border-bottom: 1px solid var(--line); }
-  .kicker { font-size: 13px; line-height: 18px; color: var(--muted); }
-  h2 { margin-top: 12px; font-size: 56px; line-height: 64px; font-weight: 300; }
+  h2 { font-size: 56px; line-height: 64px; font-weight: 300; }
   ul { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; margin: 16px 0 0; padding: 0; list-style: none; }
+  .email { display: flex; flex-wrap: wrap; align-items: center; column-gap: 16px; }
   /* The underline is a 1px background, so a hover can draw it again from the start of the line. */
   a {
     display: inline-block;
@@ -30,15 +62,37 @@ const { kicker, heading, email, whatsapp, whatsappLabel, instagram, instagramLab
     background: linear-gradient(currentColor, currentColor) right bottom 6px / 100% 1px no-repeat;
   }
   @media (prefers-reduced-motion: no-preference) {
-    a:hover { animation: redraw 0.8s var(--ease); }
+    a:is(:hover, :focus-visible) { animation: redraw 0.8s var(--ease); }
   }
   @keyframes redraw { from { background-size: 0 1px; } }
 
+  button {
+    min-height: 32px;
+    padding: 0 10px;
+    border: 1px solid var(--line);
+    border-radius: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  button:is(:hover, :focus-visible) { background: var(--ink); color: var(--ground); }
+  @media (pointer: coarse) {
+    button { min-height: 44px; }
+  }
+
+  .note { margin-top: 16px; font-size: 13px; line-height: 20px; color: var(--muted); }
+  .status { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
   @media (min-width: 720px) {
     section { padding-block: 96px; }
-    .kicker { font-size: 15px; line-height: 22px; }
     h2 { font-size: clamp(5rem, 9vw, 9rem); line-height: 1.1; }
     ul { margin-top: 32px; }
     a { font-size: 32px; line-height: 44px; }
+    button { min-height: 36px; padding: 0 14px; font-size: 13px; }
+    .note { margin-top: 24px; font-size: 15px; line-height: 22px; }
   }
 </style>

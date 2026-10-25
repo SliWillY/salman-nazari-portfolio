@@ -1,6 +1,6 @@
 ---
 // Cinematography, the one dark band (content.ts, film): the showreel, then a frame as shot in LOG beside the same
-// frame graded. Until the reel is uploaded a 16:9 box with a play mark stands in. Only the poster loads with the
+// frame graded, half the width each. Until the reel is uploaded a 16:9 box with a play mark stands in. Only the poster loads with the
 // page; the video loads when it is played. The reel, then the LOG frame, then the graded one are uncovered in turn.
 import { cloudinaryUrl, cloudinaryVideoPoster, cloudinaryVideoUrl } from '../../lib/cloudinary';
 import Photo from '../components/Photo.astro';
@@ -9,7 +9,7 @@ import { visuals } from '../content';
 const { heading, reel, log, graded, caption } = visuals.film;
 ---
 <section class="dark" aria-labelledby="film-heading">
-  <SectionHead id="film-heading" heading={heading} count="16:9" />
+  <SectionHead id="film-heading" heading={heading} />
   <div class="reel" data-reveal="wipe">
     {reel.id ? (
       <video
@@ -19,7 +19,7 @@ const { heading, reel, log, graded, caption } = visuals.film;
         controls
         playsinline
         preload="none"
-      ></video>
+      >{reel.title}</video>
     ) : (
       <div class="standin" aria-hidden="true">
         <svg width="52" height="52" viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1h54v54H1zM23 19v18l14-9z" /></svg>
@@ -30,12 +30,12 @@ const { heading, reel, log, graded, caption } = visuals.film;
   <div class="pair" data-lines>
     {[log, graded].map((frame, i) => (
       <figure>
-        <Photo photo={frame} ratio="16:9" sizes="(min-width: 720px) 25vw, 50vw" reveal={i * 4 + 1} />
+        <Photo photo={frame} ratio="16:9" sizes="50vw" reveal={i * 4 + 1} />
         <figcaption data-reveal="rise" style={`--i: ${i * 4 + 3}`}>{frame.label}</figcaption>
       </figure>
     ))}
   </div>
-  <p class="caption" dir="ltr">{caption}</p>
+  <p class="caption">{caption}</p>
 </section>
 
 <style>
@@ -49,7 +49,7 @@ const { heading, reel, log, graded, caption } = visuals.film;
     aspect-ratio: 16 / 9;
     background: var(--placeholder);
   }
-  .standin span { position: absolute; bottom: 10px; inset-inline-start: var(--gutter); font-size: 11px; line-height: 16px; color: var(--muted); }
+  .standin span { position: absolute; bottom: 10px; inset-inline-start: var(--gutter); font-size: 12px; line-height: 18px; color: var(--muted); }
 
   .pair {
     display: grid;
@@ -58,18 +58,11 @@ const { heading, reel, log, graded, caption } = visuals.film;
     background: linear-gradient(var(--line), var(--line)) 50% 0 / 1px 100% no-repeat;
   }
   figure { margin: 0; padding: 8px; }
-  figcaption { padding-top: 6px; font-size: 11px; line-height: 16px; }
+  figcaption { padding-top: 6px; font-size: 12px; line-height: 18px; }
 
-  .caption { padding: 10px var(--gutter) 11px; font-size: 11px; line-height: 16px; color: var(--muted); text-align: right; }
+  .caption { padding: 10px var(--gutter) 11px; font-size: 12px; line-height: 18px; color: var(--muted); }
 
   @media (min-width: 720px) {
-    .pair {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      background:
-        linear-gradient(var(--line), var(--line)) 25% 0 / 1px 100% no-repeat,
-        linear-gradient(var(--line), var(--line)) 50% 0 / 1px 100% no-repeat,
-        linear-gradient(var(--line), var(--line)) 75% 0 / 1px 100% no-repeat;
-    }
     figure { padding: 12px; }
     figcaption, .caption { font-size: 13px; line-height: 20px; }
   }

@@ -1,22 +1,33 @@
 ---
 // A slow band of what Salman shoots, running between the opening and the work: the one thing always moving
 // (content.ts, marquee). Two copies sit side by side and the strip slides one copy's width before starting over, so
-// it never ends; it moves toward the right, the way Arabic reads. Decorative (the words repeat the page), so screen
-// readers skip it; hovering pauses it, and with reduced motion it stands still.
+// it never ends; it moves toward the right, the way Arabic reads. The words repeat the page, so screen readers skip
+// them. It stops while hovered or keyboard-focused, and a tap (or Enter) toggles it, through a see-through button
+// laid over the band; with reduced motion it stands still and the button isn't there.
 import { visuals } from '../content';
 ---
-<div class="marquee" aria-hidden="true">
-  <div class="track">
+<div class="marquee">
+  <div class="track" aria-hidden="true">
     {[0, 1].map(() => (
       <div class="copy">
         {visuals.marquee.map((item) => <Fragment><span>{item}</span><span class="mark"></span></Fragment>)}
       </div>
     ))}
   </div>
+  <button type="button" aria-pressed="false" aria-label={visuals.marqueePause}></button>
 </div>
 
+<script>
+  document.querySelectorAll<HTMLButtonElement>('.marquee button').forEach((button) => {
+    button.addEventListener('click', () => {
+      const paused = button.getAttribute('aria-pressed') !== 'true';
+      button.setAttribute('aria-pressed', String(paused));
+    });
+  });
+</script>
+
 <style>
-  .marquee { overflow: hidden; border-bottom: 1px solid var(--line); }
+  .marquee { position: relative; overflow: hidden; border-bottom: 1px solid var(--line); }
   .track { display: flex; width: max-content; }
   .copy {
     display: flex;
@@ -29,6 +40,7 @@ import { visuals } from '../content';
     white-space: nowrap;
   }
   .mark { width: 0.2em; height: 0.2em; background: var(--ink); }
+  button { display: none; }
 
   @media (min-width: 720px) {
     .copy { font-size: 72px; line-height: 112px; }
@@ -36,7 +48,25 @@ import { visuals } from '../content';
 
   @media (prefers-reduced-motion: no-preference) {
     .track { animation: run 45s linear infinite; }
-    .marquee:hover .track { animation-play-state: paused; }
+    /* Paused while toggled off or keyboard-focused, and while a mouse rests on it; a touch's sticky hover and focus
+       don't count, or a second tap could never set it going again. */
+    .marquee:has(button[aria-pressed='true']) .track,
+    .marquee:has(button:focus-visible) .track { animation-play-state: paused; }
+    @media (hover: hover) {
+      .marquee:hover .track { animation-play-state: paused; }
+    }
+    /* Only with scripts can the button toggle anything. */
+    :global(.js) button {
+      display: block;
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      padding: 0;
+      border: 0;
+      background: none;
+      cursor: pointer;
+    }
+    button:focus-visible { outline-offset: -4px; }
   }
   @keyframes run { to { transform: translateX(50%); } }
 </style>

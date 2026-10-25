@@ -24,11 +24,10 @@ const { id, heading, count } = Astro.props;
   }
   .head::after { content: ''; position: absolute; inset-inline: 0; bottom: 0; height: 1px; background: var(--line); }
   h2 { font-size: 32px; line-height: 40px; font-weight: 300; }
-  span { font-size: 11px; line-height: 16px; }
+  span { font-size: 12px; line-height: 16px; }
 
   @media (min-width: 720px) {
     .head { padding-top: 48px; }
     h2 { font-size: 48px; line-height: 60px; }
-    span { font-size: 12px; }
   }
 </style>

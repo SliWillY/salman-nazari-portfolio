@@ -1,18 +1,18 @@
 ---
-// The same shot as it came from the camera and after retouching, side by side (content.ts, beforeAfter). On wide
-// screens the pair takes half the width and the other half is left as empty columns. The retouched shot is uncovered
+// The same shot as it came from the camera and after retouching, side by side (content.ts, beforeAfter), half the
+// width each at every size, so the retouching can be judged at a real size. The retouched shot is uncovered
 // a beat after the raw one.
 import Photo from '../components/Photo.astro';
 import SectionHead from '../components/SectionHead.astro';
 import { visuals } from '../content';
-const { heading, tag, before, after } = visuals.beforeAfter;
+const { heading, before, after } = visuals.beforeAfter;
 ---
 <section aria-labelledby="before-after-heading">
-  <SectionHead id="before-after-heading" heading={heading} count={tag} />
+  <SectionHead id="before-after-heading" heading={heading} />
   <div class="pair" data-lines>
     {[before, after].map((shot, i) => (
       <figure>
-        <Photo photo={shot} ratio="4:5" sizes="(min-width: 720px) 25vw, 50vw" reveal={i * 4} />
+        <Photo photo={shot} ratio="4:5" sizes="50vw" reveal={i * 4} />
         <figcaption data-reveal="rise" style={`--i: ${i * 4 + 3}`}><span>{shot.label}</span><span class="note">{shot.note}</span></figcaption>
       </figure>
     ))}
@@ -27,17 +27,10 @@ const { heading, tag, before, after } = visuals.beforeAfter;
     background: linear-gradient(var(--line), var(--line)) 50% 0 / 1px 100% no-repeat;
   }
   figure { margin: 0; padding: 8px; }
-  figcaption { display: flex; justify-content: space-between; padding-top: 8px; font-size: 11px; line-height: 16px; }
+  figcaption { display: flex; justify-content: space-between; padding-top: 8px; font-size: 12px; line-height: 18px; }
   .note { color: var(--muted); }
 
   @media (min-width: 720px) {
-    .pair {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      background:
-        linear-gradient(var(--line), var(--line)) 25% 0 / 1px 100% no-repeat,
-        linear-gradient(var(--line), var(--line)) 50% 0 / 1px 100% no-repeat,
-        linear-gradient(var(--line), var(--line)) 75% 0 / 1px 100% no-repeat;
-    }
     figure { padding: 12px; }
     figcaption { font-size: 13px; line-height: 20px; }
   }

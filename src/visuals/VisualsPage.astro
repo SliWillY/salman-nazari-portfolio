@@ -9,18 +9,32 @@ import Hero from './sections/Hero.astro';
 import Marquee from './sections/Marquee.astro';
 import Work from './sections/Work.astro';
 import Angles from './sections/Angles.astro';
+import Ask from './sections/Ask.astro';
 import BeforeAfter from './sections/BeforeAfter.astro';
 import Brands from './sections/Brands.astro';
-import Process from './sections/Process.astro';
 import Film from './sections/Film.astro';
+import Process from './sections/Process.astro';
+import Deliverables from './sections/Deliverables.astro';
 import Contact from './sections/Contact.astro';
 import Footer from './sections/Footer.astro';
 
 // The portfolio's GA4 property: visits show up there under /visuals/. To count them on their own, put another ID here.
 const analyticsId = 'G-B5MPLJRW2E';
 const url = new URL(Astro.url.pathname, Astro.site).href;
-const shareImage = visuals.shareImage && cloudinaryUrl(visuals.shareImage, 1200, 'auto', 'jpg');
-const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const shareId = visuals.shareImage || visuals.hero.image.id;
+const shareImage = shareId && cloudinaryUrl(shareId, 1200, 'auto', 'jpg');
+
+// Once the page is marked indexed, a [bracketed] placeholder left in content.ts stops the build instead of reaching
+// search results.
+const placeholders = (function collect(value: unknown): string[] {
+  if (typeof value === 'string') return value.match(/\[[^\]]+\]/g) ?? [];
+  if (value && typeof value === 'object') return Object.values(value).flatMap(collect);
+  return [];
+})(visuals);
+if (visuals.indexed && placeholders.length) {
+  throw new Error(`visuals: content.ts has indexed: true but still holds placeholders: ${placeholders.join(', ')}`);
+}
+const favicon = `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><style>rect{fill:#000}@media (prefers-color-scheme:dark){rect{fill:#F2F2F2}}</style><rect x="2" y="2" width="12" height="12"/></svg>')}`;
 ---
 <!doctype html>
 <html lang="ar" dir="rtl">
@@ -31,15 +45,16 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     <script is:inline>document.documentElement.classList.add('js');</script>
     <title>{visuals.title}</title>
     <meta name="description" content={visuals.description} />
+    {!visuals.indexed && <meta name="robots" content="noindex" />}
     <link rel="canonical" href={url} />
     <meta name="theme-color" content="#F2F2F2" />
-    <!-- The portfolio's icon until visuals has its own. -->
-    <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
+    <!-- The page's own mark, the black square (light on dark browser chrome), so nothing of the portfolio's look comes in. -->
+    <link rel="icon" type="image/svg+xml" href={favicon} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500&display=swap" />
     <meta property="og:type" content="website" />
-    <meta property="og:locale" content="ar_AR" />
+    <meta property="og:locale" content="ar_SA" />
     <meta property="og:title" content={visuals.title} />
     <meta property="og:description" content={visuals.description} />
     <meta property="og:url" content={url} />
@@ -65,17 +80,21 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
         <Marquee />
         <Work />
         <Angles />
+        <Ask />
         <BeforeAfter />
         <Brands />
-        <Process />
         <Film />
+        <Process />
+        <Deliverables />
         <Contact />
       </main>
       <Footer />
     </div>
     <script>
       // Reveals (visuals.css, Motion): mark each element the first time it comes into view; CSS does the moving.
-      // The bottom tenth of the screen doesn't count yet, so things start just after they appear.
+      // The bottom tenth of the screen doesn't count yet, so things start just after they appear. Whatever is already
+      // on screen when the page opens (or above it, after a reload part way down) plays at once, foot of the screen
+      // included: the opening's call to action sits there on wide screens.
       const observer = new IntersectionObserver((entries) => {
         for (const entry of entries) {
           if (!entry.isIntersecting) continue;
@@ -83,7 +102,16 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
           observer.unobserve(entry.target);
         }
       }, { rootMargin: '0px 0px -10% 0px' });
-      document.querySelectorAll('[data-reveal], [data-lines]').forEach((element) => observer.observe(element));
+      document.querySelectorAll('[data-reveal], [data-lines]').forEach((element) => {
+        if (element.getBoundingClientRect().top < innerHeight) element.classList.add('is-in');
+        else observer.observe(element);
+      });
+      // Keyboard focus reaches a link before its reveal may have run: show it, and what holds it, straight away.
+      document.addEventListener('focusin', (event) => {
+        for (let element = event.target as Element | null; element; element = element.parentElement) {
+          if (element.matches('[data-reveal], [data-lines]')) element.classList.add('is-in');
+        }
+      });
     </script>
   </body>
 </html>
