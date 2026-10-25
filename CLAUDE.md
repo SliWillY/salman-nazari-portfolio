@@ -10,7 +10,7 @@ deploy. Before working on anything, decide which of the two the task is about, a
 | Languages | English and Arabic | Arabic only |
 | Code | everything in `src/` outside `src/visuals/` | `src/visuals/`, plus its route `src/pages/visuals/index.astro` |
 | Built from | blocks and prefabs in YAML | plain Astro components and `src/visuals/content.ts` |
-| Docs | `README.md` | `src/visuals/CLAUDE.md` |
+| Docs | `README.md` | `src/visuals/CLAUDE.md`, and its `PRODUCT.md`, `DESIGN.md` and `.impeccable/` |
 
 - **No links either way.** Visuals is standalone: nothing in the portfolio links to it (menu, cards, footer, `/go/`
   share links, the brief) and it links to nothing in the portfolio.
@@ -21,3 +21,6 @@ deploy. Before working on anything, decide which of the two the task is about, a
   visuals; product photography stays out of the portfolio.
 - **No shared content.** Visuals content never goes in `src/content/` (every page file there becomes a portfolio
   page); its media is under `visuals/` in Cloudinary, the portfolio's under `portfolio/`.
+- **Separate design context.** Visuals' Impeccable context (`PRODUCT.md`, `DESIGN.md`, `.impeccable/`) lives in
+  `src/visuals/`, never at the repository root, so it only applies to visuals files. Context for the portfolio, if it
+  ever gets some, goes at the root and describes the portfolio alone.

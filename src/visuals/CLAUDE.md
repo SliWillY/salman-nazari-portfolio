@@ -13,23 +13,25 @@ media) and, in one section near the end, his cinematography. A standalone one-pa
 - **Words**: `[bracketed]` text is a placeholder for the copywriter (Saudi e-commerce audience); plain labels are
   working labels. Both live in `content.ts` only, never in the components.
 
-## The look: "Columns"
+## Product and design context
 
-Chosen from three samples; it draws on obys agency's grids and gallery sites and Frame & Form.
+Read these before any change; they are the source of truth, written in [Impeccable](https://impeccable.style)'s
+format and scoped to this folder only:
 
-- Light grey ground `#F2F2F2`, black text, black 1px hairlines; the one dark band (cinematography) redraws the same
-  tokens for black. Nothing but greys: no accent colour.
-- IBM Plex Sans Arabic, light (300) for section titles and big numbers, regular (400) for the name, medium (500) for
-  labels. Small text is 11 to 15px; the name and the closing heading are set huge.
-- Sharp corners everywhere. No rounded corners, shadows, glow, or gradients other than the 1px line trick below.
-- Column lines are 1px `linear-gradient` backgrounds on the grid, so they run its full height whatever the photos'
-  heights. Sections open with `SectionHead` (light title, small count, hairline).
-- **Motion: a bit live, never busy.** Things arrive as they scroll into view, using the `data-reveal` types and
-  `data-lines` described at the end of `visuals.css` (rise, wipe, grow, pop, line), staggered with `--i`, all on one
-  easing (`--ease`): hairlines draw, column lines grow down, photos are uncovered from the top, text rises. The
-  opening plays in order on load. The marquee is the one thing always moving. Hovers: photos push in slightly, the
-  arrow nudges, underlines redraw. Nothing bounces, flashes or glows, and everything is off for
-  `prefers-reduced-motion` and when scripts don't run.
+| File | What it holds |
+|---|---|
+| `PRODUCT.md` | Who the page is for, what it must do, constraints, what evidence exists (and what must not be invented). |
+| `DESIGN.md` | The visual system ("The Contact Sheet"): tokens, type scale, layout, motion grammar, do's and don'ts. |
+| `.impeccable/design.json` | `DESIGN.md`'s companion: motion tokens, breakpoints, component snippets. Regenerate it with `DESIGN.md`. |
+| `.impeccable/surfaces/visualspage-astro.md` | This page's brief: visitor mode, direction contract, who chose what, what is built and what is open. |
+
+In short: light grey ground, black hairlines, greys only, IBM Plex Sans Arabic, sharp corners, scroll-in reveals and
+one marquee, nothing that glows or bounces. When the code and these files disagree, fix one of them in the same
+change.
+
+Impeccable finds this context by walking up from the file it is given, so point its commands at a file in this folder
+(`/impeccable critique src/visuals/VisualsPage.astro`), not at a URL or the bare route: those resolve against the
+repository root, which has no product context because the portfolio is a different product.
 
 ## Files
 
