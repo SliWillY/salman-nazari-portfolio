@@ -33,6 +33,10 @@ body {
 
 img, video { display: block; max-width: 100%; }
 a { color: inherit; }
+
+/* Keyboard focus: one square ring in the ink colour, clear of the element so it reads on black cells too. The dark
+   band redraws --ink, so the ring turns light there. */
+:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
 h1, h2, h3, p { margin: 0; }
 
 .page { max-width: 1680px; margin-inline: auto; }
@@ -80,4 +84,8 @@ h1, h2, h3, p { margin: 0; }
 
   .js [data-lines] { transition: background-size 1.4s var(--ease) calc(var(--i, 0) * var(--stagger)); }
   .js [data-lines]:not(.is-in) { background-size: 1px 0%; }
+
+  /* Tabbing to a link that hasn't arrived yet shows it at once (the script marks it .is-in on focus), with no
+     stagger or fade to wait through. */
+  .js [data-reveal]:focus-within { transition: none; }
 }

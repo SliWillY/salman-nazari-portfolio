@@ -62,7 +62,7 @@ const whatsappNumber = whatsapp.replace(/\D/g, '');
     background: linear-gradient(currentColor, currentColor) right bottom 6px / 100% 1px no-repeat;
   }
   @media (prefers-reduced-motion: no-preference) {
-    a:hover { animation: redraw 0.8s var(--ease); }
+    a:is(:hover, :focus-visible) { animation: redraw 0.8s var(--ease); }
   }
   @keyframes redraw { from { background-size: 0 1px; } }
 
@@ -79,7 +79,10 @@ const whatsappNumber = whatsapp.replace(/\D/g, '');
     font-weight: 500;
     cursor: pointer;
   }
-  button:hover { background: var(--ink); color: var(--ground); }
+  button:is(:hover, :focus-visible) { background: var(--ink); color: var(--ground); }
+  @media (pointer: coarse) {
+    button { min-height: 44px; }
+  }
 
   .note { margin-top: 16px; font-size: 13px; line-height: 20px; color: var(--muted); }
   .status { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }

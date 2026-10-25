@@ -19,24 +19,26 @@ const { name, tagline, contact } = visuals.header;
     height: 44px;
     padding: 0 var(--gutter);
     border-bottom: 1px solid var(--line);
-    font-size: 11px;
+    font-size: 12px;
     line-height: 16px;
   }
   .name { display: flex; align-items: center; gap: 6px; }
   .mark { width: 8px; height: 8px; background: var(--ink); }
+  /* The padding widens the tap area past the short word; the underline stays under the word itself. */
   a {
     display: flex;
     align-items: center;
     align-self: stretch;
+    margin-inline: -12px;
+    padding-inline: 12px;
     text-decoration: none;
     background: linear-gradient(currentColor, currentColor) right calc(50% + 10px) / 100% 1px no-repeat;
+    background-origin: content-box;
+    background-clip: content-box;
   }
   @media (prefers-reduced-motion: no-preference) {
-    a:hover { animation: redraw 0.8s var(--ease); }
+    a:is(:hover, :focus-visible) { animation: redraw 0.8s var(--ease); }
   }
   @keyframes redraw { from { background-size: 0 1px; } }
 
-  @media (min-width: 720px) {
-    header { font-size: 12px; }
-  }
 </style>

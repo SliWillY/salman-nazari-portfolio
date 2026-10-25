@@ -37,6 +37,7 @@ export const visuals = {
 
   // The band that runs between the opening and the work, separated by small squares.
   marquee: ['تصوير منتجات', 'أحذية', 'خلفية بيضاء', 'زوايا المتجر', 'تعديل', 'تصوير سينمائي'],
+  marqueePause: 'إيقاف الشريط المتحرك', // the band's name for screen readers; tapping or focusing it stops it
 
   // Photos run in two columns on phones (the first half of a group in one, the rest in the other) and four on wide
   // screens. Alternating 4:5 and 1:1 staggers them; keep each half the same mix so the two phone columns end level.

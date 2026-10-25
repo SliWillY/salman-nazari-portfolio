@@ -28,9 +28,11 @@ const { cta } = visuals.hero;
     font-weight: 500;
     text-decoration: none;
   }
+  /* The cell runs to the screen's edge, so its focus ring sits inside it, in the ground colour. */
+  a:focus-visible { outline-color: var(--ground); outline-offset: -6px; }
   @media (prefers-reduced-motion: no-preference) {
     svg { transition: transform 0.5s var(--ease); }
-    a:hover svg { transform: translateX(-6px); }
+    a:is(:hover, :focus-visible) svg { transform: translateX(-6px); }
   }
 
   /* Wide screens: the line takes three of the four columns, the call to action the last one. */
