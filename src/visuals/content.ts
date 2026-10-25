@@ -16,7 +16,7 @@ export type GalleryPhoto = Photo & { ratio: Ratio };
 export const visuals = {
   // The browser tab, search results and link previews.
   title: 'سلمان نظري · تصوير المنتجات',
-  description: '[وصف قصير للصفحة يظهر في نتائج البحث]',
+  description: 'مصور منتجات في جدة، وأغلب عملي أحذية للمتاجر الإلكترونية. أصورها على خلفية بيضاء أو ملونة، ومن كل زاوية يحتاجها المتجر.',
   // The picture in link previews (WhatsApp, X…); empty: the opening's photo, or no picture while that is empty too.
   shareImage: '',
   // false while the page is unfinished: search engines are asked not to index it and it stays out of the sitemap.
@@ -32,8 +32,8 @@ export const visuals = {
     image: { id: '', alt: '' } as Photo, // square on phones, 4:5 beside the name on wide screens: frame the product centrally
     name: ['سلمان', 'نظري'],
     offer: 'تصوير منتجات للمتاجر الإلكترونية',
-    intro: '[سطر تعريفي]\n[سطر ثانٍ]',
-    cta: 'اطلب تصويرًا'
+    intro: 'أغلب ما أصوره أحذية، ومن كل زاوية.\nعلى خلفية بيضاء أو ملونة، هنا في جدة.',
+    cta: 'اطلب تصويرا'
   },
 
   // The band that runs between the opening and the work, separated by small squares.
@@ -48,7 +48,7 @@ export const visuals = {
     groups: [
       {
         name: 'خلفية بيضاء',
-        description: '[وصف قصير]',
+        description: 'للصورة الرئيسية في صفحة المنتج.',
         photos: [
           { id: '', alt: '', ratio: '4:5' },
           { id: '', alt: '', ratio: '1:1' },
@@ -57,8 +57,8 @@ export const visuals = {
         ] as GalleryPhoto[]
       },
       {
-        name: 'خلفية ملوّنة',
-        description: '[وصف قصير]',
+        name: 'خلفية ملونة',
+        description: 'لصور الحساب والإعلانات.',
         photos: [
           { id: '', alt: '', ratio: '1:1' },
           { id: '', alt: '', ratio: '4:5' },
@@ -68,7 +68,7 @@ export const visuals = {
       },
       {
         name: 'تفاصيل قريبة',
-        description: '[وصف قصير]',
+        description: 'الخامة والخياطة عن قرب.',
         photos: [
           { id: '', alt: '', ratio: '4:5' },
           { id: '', alt: '', ratio: '1:1' },
@@ -78,7 +78,7 @@ export const visuals = {
       },
       {
         name: 'أزواج ومجموعات',
-        description: '[وصف قصير]',
+        description: 'أكثر من قطعة في صورة واحدة.',
         photos: [
           { id: '', alt: '', ratio: '1:1' },
           { id: '', alt: '', ratio: '4:5' },
@@ -107,13 +107,13 @@ export const visuals = {
   // The same shot straight from the camera and after retouching, both 4:5.
   beforeAfter: {
     heading: 'قبل / بعد',
-    before: { label: 'من الكاميرا', note: '[ملاحظة]', id: '', alt: '' },
-    after: { label: 'بعد التعديل', note: '[ملاحظة]', id: '', alt: '' }
+    before: { label: 'من الكاميرا', note: 'بدون أي تعديل', id: '', alt: '' },
+    after: { label: 'بعد التعديل', note: 'جاهزة للمتجر', id: '', alt: '' }
   },
 
   // A short ask between the angles and the retouching, for whoever has seen enough; its button reads like the opening's.
   ask: {
-    line: '[سطر قصير يدعو المتجر إلى طلب التصوير]'
+    line: 'أرسل لي نوع منتجاتك وعددها، وأرد عليك بالسعر والموعد.'
   },
 
   // logo: a one-colour logo's public ID; empty: the name shows instead.
@@ -130,10 +130,10 @@ export const visuals = {
   process: {
     heading: 'طريقة العمل',
     steps: [
-      { name: 'الطلب', note: '[ماذا يرسل المتجر، وكيف تصل المنتجات]' },
-      { name: 'التصوير', note: '[أين يتم التصوير وكم يستغرق]' },
-      { name: 'التعديل', note: '[ما الذي يُعدَّل في كل صورة]' },
-      { name: 'التسليم', note: '[متى وكيف تُسلَّم الصور]' }
+      { name: 'الطلب', note: 'ترسل لي نوع المنتجات وعددها، ونتفق على الموعد.' },
+      { name: 'التصوير', note: 'أصور في جدة، على الخلفية التي تختارها.' },
+      { name: 'التعديل', note: 'أعدل كل صورة قبل التسليم.' },
+      { name: 'التسليم', note: 'تصلك الصور جاهزة للرفع خلال [مدة التسليم].' }
     ]
   },
 
@@ -142,8 +142,8 @@ export const visuals = {
     heading: 'ما تستلمه',
     items: [
       { label: 'الزوايا', value: '[عدد الزوايا لكل منتج]' },
-      { label: 'المقاسات', value: '[مثل 1:1 و4:5 بالدقة المطلوبة للمتجر]' },
-      { label: 'الخلفية والصيغة', value: '[مثل خلفية بيضاء، JPG أو PNG]' },
+      { label: 'المقاسات', value: '1:1 و4:5' },
+      { label: 'الخلفية والصيغة', value: 'بيضاء أو ملونة، بصيغة [JPG أو PNG]' },
       { label: 'مدة التسليم', value: '[عدد أيام العمل]' },
       { label: 'السعر', value: '[للمنتج الواحد أو للمجموعة]' }
     ]
@@ -152,7 +152,7 @@ export const visuals = {
   // Cinematography: the showreel (a Cloudinary video), and one frame as shot in LOG beside the same frame graded.
   film: {
     heading: 'تصوير سينمائي',
-    reel: { id: '', poster: '', title: '[عرض الأعمال]' }, // poster: a photo's public ID; empty: the reel's first frame
+    reel: { id: '', poster: '', title: 'مقاطع من أعمالي' }, // poster: a photo's public ID; empty: the reel's first frame
     log: { label: 'قبل التلوين', id: '', alt: '' } as Photo & { label: string },
     graded: { label: 'بعد التلوين', id: '', alt: '' } as Photo & { label: string },
     caption: 'التلوين على DaVinci Resolve، من LOG إلى Rec.709'
@@ -161,17 +161,17 @@ export const visuals = {
   // Empty WhatsApp or Instagram: that line is left off. A new email or WhatsApp message opens already filled in with
   // the subject and the questions below, so the first message carries what a quote needs.
   contact: {
-    heading: 'لنعمل معًا',
+    heading: 'لنعمل معا',
     email: 'salmansaif@live.com',
     emailSubject: 'طلب تصوير منتجات',
     emailBody: 'اسم المتجر:\nنوع المنتجات وعددها:\nالموعد المطلوب:\n',
     copyLabel: 'نسخ العنوان',
-    copiedLabel: 'نُسخ العنوان',
+    copiedLabel: 'تم النسخ',
     whatsapp: '', // international format, e.g. '9665XXXXXXXX' (spaces and + are dropped)
     whatsappLabel: 'واتساب',
-    whatsappText: 'مرحبًا، أرغب في تصوير منتجات لمتجري.',
+    whatsappText: 'السلام عليكم، أبغى تصوير لمنتجات متجري.',
     instagram: '', // the handle without @
     instagramLabel: 'إنستغرام',
-    note: '[متى ترد عادةً على الرسائل]'
+    note: '[متى ترد عادة على الرسائل]'
   }
 };

@@ -58,4 +58,4 @@ While `indexed` is `false`, the page is hidden from search. Once it is `true`, t
 | `contact.note` | The reply-time line under the contact links | One line |
 | `contact.emailSubject`, `emailBody`, `whatsappText` | Pre-filled message text | Short |
 
-The call-to-action wording on the page is «اطلب تصويرًا» in both places. Keep it the same wherever it appears. A few working labels on the page still carry vowel marks («تصويرًا»، «معًا»، «ملوّنة»، «نُسخ»). Don't copy that into new text, and point it out if asked to review the page.
+The call-to-action wording on the page is «اطلب تصويرا» in both places. Keep it the same wherever it appears. The page's text carries no vowel marks; keep it that way.
