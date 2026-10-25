@@ -1,5 +1,6 @@
 ---
-// The thin bar at the top: the name, what this is, and a jump to the contact section (content.ts, header).
+// The thin bar at the top: the name, what this is, and a jump to the contact section (content.ts, header). The jump
+// is underlined at rest, so it reads as the one link in the bar; a hover draws the underline again.
 import { visuals } from '../content';
 const { name, tagline, contact } = visuals.header;
 ---
@@ -28,12 +29,12 @@ const { name, tagline, contact } = visuals.header;
     align-items: center;
     align-self: stretch;
     text-decoration: none;
-    background: linear-gradient(currentColor, currentColor) right calc(50% + 10px) / 0 1px no-repeat;
+    background: linear-gradient(currentColor, currentColor) right calc(50% + 10px) / 100% 1px no-repeat;
   }
-  a:hover { background-size: 100% 1px; }
   @media (prefers-reduced-motion: no-preference) {
-    a { transition: background-size 0.6s var(--ease); }
+    a:hover { animation: redraw 0.8s var(--ease); }
   }
+  @keyframes redraw { from { background-size: 0 1px; } }
 
   @media (min-width: 720px) {
     header { font-size: 12px; }

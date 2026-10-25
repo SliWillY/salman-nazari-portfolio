@@ -35,7 +35,7 @@ const { heading, reel, log, graded, caption } = visuals.film;
       </figure>
     ))}
   </div>
-  <p class="caption" dir="ltr">{caption}</p>
+  <p class="caption">{caption}</p>
 </section>
 
 <style>
@@ -60,7 +60,7 @@ const { heading, reel, log, graded, caption } = visuals.film;
   figure { margin: 0; padding: 8px; }
   figcaption { padding-top: 6px; font-size: 11px; line-height: 16px; }
 
-  .caption { padding: 10px var(--gutter) 11px; font-size: 11px; line-height: 16px; color: var(--muted); text-align: right; }
+  .caption { padding: 10px var(--gutter) 11px; font-size: 11px; line-height: 16px; color: var(--muted); }
 
   @media (min-width: 720px) {
     .pair {

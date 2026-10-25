@@ -36,7 +36,7 @@ export const visuals = {
   },
 
   // The band that runs between the opening and the work, separated by small squares.
-  marquee: ['تصوير منتجات', 'أحذية', 'خلفية بيضاء', 'زوايا المتجر', 'تعديل', 'سينماتوغرافي'],
+  marquee: ['تصوير منتجات', 'أحذية', 'خلفية بيضاء', 'زوايا المتجر', 'تعديل', 'تصوير سينمائي'],
 
   // Photos run in two columns on phones (the first half of a group in one, the rest in the other) and four on wide
   // screens. Alternating 4:5 and 1:1 staggers them; keep each half the same mix so the two phone columns end level.
@@ -105,9 +105,13 @@ export const visuals = {
   // The same shot straight from the camera and after retouching, both 4:5.
   beforeAfter: {
     heading: 'قبل / بعد',
-    tag: 'RAW / FINAL',
-    before: { label: 'قبل', note: '[ملاحظة]', id: '', alt: '' },
-    after: { label: 'بعد', note: '[ملاحظة]', id: '', alt: '' }
+    before: { label: 'من الكاميرا', note: '[ملاحظة]', id: '', alt: '' },
+    after: { label: 'بعد التعديل', note: '[ملاحظة]', id: '', alt: '' }
+  },
+
+  // A short ask between the angles and the retouching, for whoever has seen enough; its button reads like the opening's.
+  ask: {
+    line: '[سطر قصير يدعو المتجر إلى طلب التصوير]'
   },
 
   // logo: a one-colour logo's public ID; empty: the name shows instead.
@@ -120,28 +124,52 @@ export const visuals = {
     ]
   },
 
+  // How a shoot runs, each step with one line of what happens in it.
   process: {
     heading: 'طريقة العمل',
-    steps: ['الطلب', 'التصوير', 'التعديل', 'التسليم']
+    steps: [
+      { name: 'الطلب', note: '[ماذا يرسل المتجر، وكيف تصل المنتجات]' },
+      { name: 'التصوير', note: '[أين يتم التصوير وكم يستغرق]' },
+      { name: 'التعديل', note: '[ما الذي يُعدَّل في كل صورة]' },
+      { name: 'التسليم', note: '[متى وكيف تُسلَّم الصور]' }
+    ]
+  },
+
+  // What a brand receives, as label and value rows, right before the contact.
+  deliverables: {
+    heading: 'ما تستلمه',
+    items: [
+      { label: 'الزوايا', value: '[عدد الزوايا لكل منتج]' },
+      { label: 'المقاسات', value: '[مثل ١:١ و٤:٥ بالدقة المطلوبة للمتجر]' },
+      { label: 'الخلفية والصيغة', value: '[مثل خلفية بيضاء، JPG أو PNG]' },
+      { label: 'مدة التسليم', value: '[عدد أيام العمل]' },
+      { label: 'السعر', value: '[للمنتج الواحد أو للمجموعة]' }
+    ]
   },
 
   // Cinematography: the showreel (a Cloudinary video), and one frame as shot in LOG beside the same frame graded.
   film: {
-    heading: 'سينماتوغرافي',
+    heading: 'تصوير سينمائي',
     reel: { id: '', poster: '', title: '[عرض الأعمال]' }, // poster: a photo's public ID; empty: the reel's first frame
-    log: { label: 'LOG', id: '', alt: '' } as Photo & { label: string },
+    log: { label: 'قبل التلوين', id: '', alt: '' } as Photo & { label: string },
     graded: { label: 'بعد التلوين', id: '', alt: '' } as Photo & { label: string },
-    caption: 'DaVinci Resolve — LOG → Rec.709'
+    caption: 'التلوين على DaVinci Resolve، من LOG إلى Rec.709'
   },
 
-  // Empty WhatsApp or Instagram: that line is left off.
+  // Empty WhatsApp or Instagram: that line is left off. A new email or WhatsApp message opens already filled in with
+  // the subject and the questions below, so the first message carries what a quote needs.
   contact: {
-    kicker: '[سطر صغير]',
     heading: 'لنعمل معًا',
     email: 'salmansaif@live.com',
-    whatsapp: '', // international format, digits only, e.g. '9665XXXXXXXX'
+    emailSubject: 'طلب تصوير منتجات',
+    emailBody: 'اسم المتجر:\nنوع المنتجات وعددها:\nالموعد المطلوب:\n',
+    copyLabel: 'نسخ العنوان',
+    copiedLabel: 'نُسخ العنوان',
+    whatsapp: '', // international format, e.g. '9665XXXXXXXX' (spaces and + are dropped)
     whatsappLabel: 'واتساب',
+    whatsappText: 'مرحبًا، أرغب في تصوير منتجات لمتجري.',
     instagram: '', // the handle without @
-    instagramLabel: 'إنستغرام'
+    instagramLabel: 'إنستغرام',
+    note: '[متى ترد عادةً على الرسائل]'
   }
 };

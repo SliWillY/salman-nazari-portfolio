@@ -1,6 +1,7 @@
 ---
-// How a shoot runs (content.ts, process): each step a big light number and its name. Rows on phones, four columns
-// on wide screens, where the column lines grow down as it scrolls in. The numbers rise one after another.
+// How a shoot runs (content.ts, process): each step a big light number, its name and one line of what happens in
+// it. Rows on phones, four columns on wide screens, where the column lines grow down as it scrolls in. The numbers
+// rise one after another.
 import SectionHead from '../components/SectionHead.astro';
 import { visuals } from '../content';
 const { heading, steps } = visuals.process;
@@ -11,7 +12,7 @@ const { heading, steps } = visuals.process;
     {steps.map((step, i) => (
       <li>
         <span class="number" dir="ltr" data-reveal="rise" style={`--i: ${i * 2}; --rise: 0.4em`}>{String(i + 1).padStart(2, '0')}</span>
-        <span class="step" data-reveal="rise" style={`--i: ${i * 2 + 1}`}>{step}</span>
+        <div class="step" data-reveal="rise" style={`--i: ${i * 2 + 1}`}><span>{step.name}</span><p>{step.note}</p></div>
       </li>
     ))}
   </ol>
@@ -27,7 +28,9 @@ const { heading, steps } = visuals.process;
     border-bottom: 1px solid var(--line);
   }
   .number { font-size: 60px; line-height: 64px; font-weight: 300; }
-  .step { font-size: 14px; line-height: 20px; font-weight: 500; }
+  .step { max-width: 60%; }
+  .step span { display: block; font-size: 14px; line-height: 20px; font-weight: 500; }
+  .step p { margin-top: 2px; font-size: 12px; line-height: 18px; color: var(--muted); }
 
   @media (min-width: 720px) {
     ol {
@@ -41,6 +44,8 @@ const { heading, steps } = visuals.process;
     }
     li { flex-direction: column; align-items: flex-start; gap: 48px; padding: 16px var(--gutter) 20px; border-bottom: 0; }
     .number { font-size: 96px; line-height: 100px; }
-    .step { font-size: 16px; line-height: 24px; }
+    .step { max-width: none; }
+    .step span { font-size: 16px; line-height: 24px; }
+    .step p { margin-top: 4px; font-size: 14px; line-height: 22px; }
   }
 </style>

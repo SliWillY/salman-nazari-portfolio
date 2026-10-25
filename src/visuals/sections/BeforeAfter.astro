@@ -5,10 +5,10 @@
 import Photo from '../components/Photo.astro';
 import SectionHead from '../components/SectionHead.astro';
 import { visuals } from '../content';
-const { heading, tag, before, after } = visuals.beforeAfter;
+const { heading, before, after } = visuals.beforeAfter;
 ---
 <section aria-labelledby="before-after-heading">
-  <SectionHead id="before-after-heading" heading={heading} count={tag} />
+  <SectionHead id="before-after-heading" heading={heading} />
   <div class="pair" data-lines>
     {[before, after].map((shot, i) => (
       <figure>
