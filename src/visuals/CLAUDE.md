@@ -11,7 +11,10 @@ media) and, in one section near the end, his cinematography. A standalone one-pa
   on wide screens and under it on phones, with the call to action inside the first screen at common sizes.
 - **Arabic only**, right to left (`<html lang="ar" dir="rtl">`). No English, no language switch. Latin bits (email,
   ratios, `DaVinci Resolve`) carry `dir="ltr"`. Use logical CSS properties (`inset-inline-start`, `border-inline-end`).
-- **Indexed**: in the sitemap and open to search engines, with a canonical URL and link-preview tags.
+- **Indexed once finished.** `indexed` in `content.ts` is false while the page is unfinished: the page then carries
+  `noindex` and stays out of the sitemap. Set to true, it joins the sitemap, and the build fails while any `[bracketed]`
+  placeholder is left. Always a canonical URL and link-preview tags (the preview picture falls back to the opening's
+  photo). A photo with a public ID but no alt text also fails the build.
 - **Words**: `[bracketed]` text is a placeholder for the copywriter (Saudi e-commerce audience); plain labels are
   working labels. Both live in `content.ts` only, never in the components.
 

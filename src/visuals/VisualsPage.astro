@@ -19,7 +19,19 @@ import Footer from './sections/Footer.astro';
 // The portfolio's GA4 property: visits show up there under /visuals/. To count them on their own, put another ID here.
 const analyticsId = 'G-B5MPLJRW2E';
 const url = new URL(Astro.url.pathname, Astro.site).href;
-const shareImage = visuals.shareImage && cloudinaryUrl(visuals.shareImage, 1200, 'auto', 'jpg');
+const shareId = visuals.shareImage || visuals.hero.image.id;
+const shareImage = shareId && cloudinaryUrl(shareId, 1200, 'auto', 'jpg');
+
+// Once the page is marked indexed, a [bracketed] placeholder left in content.ts stops the build instead of reaching
+// search results.
+const placeholders = (function collect(value: unknown): string[] {
+  if (typeof value === 'string') return value.match(/\[[^\]]+\]/g) ?? [];
+  if (value && typeof value === 'object') return Object.values(value).flatMap(collect);
+  return [];
+})(visuals);
+if (visuals.indexed && placeholders.length) {
+  throw new Error(`visuals: content.ts has indexed: true but still holds placeholders: ${placeholders.join(', ')}`);
+}
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 <!doctype html>
@@ -31,6 +43,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     <script is:inline>document.documentElement.classList.add('js');</script>
     <title>{visuals.title}</title>
     <meta name="description" content={visuals.description} />
+    {!visuals.indexed && <meta name="robots" content="noindex" />}
     <link rel="canonical" href={url} />
     <meta name="theme-color" content="#F2F2F2" />
     <!-- The portfolio's icon until visuals has its own. -->
