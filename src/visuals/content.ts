@@ -19,10 +19,6 @@ export const visuals = {
   description: 'مصور منتجات في جدة، وأغلب عملي أحذية للمتاجر الإلكترونية. أصورها على خلفية بيضاء أو ملونة، ومن كل زاوية يحتاجها المتجر.',
   // The picture in link previews (WhatsApp, X…); empty: the opening's photo, or no picture while that is empty too.
   shareImage: '',
-  // false while the page is unfinished: search engines are asked not to index it and it stays out of the sitemap.
-  // Set it to true once the photos and words are in; from then on the build fails while any [bracketed] placeholder
-  // is left in this file.
-  indexed: false,
 
   header: { name: 'سلمان نظري', tagline: 'تصوير منتجات', contact: 'تواصل' },
 

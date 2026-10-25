@@ -24,16 +24,14 @@ const url = new URL(Astro.url.pathname, Astro.site).href;
 const shareId = visuals.shareImage || visuals.hero.image.id;
 const shareImage = shareId && cloudinaryUrl(shareId, 1200, 'auto', 'jpg');
 
-// Once the page is marked indexed, a [bracketed] placeholder left in content.ts stops the build instead of reaching
-// search results.
+// The page is public and indexed from the start, finished or not. A [bracketed] placeholder left in content.ts is
+// shown on it as it is, so the build lists any that remain, as a reminder rather than a stop.
 const placeholders = (function collect(value: unknown): string[] {
   if (typeof value === 'string') return value.match(/\[[^\]]+\]/g) ?? [];
   if (value && typeof value === 'object') return Object.values(value).flatMap(collect);
   return [];
 })(visuals);
-if (visuals.indexed && placeholders.length) {
-  throw new Error(`visuals: content.ts has indexed: true but still holds placeholders: ${placeholders.join(', ')}`);
-}
+if (placeholders.length) console.warn(`visuals: placeholders still on the page: ${placeholders.join(', ')}`);
 const favicon = `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><style>rect{fill:#000}@media (prefers-color-scheme:dark){rect{fill:#F2F2F2}}</style><rect x="2" y="2" width="12" height="12"/></svg>')}`;
 ---
 <!doctype html>
@@ -45,7 +43,6 @@ const favicon = `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www
     <script is:inline>document.documentElement.classList.add('js');</script>
     <title>{visuals.title}</title>
     <meta name="description" content={visuals.description} />
-    {!visuals.indexed && <meta name="robots" content="noindex" />}
     <link rel="canonical" href={url} />
     <meta name="theme-color" content="#F2F2F2" />
     <!-- The page's own mark, the black square (light on dark browser chrome), so nothing of the portfolio's look comes in. -->

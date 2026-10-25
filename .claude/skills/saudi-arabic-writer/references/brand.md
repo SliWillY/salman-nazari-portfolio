@@ -41,7 +41,7 @@ All of the page's words live in `src/visuals/content.ts` in the salman-nazari-po
 - Latin words only where needed (email, ratios, DaVinci Resolve).
 - `[bracketed]` text is a copywriter slot; plain text is a working label, which may be improved.
 
-While `indexed` is `false`, the page is hidden from search. Once it is `true`, the build fails while any `[bracket]` remains, so a slot you can't fill keeps its bracket.
+The page is public and indexed even while unfinished, so a `[bracket]` left in a slot shows to visitors as it is: fill every slot you can, and keep a bracket only for a fact you don't have.
 
 | Slot in content.ts | What it is | Space |
 |---|---|---|
