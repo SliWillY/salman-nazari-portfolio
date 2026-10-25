@@ -34,6 +34,8 @@ body {
 img, video { display: block; max-width: 100%; }
 a { color: inherit; }
 
+::selection { background: var(--ink); color: var(--ground); }
+
 /* Keyboard focus: one square ring in the ink colour, clear of the element so it reads on black cells too. The dark
    band redraws --ink, so the ring turns light there. */
 :focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }

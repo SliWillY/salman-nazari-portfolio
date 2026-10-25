@@ -1,10 +1,10 @@
 ---
-// The thin bar at the bottom, mirroring the header.
+// The thin bar at the bottom, mirroring the header: the name, what this is, and the year.
 import { visuals } from '../content';
 ---
 <footer>
   <span class="name"><span class="mark" aria-hidden="true"></span>{visuals.header.name}</span>
-  <span dir="ltr">/visuals</span>
+  <span>{visuals.header.tagline}</span>
   <span dir="ltr">©{new Date().getFullYear()}</span>
 </footer>
 

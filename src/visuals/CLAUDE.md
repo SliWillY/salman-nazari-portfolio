@@ -10,7 +10,7 @@ media) and, in one section near the end, his cinematography. A standalone one-pa
 - **The work leads.** The opening's first thing is a photo; the name and the offer (together the `h1`) come beside it
   on wide screens and under it on phones, with the call to action inside the first screen at common sizes.
 - **Arabic only**, right to left (`<html lang="ar" dir="rtl">`). No English, no language switch. Latin bits (email,
-  ratios, `DaVinci Resolve`) carry `dir="ltr"`. Use logical CSS properties (`inset-inline-start`, `border-inline-end`).
+  ratios, `DaVinci Resolve`) carry `dir="ltr"`. Numbers use Western digits (1, 2, 3) throughout, as the big numbers do. Use logical CSS properties (`inset-inline-start`, `border-inline-end`).
 - **Indexed once finished.** `indexed` in `content.ts` is false while the page is unfinished: the page then carries
   `noindex` and stays out of the sitemap. Set to true, it joins the sitemap, and the build fails while any `[bracketed]`
   placeholder is left. Always a canonical URL and link-preview tags (the preview picture falls back to the opening's

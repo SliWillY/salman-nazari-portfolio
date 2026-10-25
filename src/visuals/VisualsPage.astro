@@ -34,7 +34,7 @@ const placeholders = (function collect(value: unknown): string[] {
 if (visuals.indexed && placeholders.length) {
   throw new Error(`visuals: content.ts has indexed: true but still holds placeholders: ${placeholders.join(', ')}`);
 }
-const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const favicon = `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><style>rect{fill:#000}@media (prefers-color-scheme:dark){rect{fill:#F2F2F2}}</style><rect x="2" y="2" width="12" height="12"/></svg>')}`;
 ---
 <!doctype html>
 <html lang="ar" dir="rtl">
@@ -48,13 +48,13 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     {!visuals.indexed && <meta name="robots" content="noindex" />}
     <link rel="canonical" href={url} />
     <meta name="theme-color" content="#F2F2F2" />
-    <!-- The portfolio's icon until visuals has its own. -->
-    <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
+    <!-- The page's own mark, the black square (light on dark browser chrome), so nothing of the portfolio's look comes in. -->
+    <link rel="icon" type="image/svg+xml" href={favicon} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500&display=swap" />
     <meta property="og:type" content="website" />
-    <meta property="og:locale" content="ar_AR" />
+    <meta property="og:locale" content="ar_SA" />
     <meta property="og:title" content={visuals.title} />
     <meta property="og:description" content={visuals.description} />
     <meta property="og:url" content={url} />

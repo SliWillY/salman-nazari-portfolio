@@ -76,7 +76,8 @@ const { image, name, offer, intro, cta } = visuals.hero;
     .divider { display: block; position: absolute; inset-inline-start: 0; top: 0; bottom: 0; width: 1px; background: var(--line); }
 
     h1 { gap: 8px; padding-top: 20px; }
-    .name { font-size: clamp(5rem, 11vw, 12rem); padding-bottom: 0.2em; }
+    /* Sized by the screen's height too, so short screens (laptops, phones on their side) keep the offer in view. */
+    .name { font-size: clamp(3.5rem, min(11vw, 18vh), 12rem); font-size: clamp(3.5rem, min(11vw, 18svh), 12rem); padding-bottom: 0.2em; }
     .last { flex-basis: 100%; text-align: end; }
     .offer { font-size: clamp(24px, 2.6vw, 40px); line-height: 1.3; }
 

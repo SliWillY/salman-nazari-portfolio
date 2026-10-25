@@ -1,4 +1,5 @@
-// Everything on salmannazari.com/visuals/: every word, photo and video, and how to get in touch. Arabic only.
+// Everything on salmannazari.com/visuals/: every word, photo and video, and how to get in touch. Arabic only, with
+// Western digits (1, 2, 3), the same as the page's big numbers and counts.
 // Words in [brackets] are placeholders for the copywriter; the plain ones are working labels, also free to change.
 // Media are Cloudinary public IDs, kept under visuals/ in the media library (the portfolio's are under portfolio/).
 // An empty id shows a grey box of the same shape, so the layout holds until the photo is uploaded.
@@ -98,7 +99,7 @@ export const visuals = {
       { label: 'خلف', id: '', alt: '' },
       { label: 'أعلى', id: '', alt: '' },
       { label: 'نعل', id: '', alt: '' },
-      { label: '٣/٤', id: '', alt: '' },
+      { label: '3/4', id: '', alt: '' },
       { label: 'تفصيل', id: '', alt: '' }
     ]
   },
@@ -119,9 +120,9 @@ export const visuals = {
   brands: {
     heading: 'عملت مع',
     items: [
-      { name: '[شعار ١]', logo: '' },
-      { name: '[شعار ٢]', logo: '' },
-      { name: '[شعار ٣]', logo: '' }
+      { name: '[شعار 1]', logo: '' },
+      { name: '[شعار 2]', logo: '' },
+      { name: '[شعار 3]', logo: '' }
     ]
   },
 
@@ -141,7 +142,7 @@ export const visuals = {
     heading: 'ما تستلمه',
     items: [
       { label: 'الزوايا', value: '[عدد الزوايا لكل منتج]' },
-      { label: 'المقاسات', value: '[مثل ١:١ و٤:٥ بالدقة المطلوبة للمتجر]' },
+      { label: 'المقاسات', value: '[مثل 1:1 و4:5 بالدقة المطلوبة للمتجر]' },
       { label: 'الخلفية والصيغة', value: '[مثل خلفية بيضاء، JPG أو PNG]' },
       { label: 'مدة التسليم', value: '[عدد أيام العمل]' },
       { label: 'السعر', value: '[للمنتج الواحد أو للمجموعة]' }
