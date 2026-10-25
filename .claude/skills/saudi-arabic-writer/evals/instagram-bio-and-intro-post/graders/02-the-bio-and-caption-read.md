@@ -4,4 +4,4 @@ focus: trace
 weight: 1
 ---
 
-The bio and caption read as light Saudi white dialect, not formal standard Arabic and not Egyptian or Levantine
+The bio and caption read as light Saudi dialect, not formal standard Arabic and not Egyptian or Levantine

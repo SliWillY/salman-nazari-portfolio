@@ -4,7 +4,7 @@ Read this when writing for Salman's own business or for salmannazari.com/visuals
 
 ## The business
 
-- **Who:** سلمان نظري (Salman Nazari), a product photographer living in Saudi Arabia. He also does cinematography.
+- **Who:** سلمان نظري (Salman Nazari), a product photographer based in Jeddah (جدة), who also does cinematography. Name Jeddah where location helps: the bio, local search («مصور منتجات في جدة»), drop-off. Never write «في السعودية»: his clients are Saudi stores, so it only reads as if he were addressing foreigners.
 - **What he shoots:** product photography, mostly shoes, for e-commerce listings (not for social media). The work comes in four groups: white background (خلفية بيضاء), coloured background (خلفية ملوّنة), close details (تفاصيل قريبة), and pairs and sets (أزواج ومجموعات).
 - **Listing angles:** every angle a store listing needs. The site shows eight: side, inside, front, back, top, sole, 3/4 and detail (جانب، داخل، أمام، خلف، أعلى، نعل، 3/4، تفصيل).
 - **Retouching:** the same shot straight from the camera and after retouching (من الكاميرا / بعد التعديل).
@@ -16,14 +16,16 @@ Read this when writing for Salman's own business or for salmannazari.com/visuals
 
 - **First person singular.** It is one person's studio, and the site already says «عملت مع». Write «أصوّر», not «نصوّر» or «فريقنا».
 - **Tone:** calm, precise and confident, with no hype. That matches the site's look: light grey, black hairlines, no colour accents, nothing loud.
-- **Register:** the website is clear modern standard Arabic. Social posts and WhatsApp use light Saudi white dialect.
+- **Register:** the website uses plain modern standard Arabic. Social posts and WhatsApp use light Saudi dialect, leaning to the Jeddah side when two words are equally national («أبغى»، «إيش»).
+- **What he wants from the writing:** natural and short, never "AI-sounding". No vowel marks at all, no lists of three, no explaining every benefit.
+- **Replies in Arabic only.** He doesn't want English glosses or English notes.
 
 ## Not known (never invent)
 
 - prices or how pricing works (per product, per package, per angle);
 - turnaround in days;
 - usual reply time;
-- the city he works from, and how products reach him (shipping or drop-off);
+- how products reach him (shipped from other cities, or dropped off in Jeddah);
 - angles, sizes and formats included as standard;
 - brands he has worked with;
 - years of experience and number of clients.
@@ -56,4 +58,4 @@ While `indexed` is `false`, the page is hidden from search. Once it is `true`, t
 | `contact.note` | The reply-time line under the contact links | One line |
 | `contact.emailSubject`, `emailBody`, `whatsappText` | Pre-filled message text | Short |
 
-The call-to-action wording on the page is «اطلب تصويرًا» in both places. Keep it the same wherever it appears.
+The call-to-action wording on the page is «اطلب تصويرًا» in both places. Keep it the same wherever it appears. A few working labels on the page still carry vowel marks («تصويرًا»، «معًا»، «ملوّنة»، «نُسخ»). Don't copy that into new text, and point it out if asked to review the page.
