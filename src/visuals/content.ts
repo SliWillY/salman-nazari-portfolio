@@ -21,12 +21,13 @@ export const visuals = {
 
   header: { name: 'سلمان نظري', tagline: 'تصوير منتجات', contact: 'تواصل' },
 
+  // The opening: the photo leads, then the name and what Salman shoots (together the page's heading), a short intro
+  // and the call to action.
   hero: {
-    intro: '[سطر تعريفي]\n[سطر ثانٍ]',
-    kicker: '[سطر صغير]',
+    image: { id: '', alt: '' } as Photo, // square on phones, 4:5 beside the name on wide screens: frame the product centrally
     name: ['سلمان', 'نظري'],
-    image: { id: '', alt: '' } as Photo, // 4:5 on phones, cropped to 16:9 on wide screens
-    line: '[سطر قصير]',
+    offer: 'تصوير منتجات للمتاجر الإلكترونية',
+    intro: '[سطر تعريفي]\n[سطر ثانٍ]',
     cta: 'اطلب تصويرًا'
   },
 

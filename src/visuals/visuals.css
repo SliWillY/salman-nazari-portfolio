@@ -1,5 +1,5 @@
 /* The visuals page's shared styles: tokens and base rules. Each section and component styles itself in its own <style>.
-   Mobile first: the plain rules are the phone layout, min-width queries (720px, 1200px) add to them for wider screens.
+   Mobile first: the plain rules are the phone layout, a min-width: 720px query adds to them for wider screens.
    The look ("Columns", see CLAUDE.md here): light grey ground, black hairlines, IBM Plex Sans Arabic in light and
    regular weights, sharp corners, nothing but greys, no shadows or glow. Motion: see the end of this file. */
 :root {

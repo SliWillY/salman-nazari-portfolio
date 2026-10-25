@@ -75,7 +75,9 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     </div>
     <script>
       // Reveals (visuals.css, Motion): mark each element the first time it comes into view; CSS does the moving.
-      // The bottom tenth of the screen doesn't count yet, so things start just after they appear.
+      // The bottom tenth of the screen doesn't count yet, so things start just after they appear. Whatever is already
+      // on screen when the page opens (or above it, after a reload part way down) plays at once, foot of the screen
+      // included: the opening's call to action sits there on wide screens.
       const observer = new IntersectionObserver((entries) => {
         for (const entry of entries) {
           if (!entry.isIntersecting) continue;
@@ -83,7 +85,10 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
           observer.unobserve(entry.target);
         }
       }, { rootMargin: '0px 0px -10% 0px' });
-      document.querySelectorAll('[data-reveal], [data-lines]').forEach((element) => observer.observe(element));
+      document.querySelectorAll('[data-reveal], [data-lines]').forEach((element) => {
+        if (element.getBoundingClientRect().top < innerHeight) element.classList.add('is-in');
+        else observer.observe(element);
+      });
     </script>
   </body>
 </html>

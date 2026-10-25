@@ -5,8 +5,10 @@ media) and, in one section near the end, his cinematography. A standalone one-pa
 (see the root `CLAUDE.md`). Nothing in `README.md` applies here.
 
 - **One page only.** New content becomes a section on this page, never a second page.
-- **Mobile first.** The plain CSS is the phone layout; `min-width: 720px` adds the wide layout (four columns),
-  `min-width: 1200px` sets the name on one line. The page only scrolls down: nothing scrolls sideways.
+- **Mobile first.** The plain CSS is the phone layout; `min-width: 720px` adds the wide layout (four columns, and
+  the opening split into the photo's half and the name's half). The page only scrolls down: nothing scrolls sideways.
+- **The work leads.** The opening's first thing is a photo; the name and the offer (together the `h1`) come beside it
+  on wide screens and under it on phones, with the call to action inside the first screen at common sizes.
 - **Arabic only**, right to left (`<html lang="ar" dir="rtl">`). No English, no language switch. Latin bits (email,
   ratios, `DaVinci Resolve`) carry `dir="ltr"`. Use logical CSS properties (`inset-inline-start`, `border-inline-end`).
 - **Indexed**: in the sitemap and open to search engines, with a canonical URL and link-preview tags.
@@ -19,8 +21,8 @@ Chosen from three samples; it draws on obys agency's grids and gallery sites and
 
 - Light grey ground `#F2F2F2`, black text, black 1px hairlines; the one dark band (cinematography) redraws the same
   tokens for black. Nothing but greys: no accent colour.
-- IBM Plex Sans Arabic, light (300) for section titles and big numbers, regular (400) for the name, medium (500) for
-  labels. Small text is 11 to 15px; the name and the closing heading are set huge.
+- IBM Plex Sans Arabic, light (300) for section titles, the offer and big numbers, regular (400) for the name, medium
+  (500) for labels and the call to action. Small text is 11 to 15px; the name and the closing heading are set huge.
 - Sharp corners everywhere. No rounded corners, shadows, glow, or gradients other than the 1px line trick below.
 - Column lines are 1px `linear-gradient` backgrounds on the grid, so they run its full height whatever the photos'
   heights. Sections open with `SectionHead` (light title, small count, hairline).
