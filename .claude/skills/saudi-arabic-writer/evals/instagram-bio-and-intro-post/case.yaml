@@ -1,0 +1,6 @@
+schema_version: "1.1"
+name: instagram-bio-and-intro-post
+expected_outcome: |
+  An Instagram bio within 150 characters and a first-post caption, both in light Saudi white dialect, with a
+  WhatsApp call to action, using only the facts given (no invented prices, turnaround, clients or experience),
+  with a few Arabic hashtags on the caption.

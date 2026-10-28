@@ -1,23 +1,27 @@
 ---
-// The close (content.ts, contact): the invitation set large, then the email in large type with a button to copy it
-// (for phones without a mail app; it only shows where the browser can copy), WhatsApp and Instagram when they are
-// filled in, and a line on when Salman replies. A new email or WhatsApp message opens already filled in. Addresses
-// and handles read left to right inside the Arabic text. It rises line by line as it scrolls in; a hovered link
-// redraws its underline.
+// The close (content.ts, contact): the invitation set large, then WhatsApp, the main way in, with the number in large
+// type; under it the email, smaller, with a button to copy it (for phones without a mail app; it only shows where the
+// browser can copy), Instagram when it is filled in, and a line on when Salman replies. A new WhatsApp or email
+// message opens already filled in. Numbers, addresses and handles read left to right inside the Arabic text. It rises
+// line by line as it scrolls in; a hovered link redraws its underline.
 import { visuals } from '../content';
-const { heading, email, emailSubject, emailBody, copyLabel, copiedLabel, whatsapp, whatsappLabel, whatsappText, instagram, instagramLabel, note } = visuals.contact;
+import { whatsappDisplay, whatsappHref } from '../whatsapp';
+const { heading, email, emailSubject, emailBody, copyLabel, copiedLabel, whatsappLabel, instagram, instagramLabel, note } = visuals.contact;
 const mailto = `mailto:${email}?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
-const whatsappNumber = whatsapp.replace(/\D/g, '');
 ---
 <section id="contact" aria-labelledby="contact-heading">
   <h2 id="contact-heading" data-reveal="rise" style="--rise: 0.3em">{heading}</h2>
   <ul data-reveal="rise" style="--i: 2">
+    {whatsappHref && (
+      <li class="primary">
+        <a href={whatsappHref} target="_blank" rel="noopener"><span class="label">{whatsappLabel}</span> <bdi dir="ltr">{whatsappDisplay}</bdi></a>
+      </li>
+    )}
     <li class="email">
       <a href={mailto} dir="ltr">{email}</a>
       <button type="button" data-copy={email} data-done={copiedLabel} hidden>{copyLabel}</button>
     </li>
-    {whatsappNumber && <li><a href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappText)}`}>{whatsappLabel} ←</a></li>}
-    {instagram && <li><a href={`https://www.instagram.com/${instagram}/`}>{instagramLabel} ←</a></li>}
+    {instagram && <li><a href={`https://www.instagram.com/${instagram}/`}>{instagramLabel}</a></li>}
   </ul>
   <p class="note" data-reveal="rise" style="--i: 3">{note}</p>
   <span class="status" role="status"></span>
@@ -55,12 +59,15 @@ const whatsappNumber = whatsapp.replace(/\D/g, '');
   /* The underline is a 1px background, so a hover can draw it again from the start of the line. */
   a {
     display: inline-block;
-    padding-block: 8px;
-    font-size: 20px;
-    line-height: 28px;
+    padding-block: 10px;
+    font-size: 16px;
+    line-height: 24px;
     text-decoration: none;
-    background: linear-gradient(currentColor, currentColor) right bottom 6px / 100% 1px no-repeat;
+    background: linear-gradient(currentColor, currentColor) right bottom 8px / 100% 1px no-repeat;
   }
+  /* WhatsApp leads: the number in large type, its label in the muted small size beside it. */
+  .primary a { font-size: 28px; line-height: 36px; font-weight: 300; }
+  .primary .label { font-size: 13px; line-height: 20px; font-weight: 500; color: var(--muted); }
   @media (prefers-reduced-motion: no-preference) {
     a:is(:hover, :focus-visible) { animation: redraw 0.8s var(--ease); }
   }
@@ -91,7 +98,9 @@ const whatsappNumber = whatsapp.replace(/\D/g, '');
     section { padding-block: 96px; }
     h2 { font-size: clamp(5rem, 9vw, 9rem); line-height: 1.1; }
     ul { margin-top: 32px; }
-    a { font-size: 32px; line-height: 44px; }
+    a { font-size: 20px; line-height: 28px; }
+    .primary a { font-size: 48px; line-height: 60px; }
+    .primary .label { font-size: 15px; }
     button { min-height: 36px; padding: 0 14px; font-size: 13px; }
     .note { margin-top: 24px; font-size: 15px; line-height: 22px; }
   }

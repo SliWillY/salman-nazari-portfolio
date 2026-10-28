@@ -1,18 +1,20 @@
 ---
 // A short ask in the middle of the page (content.ts, ask), after the angles: one line beside the same black call to
-// action as the opening (its words come from the hero, so the two always match), jumping to the contact section.
-// Two cells in a row, split by a hairline. It rises as it scrolls in.
+// action as the opening (its words come from the hero, so the two always match), opening the same WhatsApp chat.
+// Phones stack the line over a full-width black bar, like the opening's; wide screens set the two side by side. It
+// rises as it scrolls in.
 import { visuals } from '../content';
+import { ctaHref, ctaTarget } from '../whatsapp';
 const { line } = visuals.ask;
 const { cta } = visuals.hero;
 ---
 <div class="ask">
   <p data-reveal="rise">{line}</p>
-  <a href="#contact" data-reveal="rise" style="--i: 1"><span>{cta}</span><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M17 10H3M9 4l-6 6 6 6" /></svg></a>
+  <a href={ctaHref} {...ctaTarget} data-reveal="rise" style="--i: 1"><span>{cta}</span><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M17 10H3M9 4l-6 6 6 6" /></svg></a>
 </div>
 
 <style>
-  .ask { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-bottom: 1px solid var(--line); }
+  .ask { display: grid; border-bottom: 1px solid var(--line); }
   p { align-self: center; padding: 14px var(--gutter); font-size: 13px; line-height: 20px; }
   a {
     display: flex;

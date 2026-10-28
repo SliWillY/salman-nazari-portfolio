@@ -16,13 +16,9 @@ export type GalleryPhoto = Photo & { ratio: Ratio };
 export const visuals = {
   // The browser tab, search results and link previews.
   title: 'سلمان نظري · تصوير المنتجات',
-  description: '[وصف قصير للصفحة يظهر في نتائج البحث]',
+  description: 'مصور منتجات في جدة، وأغلب عملي أحذية للمتاجر الإلكترونية. أصورها على خلفية بيضاء أو ملونة، ومن كل زاوية يحتاجها المتجر.',
   // The picture in link previews (WhatsApp, X…); empty: the opening's photo, or no picture while that is empty too.
   shareImage: '',
-  // false while the page is unfinished: search engines are asked not to index it and it stays out of the sitemap.
-  // Set it to true once the photos and words are in; from then on the build fails while any [bracketed] placeholder
-  // is left in this file.
-  indexed: false,
 
   header: { name: 'سلمان نظري', tagline: 'تصوير منتجات', contact: 'تواصل' },
 
@@ -32,8 +28,8 @@ export const visuals = {
     image: { id: '', alt: '' } as Photo, // square on phones, 4:5 beside the name on wide screens: frame the product centrally
     name: ['سلمان', 'نظري'],
     offer: 'تصوير منتجات للمتاجر الإلكترونية',
-    intro: '[سطر تعريفي]\n[سطر ثانٍ]',
-    cta: 'اطلب تصويرًا'
+    intro: 'أغلب ما أصوره أحذية، ومن كل زاوية.\nعلى خلفية بيضاء أو ملونة، هنا في جدة.',
+    cta: 'اطلب تصويرا على واتساب' // opens a WhatsApp chat (whatsapp.ts), here and mid-page
   },
 
   // The band that runs between the opening and the work, separated by small squares.
@@ -48,7 +44,7 @@ export const visuals = {
     groups: [
       {
         name: 'خلفية بيضاء',
-        description: '[وصف قصير]',
+        description: 'للصورة الرئيسية في صفحة المنتج.',
         photos: [
           { id: '', alt: '', ratio: '4:5' },
           { id: '', alt: '', ratio: '1:1' },
@@ -57,8 +53,8 @@ export const visuals = {
         ] as GalleryPhoto[]
       },
       {
-        name: 'خلفية ملوّنة',
-        description: '[وصف قصير]',
+        name: 'خلفية ملونة',
+        description: 'لصور الحساب والإعلانات.',
         photos: [
           { id: '', alt: '', ratio: '1:1' },
           { id: '', alt: '', ratio: '4:5' },
@@ -68,7 +64,7 @@ export const visuals = {
       },
       {
         name: 'تفاصيل قريبة',
-        description: '[وصف قصير]',
+        description: 'الخامة والخياطة عن قرب.',
         photos: [
           { id: '', alt: '', ratio: '4:5' },
           { id: '', alt: '', ratio: '1:1' },
@@ -78,7 +74,7 @@ export const visuals = {
       },
       {
         name: 'أزواج ومجموعات',
-        description: '[وصف قصير]',
+        description: 'أكثر من قطعة في صورة واحدة.',
         photos: [
           { id: '', alt: '', ratio: '1:1' },
           { id: '', alt: '', ratio: '4:5' },
@@ -107,13 +103,13 @@ export const visuals = {
   // The same shot straight from the camera and after retouching, both 4:5.
   beforeAfter: {
     heading: 'قبل / بعد',
-    before: { label: 'من الكاميرا', note: '[ملاحظة]', id: '', alt: '' },
-    after: { label: 'بعد التعديل', note: '[ملاحظة]', id: '', alt: '' }
+    before: { label: 'من الكاميرا', note: 'صورة خام بدون تعديل', id: '', alt: '' },
+    after: { label: 'بعد التعديل', note: 'ألوان مطابقة وبدون عيوب', id: '', alt: '' }
   },
 
   // A short ask between the angles and the retouching, for whoever has seen enough; its button reads like the opening's.
   ask: {
-    line: '[سطر قصير يدعو المتجر إلى طلب التصوير]'
+    line: 'أرسل لي نوع منتجاتك وعددها، وأرد عليك بالسعر والموعد.'
   },
 
   // logo: a one-colour logo's public ID; empty: the name shows instead.
@@ -126,14 +122,14 @@ export const visuals = {
     ]
   },
 
-  // How a shoot runs, each step with one line of what happens in it.
+  // How each photo is made, from the camera to the store, each step with one line of what happens in it.
   process: {
     heading: 'طريقة العمل',
     steps: [
-      { name: 'الطلب', note: '[ماذا يرسل المتجر، وكيف تصل المنتجات]' },
-      { name: 'التصوير', note: '[أين يتم التصوير وكم يستغرق]' },
-      { name: 'التعديل', note: '[ما الذي يُعدَّل في كل صورة]' },
-      { name: 'التسليم', note: '[متى وكيف تُسلَّم الصور]' }
+      { name: 'التصوير', note: 'أصور بصيغة RAW مع بطاقة معايرة الألوان.' },
+      { name: 'الألوان', note: 'أطابق الألوان في Lightroom على بطاقة المعايرة.' },
+      { name: 'التنظيف', note: 'أزيل العيوب الصغيرة من المنتج.' },
+      { name: 'التسليم', note: 'أضيف بيانات الصورة لمحركات البحث، وتصلك خلال يومي عمل.' }
     ]
   },
 
@@ -141,37 +137,38 @@ export const visuals = {
   deliverables: {
     heading: 'ما تستلمه',
     items: [
-      { label: 'الزوايا', value: '[عدد الزوايا لكل منتج]' },
-      { label: 'المقاسات', value: '[مثل 1:1 و4:5 بالدقة المطلوبة للمتجر]' },
-      { label: 'الخلفية والصيغة', value: '[مثل خلفية بيضاء، JPG أو PNG]' },
-      { label: 'مدة التسليم', value: '[عدد أيام العمل]' },
-      { label: 'السعر', value: '[للمنتج الواحد أو للمجموعة]' }
+      { label: 'الزوايا', value: 'حسب ما يحتاجه منتجك' },
+      { label: 'المقاسات', value: '1:1 و4:5' },
+      { label: 'الخلفية', value: 'بيضاء أو ملونة' },
+      { label: 'مدة التسليم', value: 'يومي عمل' },
+      { label: 'السعر', value: 'نتفق عليه حسب المنتجات وعددها' }
     ]
   },
 
   // Cinematography: the showreel (a Cloudinary video), and one frame as shot in LOG beside the same frame graded.
   film: {
     heading: 'تصوير سينمائي',
-    reel: { id: '', poster: '', title: '[عرض الأعمال]' }, // poster: a photo's public ID; empty: the reel's first frame
+    reel: { id: '', poster: '', title: 'مقاطع من أعمالي' }, // poster: a photo's public ID; empty: the reel's first frame
     log: { label: 'قبل التلوين', id: '', alt: '' } as Photo & { label: string },
     graded: { label: 'بعد التلوين', id: '', alt: '' } as Photo & { label: string },
     caption: 'التلوين على DaVinci Resolve، من LOG إلى Rec.709'
   },
 
-  // Empty WhatsApp or Instagram: that line is left off. A new email or WhatsApp message opens already filled in with
-  // the subject and the questions below, so the first message carries what a quote needs.
+  // WhatsApp is the main way in: the calls to action open a chat with whatsappText already typed, and the contact
+  // section leads with it, the number in large type; the email comes second. Empty WhatsApp or Instagram: that line
+  // is left off (and the calls to action fall back to the contact section).
   contact: {
-    heading: 'لنعمل معًا',
+    heading: 'لنعمل معا',
     email: 'salmansaif@live.com',
     emailSubject: 'طلب تصوير منتجات',
     emailBody: 'اسم المتجر:\nنوع المنتجات وعددها:\nالموعد المطلوب:\n',
     copyLabel: 'نسخ العنوان',
-    copiedLabel: 'نُسخ العنوان',
-    whatsapp: '', // international format, e.g. '9665XXXXXXXX' (spaces and + are dropped)
+    copiedLabel: 'تم النسخ',
+    whatsapp: '966532411688', // international format; spaces and + are dropped
     whatsappLabel: 'واتساب',
-    whatsappText: 'مرحبًا، أرغب في تصوير منتجات لمتجري.',
+    whatsappText: 'السلام عليكم، أبغى تصوير لمنتجات متجري.',
     instagram: '', // the handle without @
     instagramLabel: 'إنستغرام',
-    note: '[متى ترد عادةً على الرسائل]'
+    note: 'متاح في أي وقت، وأرد بأسرع وقت.'
   }
 };
